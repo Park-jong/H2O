@@ -11,7 +11,8 @@ namespace H2O_odf
         float margin_left = 0;
         float margin_right = 0;
         float text_ident = 0;
-        string text_color = " fo:color=\"#000000\" loext:opacity=\"100%\"";
+        float font_size = 30;
+        string text_color = "#FF0000";
         bool bold = false;
         bool italic = false;
         bool line_through = false;
@@ -30,6 +31,7 @@ namespace H2O_odf
                   + " fo:text-indent=\"" + text_ident + "cm\" style:auto-text-indent=\"false\"/>";
             }
 
+
             string rsid = " officeooo:rsid=\"0007e3a5\" officeooo:paragraph-rsid=\"0007e3a5\"";
             string text_line_through = "";
             string text_position = "";
@@ -40,6 +42,22 @@ namespace H2O_odf
             string font_weight_asian = "";
             string font_style_complex = "";
             string font_weight_complex = "";
+            string text_color_content = "";
+            string font_size_str = "";
+            string font_size_asian = "";
+            string font_size_complex = "";
+
+            if(font_size != 12)
+            {
+                font_size_str = " fo:font-size=\"" + font_size + "pt\"";
+                font_size_asian = " fo:font-size-asian=\"" + font_size + "pt\"";
+                font_size_complex = " fo:font-size-complex=\"" + font_size + "pt\"";
+            }
+
+            if(text_color != "#000000")
+            {
+                text_color_content = " fo:color=\"" + text_color + "\" loext:opacity=\"100%\"";
+            }
 
             if (line_through)
             {
@@ -72,15 +90,18 @@ namespace H2O_odf
                 font_style_complex = " style:font-style-complex=\"italic\"";
             }       
             style = style + "<style:text-properties" + 
-                text_color + 
+                text_color_content + 
                 text_line_through + 
-                text_position + 
+                text_position +
+                font_size_str +
                 font_style + 
                 text_underline + 
                 font_weight + 
                 rsid + 
+                font_size_asian +
                 font_style_asian + 
                 font_weight_asian + 
+                font_size_complex + 
                 font_style_complex + 
                 font_weight_complex + "/></style:style>";
             
