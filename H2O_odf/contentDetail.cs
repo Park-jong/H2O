@@ -10,7 +10,7 @@ namespace H2O_odf
         protected string content = "asdaaaaaaaaaaaaaaaaaaaaaaaa";
         protected float margin_left = 0;
         protected float margin_right = 0;
-        protected float margin_top = 0;
+        protected float margin_top = 5;
         protected float margin_bottom = 0;
         protected float text_ident = 5;
         protected float font_size = 15;
@@ -24,62 +24,45 @@ namespace H2O_odf
         protected bool text_sub = false;
         protected int align = 1;//일단 0:왼쪽 정렬, 1 오른쪽정렬, 2 가운데정렬, 3 양쪽맞춤이라 가정 나중에 수정
         protected float angle = 0;//글자회전
-//실행안됨 추가설정필요        protected bool angle_fix = false;//글자회전 후 폭 맞춤
+        //실행안됨 추가설정필요        
+        //protected bool angle_fix = false;//글자회전 후 폭 맞춤
 
         public string textStyle()
         {
             string style = "<style:style style:name=\"" + name + "\" style:family=\"paragraph\" style:parent-style-name=\"Standard\">";
             if (margin_left != 0 || margin_right != 0 || margin_top != 0 || margin_bottom != 0 || text_ident != 0 || align != 0)
             {
+                style = style + "<style:paragraph-properties"
+                                + " fo:margin-left=\"" + margin_left + "cm\""
+                                + " fo:margin-right=\"" + margin_right + "cm\""
+                                + " fo:margin-top=\"" + margin_top + "cm\""
+                                + " fo:margin-bottom=\"" + margin_bottom + "cm\"";
                 switch (align)
                 {
                     case 0:
                         {
-                            style = style + "<style:paragraph-properties"
-                                + " fo:margin-left=\"" + margin_left + "cm\""
-                                + " fo:margin-right=\"" + margin_right + "cm\""
-                                + " fo:margin-top=\"" + margin_top + "cm\""
-                                + " fo:margin-bottom=\"" + margin_bottom + "cm\""
-                                + " fo:text-align=\"start\" style:justify-single-word=\"false\""
-                                + " fo:text-indent=\"" + text_ident + "cm\" style:auto-text-indent=\"false\"/>";
+                            style = " fo:text-align=\"start\" style:justify-single-word=\"false\"";
                             break;
                         }
                     case 1:
                         {
-                            style = style + "<style:paragraph-properties"
-                                + " fo:margin-left=\"" + margin_left + "cm\""
-                                + " fo:margin-right=\"" + margin_right + "cm\""
-                                + " fo:margin-top=\"" + margin_top + "cm\""
-                                + " fo:margin-bottom=\"" + margin_bottom + "cm\""
-                                + " fo:text-align=\"end\" style:justify-single-word=\"false\""
-                                + " fo:text-indent=\"" + text_ident + "cm\" style:auto-text-indent=\"false\"/>";
+                            style = style + " fo:text-align=\"end\" style:justify-single-word=\"false\"";
                             break;
                         }
                     case 2:
                         {
-                            style = style + "<style:paragraph-properties"
-                                + " fo:margin-left=\"" + margin_left + "cm\""
-                                + " fo:margin-right=\"" + margin_right + "cm\""
-                                + " fo:margin-top=\"" + margin_top + "cm\""
-                                + " fo:margin-bottom=\"" + margin_bottom + "cm\""
-                                + " fo:text-align=\"center\" style:justify-single-word=\"false\""
-                                + " fo:text-indent=\"" + text_ident + "cm\" style:auto-text-indent=\"false\"/>";
+                            style = style + " fo:text-align=\"center\" style:justify-single-word=\"false\"";                                
                             break;
                         }
                     case 3:
                         {
-                            style = style + "<style:paragraph-properties"
-                                + " fo:margin-left=\"" + margin_left + "cm\""
-                                + " fo:margin-right=\"" + margin_right + "cm\""
-                                + " fo:margin-top=\"" + margin_top + "cm\""
-                                + " fo:margin-bottom=\"" + margin_bottom + "cm\""
-                                + " fo:text-align=\"justify\" style:justify-single-word=\"false\""
-                                + " fo:text-indent=\"" + text_ident + "cm\" style:auto-text-indent=\"false\"/>";
+                            style = style + " fo:text-align=\"justify\" style:justify-single-word=\"false\"";
                             break;
                         }
                     default:
                         break;
                 }
+                style = style + " fo:text-indent=\"" + text_ident + "cm\" style:auto-text-indent=\"false\"/>";
             }
 
 
