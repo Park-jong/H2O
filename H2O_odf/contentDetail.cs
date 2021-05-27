@@ -11,6 +11,7 @@ namespace H2O_odf
         float margin_left = 0;
         float margin_right = 0;
         float text_ident = 0;
+        string text_color = " fo:color=\"#000000\" loext:opacity=\"100%\"";
         bool bold = false;
         bool italic = false;
         bool line_through = false;
@@ -71,6 +72,7 @@ namespace H2O_odf
                 font_style_complex = " style:font-style-complex=\"italic\"";
             }       
             style = style + "<style:text-properties" + 
+                text_color + 
                 text_line_through + 
                 text_position + 
                 font_style + 

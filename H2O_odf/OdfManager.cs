@@ -66,7 +66,7 @@ namespace H2O_odf
             }
             
 
-
+            //directory삭제
             //activeDir.Delete(true);
 
 
