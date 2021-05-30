@@ -4,23 +4,140 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
 using System.Xml;
 
 namespace H2O__
 {
     class XmlManager
     {
-        static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
-        static string meta_meta = "urn:oasis:names:tc:opendocument:xmlns:meta:1.0";
+        public FileNode root;
 
 
         public XmlManager()
         {
         }
 
+        public void CreateODT()
+        {
+            string path = Application.StartupPath;
+
+            root = new FolderNode("New File");
+            root.path = path + @"\" + root.name;
+
+
+            //Create File
+
+            string[] list1 = { "Configurations2", "META-INF", "Thumbnails" };
+            
+            foreach(string s in list1)
+            {
+                FolderNode node = new FolderNode(s, root);
+            }
+
+            FolderNode Configurations2 = (FolderNode)root.child["Configurations2"];
+
+            string[] list2 = { "accelerator", "floater", "images", "menubar", "popupmenu", "progressbar", "statusbar", "toolbar", "toolpanel" };
+
+            foreach (string s in list2)
+            {
+                FolderNode node = new FolderNode(s, Configurations2);
+            }
+
+            FolderNode images = (FolderNode)Configurations2.child["images"];
+
+            FolderNode Bitmaps = new FolderNode("Bitmaps", images);
+
+
+            //CreateXML
+
+            string[] file1 = { "content.xml", "manifest.xml", "meta.xml", "mimetype", "settings.xml", "styles.xml" };
+
+            foreach (string s in file1)
+            { 
+                XmlNode node = new XmlNode(s, root);
+                
+                node.LoadXml(path + @"\data" + @"\" + node.name);
+            }
+
+            FolderNode META_INF = (FolderNode)root.child["META-INF"];
+
+            XmlNode manifest = new XmlNode("manifest.xml", META_INF);
+            manifest.LoadXml(path + @"\data" + @"\META-INF" + @"\" + manifest.name);
+
+
+            FolderNode accelerator = (FolderNode)Configurations2.child["accelerator"];
+
+            XmlNode current = new XmlNode("current.xml", accelerator);
+            current.LoadXml(path + @"\data" + @"\Configurations2" + @"\accelerator" + @"\" + current.name);
+
+        }
+
+        public void SaveODT(FileNode node)
+        {
+            if (node.GetType() == typeof(FolderNode))
+            {
+                DirectoryInfo di = new DirectoryInfo(node.path);
+                if(!di.Exists) { di.Create(); }
+            }
+            else if (node.GetType() == typeof(XmlNode))
+            {
+                if(((XmlNode)node).name == "mimetype")
+                {
+                    StreamWriter sw = File.CreateText(((XmlNode)node).path);
+                    sw.Write("application/vnd.oasis.opendocument.text");
+                    sw.Close();
+                }
+                else
+                {
+                    ((XmlNode)node).doc.Save(((XmlNode)node).path);
+                }
+            }
+
+            if (node.child == null)
+                return;
+
+            foreach(FileNode child in node.child.Values)
+            {
+                SaveODT(child);
+            }
+        }
+
+        public void Update_Text(string text)
+        {
+            //update content
+            XmlNodeList con_list = content.GetElementsByTagName("p", content_text);
+
+            foreach (XmlElement e in con_list)
+            {
+                e.InnerText = text;
+            }
+
+            //update meta
+            int paragraph_count = text.Split("\n").Length;
+            int word_count = text.Split(" ").Length;
+            int character_count = text.Length;
+
+            XmlNodeList meta_list = meta.GetElementsByTagName("document-statistic", meta_meta);
+
+            foreach (XmlElement e in meta_list)
+            {
+                XmlAttribute xa = e.GetAttributeNode("paragraph-count", meta_meta);
+                xa.Value = paragraph_count.ToString();
+
+                xa = e.GetAttributeNode("word-count", meta_meta);
+                xa.Value = word_count.ToString();
+
+                xa = e.GetAttributeNode("character-count", meta_meta);
+                xa.Value = character_count.ToString();
+            }
+
+        }
+
+        static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+        static string meta_meta = "urn:oasis:names:tc:opendocument:xmlns:meta:1.0";
         private string mimetype;
-        
+
         private XmlDocument content;
         private XmlDocument manifest;
         private XmlDocument meta;
@@ -31,6 +148,7 @@ namespace H2O__
 
         private XmlDocument current;
 
+        /*
         public void Save_Document(string path)
         {
             XmlWriterSettings wrs = new XmlWriterSettings();
@@ -53,7 +171,9 @@ namespace H2O__
             manifest_META.Save(path + @"\META-INF" + @"\manifest.xml");
             current.Save(path + @"\Configurations2" + @"\accelerator" + @"\current.xml");
         }
+        */
 
+        /*
         public void Create_Document(string path)
         {
             Create_content(path);
@@ -132,36 +252,7 @@ namespace H2O__
            mimetype = "application/vnd.oasis.opendocument.text";
         }
 
-        public void Update_Text(string text)
-        {
-            //update content
-            XmlNodeList con_list = content.GetElementsByTagName("p", content_text);
-
-            foreach (XmlElement e in con_list)
-            {
-                e.InnerText = text;
-            }
-
-            //update meta
-            int paragraph_count = text.Split("\n").Length;
-            int word_count = text.Split(" ").Length;
-            int character_count = text.Length;
-
-            XmlNodeList meta_list = meta.GetElementsByTagName("document-statistic", meta_meta);
-
-            foreach (XmlElement e in meta_list)
-            {
-                XmlAttribute xa = e.GetAttributeNode("paragraph-count", meta_meta);
-                xa.Value = paragraph_count.ToString();
-
-                xa = e.GetAttributeNode("word-count", meta_meta);
-                xa.Value = word_count.ToString();
-
-                xa = e.GetAttributeNode("character-count", meta_meta);
-                xa.Value = character_count.ToString();
-            }
-
-        }
+        */
 
         /*
         public void Create_content(string path)
