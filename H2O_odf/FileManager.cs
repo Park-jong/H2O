@@ -32,8 +32,12 @@ namespace H2O__
             XmlManager xm = new XmlManager();
 
             xm.CreateODT();
-            xm.Update_Bold();
+            xm.AddContentP("asd");
+            xm.AddContentP("qwe");
+            xm.SetFontColor("P1", "#FF0000");
+            xm.SetFont("P2", "궁서");
             xm.SaveODT(xm.root);
+
 
             try
             {

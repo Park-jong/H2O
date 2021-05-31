@@ -13,9 +13,11 @@ namespace H2O__
     class XmlManager
     {
         public FileNode root;
-        private const string style = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
-        private const string fo = "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0";
-
+        private const string header_style = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
+        private const string header_fo = "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0";
+        private const string header_office = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
+        private const string header_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+        private static int numP = 1;
 
 
 
@@ -108,43 +110,365 @@ namespace H2O__
             }
 
         }
+        public void SetFontSize(string name, float size)
+        {
+            {
+                XmlNode content = (XmlNode)root.child["content.xml"];
 
-        public void Update_Bold()
+                XmlDocument doc = content.doc;
+
+                XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+                foreach (XmlElement e in list)
+                {
+                    string check_name = e.GetAttribute("name", header_style);
+
+                    if (check_name.Equals(name))
+                    {
+                        XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
+                        if (e1 == null)
+                        {
+                            e1 = doc.CreateElement("style:text-properties", header_style);
+                        }
+                        e1.SetAttribute("font-size", header_fo, size+"pt");
+                        e1.SetAttribute("font-size-asian", header_fo, size + "pt");
+                        e1.SetAttribute("font-size-complex", header_fo, size + "pt");
+
+                        e.AppendChild(e1);
+                    }
+                }
+            }
+        }
+
+        public void SetFontColor(string name, string color)
+        {
+            {
+                XmlNode content = (XmlNode)root.child["content.xml"];
+
+                XmlDocument doc = content.doc;
+
+                XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+                foreach (XmlElement e in list)
+                {
+                    string check_name = e.GetAttribute("name", header_style);
+
+                    if (check_name.Equals(name))
+                    {
+                        XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
+                        if (e1 == null)
+                        {
+                            e1 = doc.CreateElement("style:text-properties", header_style);
+                        }
+                        e1.SetAttribute("color", header_fo, color);
+                        e1.SetAttribute("opacity", "urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0", "100%");
+
+                        e.AppendChild(e1);
+                    }
+                }
+            }
+        }
+
+        public void SetLetterSpace(string name, float space)
+        {
+            {
+                XmlNode content = (XmlNode)root.child["content.xml"];
+
+                XmlDocument doc = content.doc;
+
+                XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+                foreach (XmlElement e in list)
+                {
+                    string check_name = e.GetAttribute("name", header_style);
+
+                    if (check_name.Equals(name))
+                    {
+                        XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
+                        if (e1 == null)
+                        {
+                            e1 = doc.CreateElement("style:text-properties", header_style);
+                        }
+                        e1.SetAttribute("letter-spacing", header_fo, space+"cm");
+
+                        e.AppendChild(e1);
+                    }
+                }
+            }
+        }
+
+        public void SetFont(string name, string font)
+        {
+            {
+                XmlNode content = (XmlNode)root.child["content.xml"];
+
+                XmlDocument doc = content.doc;
+
+                XmlNodeList list = doc.GetElementsByTagName("font-face", header_style);
+                for(int i = 0; i < list.Count; i++)
+                {
+                    string fontname = ((XmlElement)list.Item(i)).GetAttribute("name", header_style);
+                    if (fontname.Equals(font))
+                        break;
+                    if(i == list.Count - 1)
+                    {
+                        XmlNodeList fontlist = doc.GetElementsByTagName("font-face-decls", header_office);
+                        XmlElement addfont = (XmlElement)fontlist.Item(0);
+                        XmlElement e1 = doc.CreateElement("font-face", header_style);
+
+                        e1.SetAttribute("name", header_style, font);
+                        e1.SetAttribute("font-family", "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0", font);
+                        e1.SetAttribute("font-family-generic", header_style, "system");
+                        e1.SetAttribute("font-pitch", header_style, "variable");
+
+                        addfont.AppendChild(e1);
+
+                    }
+
+                }
+
+                list = doc.GetElementsByTagName("style", header_style);
+
+                foreach (XmlElement e in list)
+                {
+                    string check_name = e.GetAttribute("name", header_style);
+
+                    if (check_name.Equals(name))
+                    {
+                        XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
+                        if (e1 == null)
+                        {
+                            e1 = doc.CreateElement("style:text-properties", header_style);
+                        }
+                        e1.SetAttribute("font-name", header_style, font);
+
+                        e.AppendChild(e1);
+                    }
+                }
+            }
+        }
+
+        public void Update_Bold(string name)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
 
             XmlDocument doc = content.doc;
 
-            XmlNodeList list =  doc.GetElementsByTagName("automatic-styles", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
+            XmlNodeList list =  doc.GetElementsByTagName("style", header_style);
 
             foreach(XmlElement e in list)
             {
-                XmlElement e1 = doc.CreateElement("style:style", style);
+                string check_name = e.GetAttribute("name", header_style);
 
-                e1.SetAttribute("name", style, "P1");
-                e1.SetAttribute("family", style, "paragraph");
-                e1.SetAttribute("parent-style-name", style, "Standard");
+                if (check_name.Equals(name))
+                {
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:text-properties", header_style);
+                    }
+                    e1.SetAttribute("font-weight", header_fo, "bold");
+                    e1.SetAttribute("font-weight-asian", header_style, "bold");
+                    e1.SetAttribute("font-weight-complex", header_style, "bold");
 
-                e.AppendChild(e1);
-
-                XmlElement e2 = doc.CreateElement("style:text-properties", style);
-
-                e2.SetAttribute("font-weight", fo, "bold");
-                e2.SetAttribute("font-weight-asian", style, "bold");
-                e2.SetAttribute("font-weight-complex", style, "bold");
-
-                e1.AppendChild(e2);
+                    e.AppendChild(e1);
+                }
             }
+        }
 
-            list = doc.GetElementsByTagName("p", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
+        public void Update_Italic(string name)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
 
-            foreach(XmlElement e in list)
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+            foreach (XmlElement e in list)
             {
-                XmlAttribute att = e.GetAttributeNode("style-name", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
+                string check_name = e.GetAttribute("name", header_style);
 
-                att.Value = "P1";
+                if (check_name.Equals(name))
+                {
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:text-properties", header_style);
+                    }
+                    e1.SetAttribute("font-style", header_fo, "italic");
+                    e1.SetAttribute("font-style-asian", header_style, "italic");
+                    e1.SetAttribute("font-style-complex", header_style, "italic");
+
+                    e.AppendChild(e1);
+                }
             }
+        }
 
+        public void Update_Underline(string name)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+            foreach (XmlElement e in list)
+            {
+                string check_name = e.GetAttribute("name", header_style);
+
+                if (check_name.Equals(name))
+                {
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:text-properties", header_style);
+                    }
+                    e1.SetAttribute("text-underline-style", header_style, "solid");
+                    e1.SetAttribute("text-underline-width", header_style, "auto");
+                    e1.SetAttribute("text-underline-color", header_style, "font-color");
+
+                    e.AppendChild(e1);
+                }
+            }
+        }
+
+        public void Update_Throughline(string name)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+            foreach (XmlElement e in list)
+            {
+                string check_name = e.GetAttribute("name", header_style);
+
+                if (check_name.Equals(name))
+                {
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:text-properties", header_style);
+                    }
+                    e1.SetAttribute("text-line-through-style", header_style, "solid");
+                    e1.SetAttribute("text-line-through-type", header_style, "single");
+
+                    e.AppendChild(e1);
+                }
+            }
+        }
+
+        public void SetPMargin(string name, float left, float right, float top, float bottom)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+            foreach (XmlElement e in list)
+            {
+                string check_name = e.GetAttribute("name", header_style);
+
+                if (check_name.Equals(name))
+                {
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("paragraph-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:paragraph-properties", header_style);
+                    }
+                    e1.SetAttribute("margin-left", header_fo, left+"cm");
+                    e1.SetAttribute("margin-right", header_fo, right + "cm");
+                    e1.SetAttribute("margin-top", header_fo, top + "cm");
+                    e1.SetAttribute("margin-bottom", header_fo, bottom + "cm");
+
+                    e.PrependChild(e1);
+                }
+            }
+        }
+
+        public void SetPIndent(string name, float ident)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+            foreach (XmlElement e in list)
+            {
+                string check_name = e.GetAttribute("name", header_style);
+
+                if (check_name.Equals(name))
+                {
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("paragraph-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:paragraph-properties", header_style);
+                    }
+                    e1.SetAttribute("text-indent", header_fo, ident + "cm");
+
+                    e.PrependChild(e1);
+                }
+            }
+        }
+
+        public void SetPAlign(string name, string align)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+
+            foreach (XmlElement e in list)
+            {
+                string check_name = e.GetAttribute("name", header_style);
+
+                if (check_name.Equals(name))
+                {
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("paragraph-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:paragraph-properties", header_style);
+                    }
+                    e1.SetAttribute("text-align", header_fo, align);
+                    e1.SetAttribute("justify-single-word", header_style, "false");
+
+
+                    e.PrependChild(e1);
+                }
+            }
+        }
+
+        public void AddContentP(string text)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
+            XmlElement e = (XmlElement)list.Item(0);
+            
+            XmlElement e1 = doc.CreateElement("style:style", header_style);
+
+            e1.SetAttribute("name", header_style, "P"+numP.ToString());
+            e1.SetAttribute("family", header_style, "paragraph");
+            e1.SetAttribute("parent-style-name", header_style, "Standard");
+
+            e.AppendChild(e1);
+            
+            list = doc.GetElementsByTagName("text", header_office);
+
+            e = (XmlElement)list.Item(0);
+            
+            XmlElement text_element = doc.CreateElement("text:p", header_text);
+
+            text_element.SetAttribute("style-name", header_text, "P" + numP.ToString());
+            text_element.InnerText = text;
+            e.AppendChild(text_element);
+
+            numP++;
 
         }
 
