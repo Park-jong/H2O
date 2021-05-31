@@ -31,6 +31,7 @@ namespace H2O__
             XmlManager xm = new XmlManager();
 
             xm.CreateODT();
+            xm.Update_Bold();
             xm.SaveODT(xm.root);
 
             //xm.Create_Document(appPath + loadName);

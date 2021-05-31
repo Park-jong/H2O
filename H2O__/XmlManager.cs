@@ -103,6 +103,48 @@ namespace H2O__
             }
         }
 
+        public void Update_Bold()
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list =  doc.GetElementsByTagName("automatic-styles", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
+
+            foreach(XmlElement e in list)
+            {
+                string style = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
+                XmlElement e1 = doc.CreateElement("style:style", style);
+
+                e1.SetAttribute("name", style, "P1");
+                e1.SetAttribute("family", style, "paragraph");
+                e1.SetAttribute("parent-style-name", style, "Standard");
+
+                e.AppendChild(e1);
+
+                XmlElement e2 = doc.CreateElement("style:text-properties", style);
+
+                string fo = "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0";
+
+                e2.SetAttribute("font-weight", fo, "bold");
+                e2.SetAttribute("font-weight-asian", style, "bold");
+                e2.SetAttribute("font-weight-complex", style, "bold");
+
+                e1.AppendChild(e2);
+            }
+
+            list = doc.GetElementsByTagName("p", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
+
+            foreach(XmlElement e in list)
+            {
+                XmlAttribute att = e.GetAttributeNode("style-name", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
+
+                att.Value = "P1";
+            }
+
+
+        }
+
         public void Update_Text(string text)
         {
             //update content
