@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,13 @@ namespace H2O__
     {
         public FileNode root;
 
+        public Hashtable docs = new Hashtable();
+
+        static string content_style = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
+        static string content_fo = "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0";
+        static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+        static string content_office = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
+        static string meta_meta = "urn:oasis:names:tc:opendocument:xmlns:meta:1.0";
 
         public XmlManager()
         {
@@ -29,8 +38,8 @@ namespace H2O__
             //Create File
 
             string[] list1 = { "Configurations2", "META-INF", "Thumbnails" };
-            
-            foreach(string s in list1)
+
+            foreach (string s in list1)
             {
                 FolderNode node = new FolderNode(s, root);
             }
@@ -54,10 +63,12 @@ namespace H2O__
             string[] file1 = { "content.xml", "manifest.xml", "meta.xml", "mimetype", "settings.xml", "styles.xml" };
 
             foreach (string s in file1)
-            { 
+            {
                 XmlNode node = new XmlNode(s, root);
-                
+
                 node.LoadXml(path + @"\data" + @"\" + node.name);
+
+                docs.Add(node.name, node.doc);
             }
 
             FolderNode META_INF = (FolderNode)root.child["META-INF"];
@@ -65,12 +76,15 @@ namespace H2O__
             XmlNode manifest = new XmlNode("manifest.xml", META_INF);
             manifest.LoadXml(path + @"\data" + @"\META-INF" + @"\" + manifest.name);
 
+            //docs.Add(manifest.name, manifest.doc); //이름이 겹침
+
 
             FolderNode accelerator = (FolderNode)Configurations2.child["accelerator"];
 
             XmlNode current = new XmlNode("current.xml", accelerator);
             current.LoadXml(path + @"\data" + @"\Configurations2" + @"\accelerator" + @"\" + current.name);
 
+            //docs.Add(manifest.name, manifest.doc); //일단 보류
         }
 
         public void SaveODT(FileNode node)
@@ -78,15 +92,20 @@ namespace H2O__
             if (node.GetType() == typeof(FolderNode))
             {
                 DirectoryInfo di = new DirectoryInfo(node.path);
-                if(!di.Exists) { di.Create(); }
+                if (!di.Exists) { di.Create(); }
             }
             else if (node.GetType() == typeof(XmlNode))
             {
-                if(((XmlNode)node).name == "mimetype")
+                if (((XmlNode)node).name == "mimetype")
                 {
                     StreamWriter sw = File.CreateText(((XmlNode)node).path);
                     sw.Write("application/vnd.oasis.opendocument.text");
                     sw.Close();
+                }
+                else if (((XmlNode)node).name == "manifest.xml" && ((XmlNode)node).parent.name == "New File")
+                {
+                    string s = ((XmlNode)node).path.Replace(".xml", ".rdf");
+                    ((XmlNode)node).doc.Save(s);
                 }
                 else
                 {
@@ -97,9 +116,218 @@ namespace H2O__
             if (node.child == null)
                 return;
 
-            foreach(FileNode child in node.child.Values)
+            foreach (FileNode child in node.child.Values)
             {
                 SaveODT(child);
+            }
+        }
+
+        public void SaveZIP(FileNode node)
+        {
+            string folderPath = node.path;
+            string zipPath = node.path + ".odt";
+
+            if (File.Exists(zipPath))
+                File.Delete(zipPath);
+
+            System.IO.Compression.ZipFile.CreateFromDirectory(folderPath, zipPath);
+        }
+
+        public void UpdateOfficeAutomaticStyles(XmlDocument doc, string[] v)
+        {
+            XmlElement automatic_styles;
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", content_office);
+            foreach (XmlElement e in list)
+            {
+                automatic_styles = e;
+
+                //Test Kerning
+
+                XmlElement x = GetStyleStyle(doc, v[0], v[1], v[2]);
+                x.AppendChild(GetStyleTextProperties(doc, v[3], v[4]));
+
+                automatic_styles.AppendChild(x);
+            }
+        }
+
+        public XmlElement GetStyleStyle(XmlDocument doc, string name, string parent_style_name, string family)
+        {
+            XmlElement e = doc.CreateElement("style:style", content_style);
+
+            e.SetAttribute("name", content_style, name);
+            e.SetAttribute("parent-style-name", content_style, parent_style_name);
+            e.SetAttribute("family", content_style, family);
+
+            return e;
+        }
+
+        public XmlElement GetStyleTextProperties(XmlDocument doc, string name, string value)
+        {
+            XmlElement e = doc.CreateElement("style:text-properties", content_style);
+
+            e.SetAttribute(name, content_fo, value);
+
+            return e;
+        }
+
+
+        public void UpdateOfficeText(XmlDocument doc, string text, bool isKerning)
+        {
+            XmlElement node;
+
+            //XmlNodeList list = doc.GetElementsByTagName("text", content_office);
+            XmlNodeList list = doc.GetElementsByTagName("p", content_text);
+            foreach (XmlElement e in list)
+            {
+                node = e;
+
+                //XmlElement p = GetTextP(doc, "표준");
+
+                if (isKerning)
+                {
+                    XmlElement span = GetTextspan(doc, "T2");
+                    span.InnerText = text;
+                    node.AppendChild(span);
+                }
+                else
+                    node.InnerText = text;
+
+                //p.AppendChild(node);
+
+            }
+        }
+
+
+        public XmlElement GetTextP(XmlDocument doc, string style_name)
+        {
+            XmlElement p = doc.CreateElement("text:p", content_text);
+
+            p.SetAttribute("style-name", content_text, style_name);
+
+            return p;
+        }
+
+        public XmlElement GetTextspan(XmlDocument doc, string style_name)
+        {
+            XmlElement k = doc.CreateElement("text:span", content_text);
+
+            k.SetAttribute("style-name", content_text, style_name);
+
+            return k;
+        }
+
+        public void SetParagraphProperties(XmlDocument doc, string paragraph, string command, string va)
+        {
+            XmlNodeList list = doc.GetElementsByTagName("style", content_style);
+            foreach (XmlElement e in list)
+            {
+                XmlAttribute att = e.GetAttributeNode("name", content_style);
+                if(att.Value == paragraph)
+                {
+                    XmlNodeList list2 = e.ChildNodes;
+                    foreach (XmlElement e2 in list2)
+                    {
+                        //줄 나눔
+                        if (command.Equals("1"))
+                            e2.SetAttribute("line-break", content_style, "strict");
+
+                        //외톨이 줄
+                        if(command.Equals("2"))
+                        {
+                            e2.SetAttribute("widows", content_fo, "2");
+                            e2.SetAttribute("orphans", content_fo, "2");
+                        }
+
+                        //다음 문단과 함께
+                        if(command.Equals("3"))
+                        {
+                            e2.SetAttribute("keep-with-next", content_fo, "always");
+                        }
+
+                        //문단 보호 여부
+                        if(command.Equals("4"))
+                        {
+                            e2.SetAttribute("keep-together", content_fo, "always");
+                            e2.SetAttribute("line-height", content_fo, "107%");
+                        }
+
+                        //줄 간격
+                        if (command.Equals("6"))
+                            e2.SetAttribute("line-height", content_fo, va);
+
+                        //문단간격 왼쪽, 단위 글자 -> 숫자로 변환
+                        if (command.Equals("7"))
+                        {
+                            e2.SetAttribute("line-height", content_fo, "107%");
+                            e2.SetAttribute("margin-left", content_fo, va);
+
+                            XmlElement e3 = doc.CreateElement("style:tab-stops", content_style);
+                            e2.AppendChild(e3); //이건 뭔지 모르겠음 그냥 추가됨
+                        }
+
+                        //문단간격 오른쪽, 단위 글자 -> 숫자로 변환
+                        if(command.Equals("8"))
+                        {
+                            e2.SetAttribute("line-height", content_fo, "107%");
+                            e2.SetAttribute("margin-right", content_fo, va);
+                        }
+
+                        //문단간격 위쪽, 단위 줄 -> 숫자로 변환
+                        if (command.Equals("9"))
+                        {
+                            e2.SetAttribute("line-height", content_fo, "107%");
+                            e2.SetAttribute("margin-top", content_fo, va);
+                        }
+
+                        //문단간격 아래쪽, 단위 pt -> 숫자로 변환
+                        if (command.Equals("9"))
+                        {
+                            e2.SetAttribute("line-height", content_fo, "107%");
+                            e2.SetAttribute("margin-bottom", content_fo, va);
+                        }
+
+                        //한글과 영어 간격을 자동 조절
+                        if (command.Equals("10"))
+                        {
+                            e2.SetAttribute("line-height", content_fo, "107%");
+                            e2.SetAttribute("text-autospace", content_style, "ideograph-alpha");
+                        }
+                    }
+                }
+            }
+        }
+
+        public void Update_Text(string text)
+        {
+            //update content
+
+            XmlDocument doc = (XmlDocument)docs["content.xml"];
+
+            //string[] v = { "T2", "기본단락글꼴", "text", "letter-spacing", "0.07in" };
+            UpdateOfficeText(doc, text, false);
+            SetParagraphProperties(doc, "P1", "3", "200%");
+            //UpdateOfficeAutomaticStyles(doc, v);
+
+
+            //update meta
+            int paragraph_count = text.Split("\n").Length;
+            int word_count = text.Split(" ").Length;
+            int character_count = text.Length;
+
+            doc = (XmlDocument)docs["meta.xml"];
+            XmlNodeList meta_list = doc.GetElementsByTagName("document-statistic", meta_meta);
+
+            foreach (XmlElement e in meta_list)
+            {
+                XmlAttribute xa = e.GetAttributeNode("paragraph-count", meta_meta);
+                xa.Value = paragraph_count.ToString();
+
+                xa = e.GetAttributeNode("word-count", meta_meta);
+                xa.Value = word_count.ToString();
+
+                xa = e.GetAttributeNode("character-count", meta_meta);
+                xa.Value = character_count.ToString();
             }
         }
 
@@ -142,42 +370,9 @@ namespace H2O__
                 att.Value = "P1";
             }
 
-
         }
 
-        public void Update_Text(string text)
-        {
-            //update content
-            XmlNodeList con_list = content.GetElementsByTagName("p", content_text);
-
-            foreach (XmlElement e in con_list)
-            {
-                e.InnerText = text;
-            }
-
-            //update meta
-            int paragraph_count = text.Split("\n").Length;
-            int word_count = text.Split(" ").Length;
-            int character_count = text.Length;
-
-            XmlNodeList meta_list = meta.GetElementsByTagName("document-statistic", meta_meta);
-
-            foreach (XmlElement e in meta_list)
-            {
-                XmlAttribute xa = e.GetAttributeNode("paragraph-count", meta_meta);
-                xa.Value = paragraph_count.ToString();
-
-                xa = e.GetAttributeNode("word-count", meta_meta);
-                xa.Value = word_count.ToString();
-
-                xa = e.GetAttributeNode("character-count", meta_meta);
-                xa.Value = character_count.ToString();
-            }
-
-        }
-
-        static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
-        static string meta_meta = "urn:oasis:names:tc:opendocument:xmlns:meta:1.0";
+        /*
         private string mimetype;
 
         private XmlDocument content;
@@ -189,6 +384,7 @@ namespace H2O__
         private XmlDocument manifest_META;
 
         private XmlDocument current;
+        */
 
         /*
         public void Save_Document(string path)

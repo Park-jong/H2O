@@ -4,6 +4,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>H2O__</AssemblyName>
+    <RootNamespace>H2O__</RootNamespace>
   </PropertyGroup>
 
 </Project>

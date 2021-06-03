@@ -18,8 +18,6 @@ namespace H2O__
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-
-
         }
     }
 }
