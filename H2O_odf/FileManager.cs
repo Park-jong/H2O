@@ -66,9 +66,14 @@ namespace H2O__
 
         private void make(XmlManager xm, JObject json)
         {
+            // 문단 내 텍스트 별로 subcontent 만들기
             // p 생성
             for (int i = 0; i < json["BodyText"]["Section_0"]["HWPTAG_PARA_LINE_SEG"]["PARA LINE SEG"].Count(); i++)
             {
+                // 문단 ID 가져오기
+                int shapeID = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_HEADER"]["ShapeId"].Value<int>();
+
+                //전체 텍스트 가져오기
                 string pcontent; // p text
                 try
                 {
@@ -80,20 +85,23 @@ namespace H2O__
                     continue;
                 }
 
-                int shpaeID = 
+                // 스타일별 텍스트 개수
                 int spancount = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"].Count(); // p 안 text style count
+                // 스타일별 텍스트 아이디
                 int pstyle = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_0"]["ShapeId"].Value<int>();
+                
                 int current_position;
                 int next_position;
+
                 string name = "P" + (i + 1);
 
-                // span 생성
-
+                // 텍스트별 위치 비교해서 자르기
                 for (int j = 0; j < spancount; j++)
                 {
+                    //스타일이 시작되는 위치
                     current_position = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + j]["Position"].Value<int>();
+
                     string subcontent;
-                    int currentstyle = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + j]["ShapeId"].Value<int>();
                     if (j < spancount - 1)
                     {
                         next_position = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + (j + 1)]["Position"].Value<int>();
@@ -102,9 +110,9 @@ namespace H2O__
                             current_position = current_position - 16 < 0 ? 0 : current_position - 16;
                             next_position -= 16;
                         }
-                        subcontent = pcontent.Substring(current_position, next_position - current_position);
+                        subcontent = pcontent.Substring(current_position, next_position - current_position); //처음포지션부터 글자 수만큼 자르기
                     }
-                    else
+                    else //마지막 텍스트
                     {
                         if (i == 0 && j != 0)
                         {
@@ -113,15 +121,27 @@ namespace H2O__
                         subcontent = pcontent.Substring(current_position);
                     }
 
+                    //스타일 추가 및 내용 추가
+                    //스타일의 아이디
+                    int currentstyle = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + j]["ShapeId"].Value<int>();
+
                     if (j == 0)
                         name = xm.AddContentP(subcontent);
-                    else if (currentstyle == pstyle)
-                        xm.AddContentP(i, subcontent);
+                    else if (currentstyle == pstyle) 
+                        xm.AddContentP(i, subcontent); //pstyle과 같으면 텍스트만 추가
                     else
-                        name = xm.AddContentSpan(name, subcontent);
+                        name = xm.AddContentSpan(name, subcontent); //pstyle과 다르면 span 생성 후 텍스트 추가
 
-                    //sytle 적용
 
+                    //스타일 속성 추가
+
+                    //문단 속성 추가
+                    if(j == 0)
+                    {
+
+                    }
+
+                    
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
                     bool italic = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isItalic"].Value<bool>();
 
@@ -129,6 +149,7 @@ namespace H2O__
                         xm.SetBold(name);
                     if (italic)
                         xm.SetItalic(name);
+
 
                 }
             }

@@ -701,15 +701,18 @@ namespace H2O__
             }
         }
         
+        // p 생성
         public string AddContentP(string text)
         {
             string pname = "P" + numP.ToString();
+
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
 
             XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
             XmlElement e = (XmlElement)list.Item(0);
             
+            // 문단 스타일 생성
             XmlElement e1 = doc.CreateElement("style:style", header_style);
 
             e1.SetAttribute("name", header_style, pname);
@@ -718,6 +721,7 @@ namespace H2O__
 
             e.AppendChild(e1);
             
+            // 문단 내용 생성
             list = doc.GetElementsByTagName("text", header_office);
 
             e = (XmlElement)list.Item(0);
@@ -725,7 +729,7 @@ namespace H2O__
             XmlElement text_element = doc.CreateElement("text:p", header_text);
 
             text_element.SetAttribute("style-name", header_text, pname);
-            text_element.InnerText = text;
+            text_element.InnerText = text; // 구식
             e.AppendChild(text_element);
 
             numP++;
@@ -733,6 +737,7 @@ namespace H2O__
             return pname;
         }
 
+        // p 생성 : null
         public void AddContentP()
         {
             string pname = "P" + (numP-1).ToString();
@@ -750,6 +755,7 @@ namespace H2O__
             e.AppendChild(text_element);
         }
 
+        // text 추가
         public void AddContentP(int p_number, string text)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
@@ -762,6 +768,7 @@ namespace H2O__
 
         }
 
+        // span 추가
         public string AddContentSpan(string pname, string text)
         {
             string spanname = "T" + numSpan.ToString();
