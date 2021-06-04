@@ -65,6 +65,7 @@ namespace H2O__
 
         private void make(XmlManager xm, JObject json)
         {
+            //p 생성
             for (int i = 0; i < json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"].Count(); i++)
             {
                 string pcontent = json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"]["PARA " + i]["Text"].ToString();
@@ -74,6 +75,7 @@ namespace H2O__
                 int next_position;
                 string name = "P" + (i + 1);
 
+                //span 생성
                 for (int j = 0; j < spancount; j++)
                 {
                     current_position = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + j]["Position"].Value<int>();
@@ -106,15 +108,17 @@ namespace H2O__
                         name = xm.AddContentSpan(name, subcontent);
 
 
+                    //스타일추가
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
                     bool italic = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isItalic"].Value<bool>();
+
+
 
                     if (bold)
                         xm.SetBold(name);
                     if (italic)
                         xm.SetItalic(name);
-
 
                 }
             }
