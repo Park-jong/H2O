@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 //using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace H2O__
 {
@@ -20,11 +17,17 @@ namespace H2O__
         private string appPath;
         private string fileName;
         private string loadName;
+        private string jsonpath = @"C:\Users\park\source\repos\H2O_odf\H2O_odf\test.json";
 
         private void Initial_Folder()
         {
             appPath = @"C:\Users\park\source\repos\H2O_odf\H2O_odf";
 
+            StreamReader file = File.OpenText(jsonpath);
+            JsonTextReader reader = new JsonTextReader(file);
+
+
+            JObject json = (JObject)JToken.ReadFrom(reader);
 
             //fileName = @"\TestODT";
             //loadName = @"\data";
@@ -32,10 +35,9 @@ namespace H2O__
             XmlManager xm = new XmlManager();
 
             xm.CreateODT();
-            xm.AddContentP("asd");
-            xm.AddContentP("qwe");
-            xm.SetFontColor("P1", "#FF0000");
-            xm.SetFont("P2", "궁서");
+
+            make(xm, json);
+
             xm.SaveODT(xm.root);
 
 
@@ -59,6 +61,63 @@ namespace H2O__
         private void Initial_XML()
         {
 
+        }
+
+        private void make(XmlManager xm, JObject json)
+        {
+            for (int i = 0; i < json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"].Count(); i++)
+            {
+                string pcontent = json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"]["PARA " + i]["Text"].ToString();
+                int spancount = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"].Count();
+                int pstyle = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_0"]["ShapeId"].Value<int>();
+                int current_position;
+                int next_position;
+                string name = "P" + (i + 1);
+
+                for (int j = 0; j < spancount; j++)
+                {
+                    current_position = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + j]["Position"].Value<int>();
+                    string subcontent;
+                    int currentstyle = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + j]["ShapeId"].Value<int>();
+                    if (j < spancount - 1)
+                    {
+                        next_position = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + (j + 1)]["Position"].Value<int>();
+                        if (i == 0)
+                        {
+                            current_position = current_position - 16 < 0 ? 0 : current_position - 16;
+                            next_position -= 16;
+                        }
+                        subcontent = pcontent.Substring(current_position, next_position - current_position);
+                    }
+                    else
+                    {
+                        if (i == 0 && j != 0)
+                        {
+                            current_position -= 16;
+                        }
+                        subcontent = pcontent.Substring(current_position);
+                    }
+
+                    if (j == 0)
+                        name = xm.AddContentP(subcontent);
+                    else if (currentstyle == pstyle)
+                        xm.AddContentP(i, subcontent);
+                    else
+                        name = xm.AddContentSpan(name, subcontent);
+
+
+
+                    bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
+                    bool italic = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isItalic"].Value<bool>();
+
+                    if (bold)
+                        xm.SetBold(name);
+                    if (italic)
+                        xm.SetItalic(name);
+
+
+                }
+            }
         }
     }
 }

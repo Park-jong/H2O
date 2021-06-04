@@ -7,14 +7,23 @@
     <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable" />
     <style:font-face style:name="Lucida Sans" svg:font-family="'Lucida Sans'" style:font-family-generic="system" style:font-pitch="variable" />
     <style:font-face style:name="바탕1" svg:font-family="바탕" style:font-family-generic="system" style:font-pitch="variable" />
-    <font-face style:name="궁서" svg:font-family="궁서" style:font-family-generic="system" style:font-pitch="variable" xmlns="urn:oasis:names:tc:opendocument:xmlns:style:1.0" />
   </office:font-face-decls>
   <office:automatic-styles>
-    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard">
-      <style:text-properties fo:color="#FF0000" d4p1:opacity="100%" xmlns:d4p1="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" />
+    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard" />
+    <style:style style:name="T1" style:family="text">
+      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" />
     </style:style>
-    <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Standard">
-      <style:text-properties style:font-name="궁서" />
+    <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Standard" />
+    <style:style style:name="T2" style:family="text">
+      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" />
+    </style:style>
+    <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Standard" />
+    <style:style style:name="T3" style:family="text">
+      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" />
+    </style:style>
+    <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Standard" />
+    <style:style style:name="T4" style:family="text">
+      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" />
     </style:style>
   </office:automatic-styles>
   <office:body>
@@ -25,8 +34,10 @@
         <text:sequence-decl text:display-outline-level="0" text:name="Text" />
         <text:sequence-decl text:display-outline-level="0" text:name="Drawing" />
       </text:sequence-decls>
-      <text:p text:style-name="P1">asd</text:p>
-      <text:p text:style-name="P2">qwe</text:p>
+      <text:p text:style-name="P1">bbd<text:span text:style-name="T1">sadda</text:span>sd</text:p>
+      <text:p text:style-name="P2">b<text:span text:style-name="T2">b</text:span></text:p>
+      <text:p text:style-name="P3">b<text:span text:style-name="T3">b</text:span></text:p>
+      <text:p text:style-name="P4">b<text:span text:style-name="T4">b</text:span></text:p>
     </office:text>
   </office:body>
 </office:document-content>
