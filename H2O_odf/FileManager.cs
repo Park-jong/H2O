@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Xml;
 
 namespace H2O__
 {
@@ -72,6 +73,7 @@ namespace H2O__
             {
                 // 문단 ID 가져오기
                 int shapeID = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_HEADER"]["ShapeId"].Value<int>();
+                string sID = shapeID.ToString();
 
                 //전체 텍스트 가져오기
                 string pcontent; // p text
@@ -134,11 +136,12 @@ namespace H2O__
 
 
                     //스타일 속성 추가
-
                     //문단 속성 추가
                     if (j == 0)
                     {
-                        //bool kerning = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + shapeID.ToString()].Value<bool>();
+                        //줄 간격
+                        int lineSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["LineSpace"].Value<int>();
+                        xm.Paragraph.SetLineSpace(name, (XmlDocument)xm.docs["content.xml"], lineSpace.ToString());
                     }
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();

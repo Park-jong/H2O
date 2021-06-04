@@ -7,44 +7,36 @@ namespace H2O__
 {
     public class ParagraphManager
     {
+        private const string header_style = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
+        private const string header_fo = "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0";
+        private const string header_office = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
+        private const string header_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+
         public ParagraphManager()
         {
-
         }
 
-        /*
-        public void SetBold(string name)
+        //줄 간격
+        public void SetLineSpace(string name, XmlDocument doc, string lineSpace)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
-
-            XmlDocument doc = content.doc;
-
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+            XmlElement e = ((XmlElement)list.Item(0));
 
-            foreach (XmlElement e in list)
+            string check_name = e.GetAttribute("name", header_style);
+            if (check_name.Equals(name))
             {
-                string check_name = e.GetAttribute("name", header_style);
+                XmlElement e1 = null;
+                string type = e.GetAttribute("family", header_style);
 
-                if (check_name.Equals(name))
+                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                if (e1 == null)
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
-
-                    if (e1 == null)
-                    {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
-                    }
-                    e1.SetAttribute("font-weight", header_fo, "bold");
-                    e1.SetAttribute("font-weight-asian", header_style, "bold");
-                    e1.SetAttribute("font-weight-complex", header_style, "bold");
-
-                    e.AppendChild(e1);
-                    break;
+                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
                 }
+                e1.SetAttribute("line-height", header_fo, lineSpace);
+                
+                e.AppendChild(e1);
             }
         }
-        */
     }
 }

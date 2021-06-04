@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Collections;
 
 namespace H2O__
 {
@@ -18,6 +19,8 @@ namespace H2O__
         private const string header_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
         private static int numP = 1;
         private static int numSpan = 1;
+
+        public Hashtable docs = new Hashtable();
 
         public ParagraphManager Paragraph;
         
@@ -66,6 +69,8 @@ namespace H2O__
                 XmlNode node = new XmlNode(s, root);
                 
                 node.LoadXml(path + @"\data" + @"\" + node.name);
+
+                docs.Add(node.name, node.doc);
             }
 
             FolderNode META_INF = (FolderNode)root.child["META-INF"];
