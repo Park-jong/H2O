@@ -169,6 +169,10 @@ namespace H2O__
                         if (isProtectLoner)
                             xm.Paragraph.SetisProtectLoner(name, (XmlDocument)xm.docs["content.xml"]);
 
+                        //다음 문단과 함께 여부
+                        bool isTogetherNextPara = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["isTogetherNextPara"].Value<bool>();
+                        if(isTogetherNextPara)
+                            xm.Paragraph.SetisTogetherNextPara(name, (XmlDocument)xm.docs["content.xml"]);
                     }
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();

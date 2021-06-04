@@ -63,6 +63,7 @@ namespace H2O__
             }
         }
 
+        //외톨이줄 보호 여부
         public void SetisProtectLoner(string name, XmlDocument doc)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
@@ -82,6 +83,30 @@ namespace H2O__
 
                 e1.SetAttribute("widows", header_fo, "2");
                 e1.SetAttribute("orphans", header_fo, "2");
+
+                e.AppendChild(e1);
+            }
+        }
+        
+        //다음 문단과 함께 여부
+        public void SetisTogetherNextPara(string name, XmlDocument doc)
+        {
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+            XmlElement e = ((XmlElement)list.Item(0));
+
+            string check_name = e.GetAttribute("name", header_style);
+            if (check_name.Equals(name))
+            {
+                XmlElement e1 = null;
+                string type = e.GetAttribute("family", header_style);
+
+                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                if (e1 == null)
+                {
+                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                }
+
+                e1.SetAttribute("keep-with-next", header_fo, "always");
 
                 e.AppendChild(e1);
             }
