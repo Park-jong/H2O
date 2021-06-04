@@ -173,6 +173,13 @@ namespace H2O__
                         bool isTogetherNextPara = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["isTogetherNextPara"].Value<bool>();
                         if(isTogetherNextPara)
                             xm.Paragraph.SetisTogetherNextPara(name, (XmlDocument)xm.docs["content.xml"]);
+
+                        //문단 보호 여부
+                        bool isProtectPara = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["isProtectPara"].Value<bool>();
+                        if (isProtectPara)
+                            xm.Paragraph.SetisProtectPara(name, (XmlDocument)xm.docs["content.xml"]);
+
+
                     }
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();

@@ -63,6 +63,30 @@ namespace H2O__
             }
         }
 
+        //문단 보호 여부
+        public void SetisProtectPara(string name, XmlDocument doc)
+        {
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+            XmlElement e = ((XmlElement)list.Item(0));
+
+            string check_name = e.GetAttribute("name", header_style);
+            if (check_name.Equals(name))
+            {
+                XmlElement e1 = null;
+                string type = e.GetAttribute("family", header_style);
+
+                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                if (e1 == null)
+                {
+                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                }
+
+                e1.SetAttribute("keep-together", header_fo, "always");
+
+                e.AppendChild(e1);
+            }
+        }
+
         //외톨이줄 보호 여부
         public void SetisProtectLoner(string name, XmlDocument doc)
         {
