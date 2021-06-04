@@ -127,7 +127,7 @@ namespace H2O__
 
                     if (j == 0)
                         name = xm.AddContentP(subcontent);
-                    else if (currentstyle == pstyle) 
+                    else if (currentstyle == pstyle)
                         xm.AddContentP(i, subcontent); //pstyle과 같으면 텍스트만 추가
                     else
                         name = xm.AddContentSpan(name, subcontent); //pstyle과 다르면 span 생성 후 텍스트 추가
@@ -136,21 +136,27 @@ namespace H2O__
                     //스타일 속성 추가
 
                     //문단 속성 추가
-                    if(j == 0)
+                    if (j == 0)
                     {
-
+                        //bool kerning = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + shapeID.ToString()].Value<bool>();
                     }
 
-                    
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
                     bool italic = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isItalic"].Value<bool>();
+                    bool kerning = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isKerning"].Value<bool>();
 
                     if (bold)
                         xm.SetBold(name);
                     if (italic)
                         xm.SetItalic(name);
+                    if (kerning)
+                    {
+                        double baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<int>(); // pt * 100 값
+                        double kerningSpace = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharSpacebyLanguage"]["Hangul"].Value<int>(); // kerning percent 값
 
-
+                        double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
+                        xm.SetKerning(name, baseSize.ToString() + "cm");
+                    }
                 }
             }
         }

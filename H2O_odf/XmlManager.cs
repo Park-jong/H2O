@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
 using System.Xml;
 
 namespace H2O__
@@ -20,10 +19,11 @@ namespace H2O__
         private static int numP = 1;
         private static int numSpan = 1;
 
-
-
+        public ParagraphManager Paragraph;
+        
         public XmlManager()
         {
+            Paragraph = new ParagraphManager();
         }
 
         public void CreateODT()
@@ -357,6 +357,35 @@ namespace H2O__
                     e1.SetAttribute("font-style", header_fo, "italic");
                     e1.SetAttribute("font-style-asian", header_style, "italic");
                     e1.SetAttribute("font-style-complex", header_style, "italic");
+
+                    e.AppendChild(e1);
+                    break;
+                }
+            }
+        }
+
+        public void SetKerning(string name, string kerningValue)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
+            foreach (XmlElement e in list)
+            {
+                string check_name = e.GetAttribute("name", header_style);
+                if (check_name.Equals(name))
+                {
+                    XmlElement e1 = null;
+                    string type = e.GetAttribute("family", header_style);
+
+                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    }
+
+                    e1.SetAttribute("letter-spacing", header_fo, kerningValue);
+                    e1.SetAttribute("letter-kerning", header_style, "true");
 
                     e.AppendChild(e1);
                     break;
