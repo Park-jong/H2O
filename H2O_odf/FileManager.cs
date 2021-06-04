@@ -66,22 +66,28 @@ namespace H2O__
 
         private void make(XmlManager xm, JObject json)
         {
+            // p 생성
             for (int i = 0; i < json["BodyText"]["Section_0"]["HWPTAG_PARA_LINE_SEG"]["PARA LINE SEG"].Count(); i++)
             {
-                string pcontent;
+                string pcontent; // p text
                 try
                 {
                     pcontent = json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"]["PARA " + i]["Text"].ToString();
-                }catch(Exception)
+                }
+                catch(Exception)
                 {
-                    xm.AddContentP();
+                    xm.AddContentP(); // para null 인 경우 처리
                     continue;
                 }
-                int spancount = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"].Count();
+
+                int shpaeID = 
+                int spancount = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"].Count(); // p 안 text style count
                 int pstyle = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_0"]["ShapeId"].Value<int>();
                 int current_position;
                 int next_position;
                 string name = "P" + (i + 1);
+
+                // span 생성
 
                 for (int j = 0; j < spancount; j++)
                 {
@@ -114,7 +120,7 @@ namespace H2O__
                     else
                         name = xm.AddContentSpan(name, subcontent);
 
-
+                    //sytle 적용
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
                     bool italic = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isItalic"].Value<bool>();
@@ -123,7 +129,6 @@ namespace H2O__
                         xm.SetBold(name);
                     if (italic)
                         xm.SetItalic(name);
-
 
                 }
             }
