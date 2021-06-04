@@ -9,9 +9,7 @@
     <style:font-face style:name="바탕1" svg:font-family="바탕" style:font-family-generic="system" style:font-pitch="variable" />
   </office:font-face-decls>
   <office:automatic-styles>
-    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard">
-      <style:paragraph-properties fo:font-style="italic" style:font-style-asian="italic" style:font-style-complex="italic" />
-    </style:style>
+    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard" />
     <style:style style:name="T1" style:family="text">
       <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" />
     </style:style>
