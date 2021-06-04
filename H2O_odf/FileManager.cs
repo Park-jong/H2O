@@ -164,6 +164,10 @@ namespace H2O__
                             xm.Paragraph.SetByWord(name, (XmlDocument)xm.docs["content.xml"]);
                         }
 
+                        //외톨이줄 보호 여부
+                        bool isProtectLoner = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["isProtectLoner"].Value<bool>();
+                        if (isProtectLoner)
+                            xm.Paragraph.SetisProtectLoner(name, (XmlDocument)xm.docs["content.xml"]);
 
                     }
 
