@@ -155,6 +155,16 @@ namespace H2O__
                         rightBorderSpace *= 0.01;
 
                         xm.Paragraph.SetBorderSpace(name, (XmlDocument)xm.docs["content.xml"], topborderSpace, bottomBorderSpace, leftBorderSpace, rightBorderSpace);
+
+                        //줄 나눔
+                        //한글이 ByWord일 경우 적용 (한글, 영어 모두)
+                        string byWord = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["LineDivideForHangul"].Value<string>();
+                        if (byWord.Equals("ByWord"))
+                        {
+                            xm.Paragraph.SetByWord(name, (XmlDocument)xm.docs["content.xml"]);
+                        }
+
+
                     }
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
