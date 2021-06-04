@@ -141,7 +141,20 @@ namespace H2O__
                     {
                         //줄 간격
                         int lineSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["LineSpace"].Value<int>();
-                        xm.Paragraph.SetLineSpace(name, (XmlDocument)xm.docs["content.xml"], lineSpace.ToString());
+                        xm.Paragraph.SetLineSpace(name, (XmlDocument)xm.docs["content.xml"], lineSpace);
+
+                        //문단 테두리 간격
+                        double topborderSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["TopBorderSpace"].Value<double>();
+                        double bottomBorderSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["BottomBorderSpace"].Value<double>();
+                        double leftBorderSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["LeftBorderSpace"].Value<double>();
+                        double rightBorderSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["RightBorderSpace"].Value<double>();
+
+                        topborderSpace *= 0.01;
+                        bottomBorderSpace *= 0.01;
+                        leftBorderSpace *= 0.01;
+                        rightBorderSpace *= 0.01;
+
+                        xm.Paragraph.SetBorderSpace(name, (XmlDocument)xm.docs["content.xml"], topborderSpace, bottomBorderSpace, leftBorderSpace, rightBorderSpace);
                     }
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
