@@ -179,7 +179,10 @@ namespace H2O__
                         if (isProtectPara)
                             xm.Paragraph.SetisProtectPara(name, (XmlDocument)xm.docs["content.xml"]);
 
-
+                        //한글과 영어 간격을 자동 조절 여부
+                        bool isAutoAdjustGapHangulEnglish = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property2"]["isAutoAdjustGapHangulEnglish"].Value<bool>();
+                        if (isAutoAdjustGapHangulEnglish)
+                            xm.Paragraph.SetisAutoAdjustGapHangulEnglish(name, (XmlDocument)xm.docs["content.xml"]);
                     }
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
