@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Collections;
+using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
@@ -24,19 +25,18 @@ namespace WindowsFormsApp1
         public Hashtable docs = new Hashtable();
 
         public ParagraphManager Paragraph;
-        
-        public XmlManager(string appPath)
+
+        public XmlManager()
         {
-            this.appPath = appPath;
             Paragraph = new ParagraphManager();
         }
 
-        string appPath;
-
         public void CreateODT()
         {
+            string path = Application.StartupPath;
+
             root = new FolderNode("New File");
-            root.path = appPath + @"\" + root.name;
+            root.path = path + @"\" + root.name;
 
 
             //Create File
@@ -70,7 +70,7 @@ namespace WindowsFormsApp1
             { 
                 XmlNode node = new XmlNode(s, root);
                 
-                node.LoadXml(appPath + @"\data" + @"\" + node.name);
+                node.LoadXml(path + @"\data" + @"\" + node.name);
 
                 docs.Add(node.name, node.doc);
             }
@@ -78,13 +78,13 @@ namespace WindowsFormsApp1
             FolderNode META_INF = (FolderNode)root.child["META-INF"];
 
             XmlNode manifest = new XmlNode("manifest.xml", META_INF);
-            manifest.LoadXml(appPath + @"\data" + @"\META-INF" + @"\" + manifest.name);
+            manifest.LoadXml(path + @"\data" + @"\META-INF" + @"\" + manifest.name);
 
 
             FolderNode accelerator = (FolderNode)Configurations2.child["accelerator"];
 
             XmlNode current = new XmlNode("current.xml", accelerator);
-            current.LoadXml(appPath + @"\data" + @"\Configurations2" + @"\accelerator" + @"\" + current.name);
+            current.LoadXml(path + @"\data" + @"\Configurations2" + @"\accelerator" + @"\" + current.name);
 
         }
 
