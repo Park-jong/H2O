@@ -144,8 +144,8 @@ namespace WindowsFormsApp1
                             e1 = doc.CreateElement("style:text-properties", header_style);
                         }
                         e1.SetAttribute("font-size", header_fo, size + "pt");
-                        e1.SetAttribute("font-size-asian", header_fo, size + "pt");
-                        e1.SetAttribute("font-size-complex", header_fo, size + "pt");
+                        e1.SetAttribute("font-size-asian", header_style, size + "pt");
+                        e1.SetAttribute("font-size-complex", header_style, size + "pt");
 
                         e.AppendChild(e1);
                         break;
