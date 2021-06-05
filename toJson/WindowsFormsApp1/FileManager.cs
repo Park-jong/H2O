@@ -73,12 +73,15 @@ namespace WindowsFormsApp1
                 string sID = shapeID.ToString();
 
                 //전체 텍스트 가져오기
-                string pcontent; // p text
+                string pcontent = null; // p text
                 try
                 {
-                    pcontent = json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"]["PARA " + i]["Text"].ToString();
+                    object obj = json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"]["PARA " + i].Value<object>();
+
+                    if(obj != null)
+                        pcontent = json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"]["PARA " + i]["Text"].Value<string>();
                 }
-                catch(Exception)
+                catch(Exception e)
                 {
                     xm.AddContentP(); // para null 인 경우 처리
                     continue;
