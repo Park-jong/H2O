@@ -69,7 +69,7 @@ namespace WindowsFormsApp1
                 // Incidentally, /c tells cmd that we want it to execute the command that follows,
                 // and then exit.
                 System.Diagnostics.ProcessStartInfo procStartInfo =
-                    new System.Diagnostics.ProcessStartInfo("java", @"-jar temp44-0.0.1-jar-with-dependencies.jar " + filepath + " " + Environment.NewLine);
+                    new System.Diagnostics.ProcessStartInfo("java", @"-jar temp44-0.0.1-jar-with-dependencies.jar " + "\"" + filepath + "\" " + Environment.NewLine);
 
                 // The following commands are needed to redirect the standard output.
                 // This means that it will be redirected to the Process.StandardOutput StreamReader.
