@@ -25,17 +25,18 @@ namespace WindowsFormsApp1
 
         public ParagraphManager Paragraph;
         
-        public XmlManager()
+        public XmlManager(string appPath)
         {
+            this.appPath = appPath;
             Paragraph = new ParagraphManager();
         }
 
+        string appPath;
+
         public void CreateODT()
         {
-            string path = @"C:\Users\park\source\repos\H2O_odf\H2O_odf";
-
             root = new FolderNode("New File");
-            root.path = path + @"\" + root.name;
+            root.path = appPath + @"\" + root.name;
 
 
             //Create File
@@ -69,7 +70,7 @@ namespace WindowsFormsApp1
             { 
                 XmlNode node = new XmlNode(s, root);
                 
-                node.LoadXml(path + @"\data" + @"\" + node.name);
+                node.LoadXml(appPath + @"\data" + @"\" + node.name);
 
                 docs.Add(node.name, node.doc);
             }
@@ -77,13 +78,13 @@ namespace WindowsFormsApp1
             FolderNode META_INF = (FolderNode)root.child["META-INF"];
 
             XmlNode manifest = new XmlNode("manifest.xml", META_INF);
-            manifest.LoadXml(path + @"\data" + @"\META-INF" + @"\" + manifest.name);
+            manifest.LoadXml(appPath + @"\data" + @"\META-INF" + @"\" + manifest.name);
 
 
             FolderNode accelerator = (FolderNode)Configurations2.child["accelerator"];
 
             XmlNode current = new XmlNode("current.xml", accelerator);
-            current.LoadXml(path + @"\data" + @"\Configurations2" + @"\accelerator" + @"\" + current.name);
+            current.LoadXml(appPath + @"\data" + @"\Configurations2" + @"\accelerator" + @"\" + current.name);
 
         }
 

@@ -43,9 +43,8 @@ namespace WindowsFormsApp1
                             MessageBox.Show("불러오기 완료.", "Success", button);
                             ExecuteCommandSync(filePath);
 
-                            string path = @"C:\Documents\MasterDocumentFolder\";
+                            
                             DirectoryInfo parentDir = Directory.GetParent(filePath);
-
                             currentPath = parentDir.FullName;
                         }
                     }

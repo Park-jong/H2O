@@ -29,7 +29,7 @@ namespace WindowsFormsApp1
 
             JObject json = (JObject)JToken.ReadFrom(reader);
 
-            XmlManager xm = new XmlManager();
+            XmlManager xm = new XmlManager(appPath);
 
             xm.CreateODT();
 
