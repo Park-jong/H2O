@@ -293,7 +293,7 @@ namespace H2O__
                         //글꼴 적용
 
                         int fontID = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["FontNameidbyLanguage"]["Hangul"].Value<int>();
-                        string fontName = json["DocInfo 2"]["FONT_NAME"]["FONT_NAME_" + fontID.ToString()]["FaceName"].Value<string>();
+                        string fontName = json["DocInfo 2"]["HWPTAG_FACE_NAME"]["FONT_NAME"]["FONT_NAME_" + fontID.ToString()]["FaceName"].Value<string>();
                         xm.SetFont(name, fontName);
 
                     }
