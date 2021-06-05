@@ -134,14 +134,12 @@ namespace H2O__
 
                     if (check_name.Equals(name))
                     {
-                        XmlElement e1 = null;
-                        string type = e.GetAttribute("family", header_style);
 
-                        e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                        XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                         if (e1 == null)
                         {
-                            e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                            e1 = doc.CreateElement("style:text-properties", header_style);
                         }
                         e1.SetAttribute("font-size", header_fo, size + "pt");
                         e1.SetAttribute("font-size-asian", header_fo, size + "pt");
@@ -171,14 +169,11 @@ namespace H2O__
 
                     if (check_name.Equals(name))
                     {
-                        XmlElement e1 = null;
-                        string type = e.GetAttribute("family", header_style);
-
-                        e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                        XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                         if (e1 == null)
                         {
-                            e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                            e1 = doc.CreateElement("style:text-properties", header_style);
                         }
                         e1.SetAttribute("color", header_fo, color);
                         e1.SetAttribute("opacity", "urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0", "100%");
@@ -205,14 +200,11 @@ namespace H2O__
 
                     if (check_name.Equals(name))
                     {
-                        XmlElement e1 = null;
-                        string type = e.GetAttribute("family", header_style);
-
-                        e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                        XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                         if (e1 == null)
                         {
-                            e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                            e1 = doc.CreateElement("style:text-properties", header_style);
                         }
                         e1.SetAttribute("letter-spacing", header_fo, space+"cm");
 
@@ -261,14 +253,11 @@ namespace H2O__
 
                     if (check_name.Equals(name))
                     {
-                        XmlElement e1 = null;
-                        string type = e.GetAttribute("family", header_style);
-
-                        e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                        XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                         if (e1 == null)
                         {
-                            e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                            e1 = doc.CreateElement("style:text-properties", header_style);
                         }
                         e1.SetAttribute("font-name", header_style, font);
 
@@ -317,14 +306,11 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("font-weight", header_fo, "bold");
                     e1.SetAttribute("font-weight-asian", header_style, "bold");
@@ -350,14 +336,11 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("font-style", header_fo, "italic");
                     e1.SetAttribute("font-style-asian", header_style, "italic");
@@ -380,13 +363,11 @@ namespace H2O__
                 string check_name = e.GetAttribute("name", header_style);
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
 
                     e1.SetAttribute("letter-spacing", header_fo, kerningValue);
@@ -398,8 +379,46 @@ namespace H2O__
             }
         }
 
-        public void SetUnderline(string name, string style = "solid", string color = "font-color")
+        public void SetUnderline(string name, int stylenum = 0, string color = "font-color")
         {
+            string style = "solid";
+            string width = "auto";
+            switch (stylenum)
+            {
+                case 0:
+                    style = "solid";
+                    break;
+                case 1:
+                    style = "dash";
+                    break;
+                case 2:
+                    style = "dotted";
+                    break;
+                case 3:
+                    style = "dot-dash";
+                    break;
+                case 4:
+                    style = "dot-dot-dash";
+                    break;
+                case 5:
+                    style = "long-dash";
+                    break;
+                case 6:
+                    style = "dash";
+                    width = "bold";
+                    break;
+                case 7:
+                    style = "solid";
+                    break;
+                case 11:
+                    style = "wave";
+                    break;
+                case 12:
+                    style = "wave";
+                    break;
+                default:
+                    break;
+            }
             XmlNode content = (XmlNode)root.child["content.xml"];
 
             XmlDocument doc = content.doc;
@@ -412,18 +431,19 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-                    
-                    e1 = (XmlElement)e.GetElementsByTagName(type+"-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:"+type+"-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("text-underline-style", header_style, style);
-                    e1.SetAttribute("text-underline-width", header_style, "auto");
+                    e1.SetAttribute("text-underline-width", header_style, width);
                     e1.SetAttribute("text-underline-color", header_style, color);
+                    if(stylenum == 7 || stylenum == 12)
+                    {
+                        e1.SetAttribute("text-underline-type", header_style, "double");
+                    }
 
                     e.AppendChild(e1);
                     break;
@@ -431,8 +451,47 @@ namespace H2O__
             }
         }
 
-        public void SetOverline(string name, string style = "solid", string color = "font-color")
+        public void SetOverline(string name, int stylenum = 0, string color = "font-color")
         {
+            string style = "solid";
+            string width = "auto";
+            switch (stylenum)
+            {
+                case 0:
+                    style = "solid";
+                    break;
+                case 1:
+                    style = "dash";
+                    break;
+                case 2:
+                    style = "dotted";
+                    break;
+                case 3:
+                    style = "dot-dash";
+                    break;
+                case 4:
+                    style = "dot-dot-dash";
+                    break;
+                case 5:
+                    style = "long-dash";
+                    break;
+                case 6:
+                    style = "dash";
+                    width = "bold";
+                    break;
+                case 7:
+                    style = "solid";
+                    break;
+                case 11:
+                    style = "wave";
+                    break;
+                case 12:
+                    style = "wave";
+                    break;
+                default:
+                    break;
+            }
+
             XmlNode content = (XmlNode)root.child["content.xml"];
 
             XmlDocument doc = content.doc;
@@ -445,18 +504,19 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("text-overline-style", header_style, style);
-                    e1.SetAttribute("text-overline-width", header_style, "auto");
+                    e1.SetAttribute("text-overline-width", header_style, width);
                     e1.SetAttribute("text-overline-color", header_style, color);
+                    if (stylenum == 7 || stylenum == 12)
+                    {
+                        e1.SetAttribute("text-overline-type", header_style, "double");
+                    }
 
                     e.AppendChild(e1);
                     break;
@@ -464,8 +524,23 @@ namespace H2O__
             }
         }
 
-        public void SetThroughline(string name, string style = "solid")
+        public void SetThroughline(string name, int stylenum = 0)
         {
+            string style = "solid";
+            string type = "single";
+            switch (stylenum)
+            {
+                case 0:
+                    style = "solid";
+                    break;
+                case 7:
+                    style = "solid";
+                    type = "double";
+                    break;
+                default:
+                    break;
+            }
+
             XmlNode content = (XmlNode)root.child["content.xml"];
 
             XmlDocument doc = content.doc;
@@ -478,17 +553,14 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("text-line-through-style", header_style, style);
-                    e1.SetAttribute("text-line-through-type", header_style, "single");
+                    e1.SetAttribute("text-line-through-type", header_style, type);
 
                     e.AppendChild(e1);
                     break;
@@ -510,14 +582,11 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("text-outline", header_style, "true");
 
@@ -541,14 +610,11 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("text-shadow", header_fo, "1pt 1pt");
 
@@ -572,14 +638,11 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type2 = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type2 + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type2 + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("font-relief", header_style, type);//engraved, embossed
 
@@ -603,14 +666,11 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("text-position", header_style, "super 58%");
                     e.AppendChild(e1);
@@ -633,14 +693,11 @@ namespace H2O__
 
                 if (check_name.Equals(name))
                 {
-                    XmlElement e1 = null;
-                    string type = e.GetAttribute("family", header_style);
-
-                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    XmlElement e1 = (XmlElement)e.GetElementsByTagName("text-properties", header_style).Item(0);
 
                     if (e1 == null)
                     {
-                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                        e1 = doc.CreateElement("style:text-properties", header_style);
                     }
                     e1.SetAttribute("text-position", header_style, "sub 58%");
                     e.AppendChild(e1);
@@ -838,7 +895,7 @@ namespace H2O__
             return spanname;
         }
 
-        public void SetPageLayout(float left, float right, float top, float bottom)
+        public void SetPageLayout(float left = 3, float right = 3, float top = 3, float bottom = 3)
         {
             XmlNode styles = (XmlNode)root.child["styles.xml"];
 

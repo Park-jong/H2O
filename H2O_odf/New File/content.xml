@@ -10,28 +10,31 @@
   </office:font-face-decls>
   <office:automatic-styles>
     <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard">
-      <style:paragraph-properties fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" />
+      <style:paragraph-properties fo:line-height="160%" fo:margin-top="0in" fo:margin-bottom="0in" fo:margin-left="0in" fo:margin-right="0in" style:line-break="strict" fo:text-align="center" style:justify-single-word="false">
+        <style:tab-stops />
+      </style:paragraph-properties>
+      <style:text-properties fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" fo:text-shadow="1pt 1pt" />
     </style:style>
     <style:style style:name="T1" style:family="text">
-      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" />
+      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" fo:text-shadow="1pt 1pt" />
     </style:style>
     <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Standard">
-      <style:paragraph-properties fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" />
+      <style:paragraph-properties fo:line-height="160%" fo:margin-top="0in" fo:margin-bottom="0in" fo:margin-left="0in" fo:margin-right="0in" fo:text-align="justify" style:justify-single-word="false" fo:text-indent="0.0353cm">
+        <style:tab-stops />
+      </style:paragraph-properties>
+      <style:text-properties fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" fo:text-shadow="1pt 1pt" />
     </style:style>
     <style:style style:name="T2" style:family="text">
-      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" />
+      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" fo:text-shadow="1pt 1pt" />
     </style:style>
     <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Standard">
-      <style:paragraph-properties fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" />
+      <style:paragraph-properties fo:line-height="160%" fo:margin-top="0in" fo:margin-bottom="0in" fo:margin-left="0in" fo:margin-right="0in" fo:text-align="justify" style:justify-single-word="false">
+        <style:tab-stops />
+      </style:paragraph-properties>
+      <style:text-properties fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" fo:text-shadow="1pt 1pt" />
     </style:style>
     <style:style style:name="T3" style:family="text">
-      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" />
-    </style:style>
-    <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Standard">
-      <style:paragraph-properties fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" />
-    </style:style>
-    <style:style style:name="T4" style:family="text">
-      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" />
+      <style:text-properties fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold" fo:font-size="10pt" fo:font-size-asian="10pt" fo:font-size-complex="10pt" fo:text-shadow="1pt 1pt" />
     </style:style>
   </office:automatic-styles>
   <office:body>
@@ -42,13 +45,10 @@
         <text:sequence-decl text:display-outline-level="0" text:name="Text" />
         <text:sequence-decl text:display-outline-level="0" text:name="Drawing" />
       </text:sequence-decls>
-      <text:p text:style-name="P1">bbd<text:span text:style-name="T1">sadd         a</text:span>sd</text:p>
-      <text:p text:style-name="P1" />
-      <text:p text:style-name="P1" />
-      <text:p text:style-name="P1" />
-      <text:p text:style-name="P2">b<text:span text:style-name="T2">b</text:span></text:p>
-      <text:p text:style-name="P3">b<text:span text:style-name="T3">b</text:span></text:p>
-      <text:p text:style-name="P4">b<text:span text:style-name="T4">b</text:span></text:p>
+      <text:p text:style-name="P1">a<text:span text:style-name="T1">a</text:span></text:p>
+      <text:p text:style-name="P2">a<text:span text:style-name="T2">a</text:span></text:p>
+      <text:p text:style-name="P3">a<text:span text:style-name="T3">a</text:span></text:p>
+      <text:p text:style-name="P3" />
     </office:text>
   </office:body>
 </office:document-content>

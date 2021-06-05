@@ -104,7 +104,7 @@
   </office:styles>
   <office:automatic-styles>
     <style:page-layout style:name="Mpm1">
-      <style:page-layout-properties fo:page-width="21.001cm" fo:page-height="29.7cm" style:num-format="1" style:print-orientation="portrait" fo:margin-top="2cm" fo:margin-bottom="2cm" fo:margin-left="2cm" fo:margin-right="2cm" style:writing-mode="lr-tb" style:footnote-max-height="0cm">
+      <style:page-layout-properties fo:page-width="21.001cm" fo:page-height="29.7cm" style:num-format="1" style:print-orientation="portrait" fo:margin-top="3cm" fo:margin-bottom="3cm" fo:margin-left="3cm" fo:margin-right="3cm" style:writing-mode="lr-tb" style:footnote-max-height="0cm">
         <style:footnote-sep style:width="0.018cm" style:distance-before-sep="0.101cm" style:distance-after-sep="0.101cm" style:adjustment="left" style:rel-width="25%" style:color="#000000" />
       </style:page-layout-properties>
       <style:header-style />

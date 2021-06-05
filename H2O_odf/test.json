@@ -516,6 +516,79 @@
             "Other":100
           }
         },
+        "CHAR_SHAPE_8":{
+          "CharColor":0,
+          "RatiobyLanguage":{
+            "English":100,
+            "User":100,
+            "Symbol":100,
+            "Hanja":100,
+            "Japanese":100,
+            "Hangul":100,
+            "Other":100
+          },
+          "OffsetbyLanguage":{
+            "English":0,
+            "User":0,
+            "Symbol":0,
+            "Hanja":0,
+            "Japanese":0,
+            "Hangul":0,
+            "Other":0
+          },
+          "ShadowGap2":10,
+          "ShadowColor":11711154,
+          "UnderLineColor":0,
+          "ShadowGap1":10,
+          "ShadeColor":-1,
+          "BaseSize":1000,
+          "CharSpacebyLanguage":{
+            "English":0,
+            "User":0,
+            "Symbol":0,
+            "Hanja":0,
+            "Japanese":0,
+            "Hangul":0,
+            "Other":0
+          },
+          "FontNameidbyLanguage":{
+            "English":1,
+            "User":1,
+            "Symbol":1,
+            "Hanja":1,
+            "Japanese":1,
+            "Hangul":1,
+            "Other":1
+          },
+          "BorderFillId":2,
+          "StrikeLineColor":0,
+          "Property":{
+            "ShadowSort":"Non-continuous",
+            "StrikeLineShape":0,
+            "isSuperScript":false,
+            "isEmboss":false,
+            "UnderLineShape":0,
+            "EmphasisSort":"None",
+            "isBold":true,
+            "isEngrave":false,
+            "isItalic":false,
+            "isSubScript":false,
+            "UnderLineSort":"None",
+            "isStrikeLine":false,
+            "isUsingSpaceAppropriateForFont":false,
+            "OutterLineSort":"None",
+            "isKerning":false
+          },
+          "RelativeSizebyLanguage":{
+            "English":100,
+            "User":100,
+            "Symbol":100,
+            "Hanja":100,
+            "Japanese":100,
+            "Hangul":100,
+            "Other":100
+          }
+        },
         "CHAR_SHAPE_7":{
           "CharColor":0,
           "RatiobyLanguage":{
@@ -563,13 +636,13 @@
           "BorderFillId":2,
           "StrikeLineColor":0,
           "Property":{
-            "ShadowSort":"None",
+            "ShadowSort":"Non-continuous",
             "StrikeLineShape":0,
             "isSuperScript":false,
             "isEmboss":false,
             "UnderLineShape":0,
             "EmphasisSort":"None",
-            "isBold":true,
+            "isBold":false,
             "isEngrave":false,
             "isItalic":false,
             "isSubScript":false,
@@ -651,8 +724,8 @@
         "BorderFillCount":2,
         "TrackChangeAuthorCount":0,
         "HanjaFaceNameCount":2,
-        "CharShapeCount":8,
-        "ParaShapeCount":20,
+        "CharShapeCount":9,
+        "ParaShapeCount":22,
         "EtcFaceNameCount":2,
         "MemoShapeCount":0,
         "TrackChangeCount":0,
@@ -1183,6 +1256,49 @@
           "BorderFillId":2,
           "LeftMargin":0
         },
+        "PARA_SHAPE_21":{
+          "Property3":{
+            "LineSpaceSort":"RatioForLetter"
+          },
+          "Property2":{
+            "isAutoAdjustGapHangulNumber":false,
+            "isInputSingleLine":false,
+            "isAutoAdjustGapHangulEnglish":false
+          },
+          "Indent":200,
+          "Property1":{
+            "MinimumSpace":0,
+            "isIgnoreParaMargin":false,
+            "LineSpaceSort":"RatioForLetter",
+            "ParaHeadShape":"None",
+            "isParaTailShape":false,
+            "LineDivideForHangul":"ByLetter",
+            "isLineHeightForFont":false,
+            "LineDivideForEnglish":"ByWord",
+            "isProtectLoner":false,
+            "Alignment":"Justify",
+            "isLinkBorder":false,
+            "isSplitPageBeforePara":false,
+            "VerticalAlignment":"ByFont",
+            "ParaLevel":0,
+            "isUseGrid":true,
+            "isProtectPara":false,
+            "isTogetherNextPara":false
+          },
+          "BottomBorderSpace":0,
+          "ParaHeadId":0,
+          "TopBorderSpace":0,
+          "LineSpace":160,
+          "LeftBorderSpace":0,
+          "TabDefId":0,
+          "RightMargin":0,
+          "TopParaSpace":0,
+          "LineSpace2":160,
+          "RightBorderSpace":0,
+          "BottomParaSpace":0,
+          "BorderFillId":2,
+          "LeftMargin":0
+        },
         "PARA_SHAPE_2":{
           "Property3":{
             "LineSpaceSort":"RatioForLetter"
@@ -1290,6 +1406,49 @@
             "LineDivideForEnglish":"ByWord",
             "isProtectLoner":false,
             "Alignment":"Justify",
+            "isLinkBorder":false,
+            "isSplitPageBeforePara":false,
+            "VerticalAlignment":"ByFont",
+            "ParaLevel":0,
+            "isUseGrid":true,
+            "isProtectPara":false,
+            "isTogetherNextPara":false
+          },
+          "BottomBorderSpace":0,
+          "ParaHeadId":0,
+          "TopBorderSpace":0,
+          "LineSpace":160,
+          "LeftBorderSpace":0,
+          "TabDefId":0,
+          "RightMargin":0,
+          "TopParaSpace":0,
+          "LineSpace2":160,
+          "RightBorderSpace":0,
+          "BottomParaSpace":0,
+          "BorderFillId":2,
+          "LeftMargin":0
+        },
+        "PARA_SHAPE_20":{
+          "Property3":{
+            "LineSpaceSort":"RatioForLetter"
+          },
+          "Property2":{
+            "isAutoAdjustGapHangulNumber":false,
+            "isInputSingleLine":false,
+            "isAutoAdjustGapHangulEnglish":false
+          },
+          "Indent":0,
+          "Property1":{
+            "MinimumSpace":0,
+            "isIgnoreParaMargin":false,
+            "LineSpaceSort":"RatioForLetter",
+            "ParaHeadShape":"None",
+            "isParaTailShape":false,
+            "LineDivideForHangul":"ByWord",
+            "isLineHeightForFont":false,
+            "LineDivideForEnglish":"ByWord",
+            "isProtectLoner":false,
+            "Alignment":"Center",
             "isLinkBorder":false,
             "isSplitPageBeforePara":false,
             "VerticalAlignment":"ByFont",
@@ -1642,22 +1801,7 @@
     "Section_0":{
       "HWPTAG_LIST_HEADER":null,
       "PARAMETER_List":{
-        "PARA_4_HWPTAG_RANGE_TAG":{
-          "HWPTAG_PARA_RANGE_TAG":null
-        },
-        "PARA_6_HWPTAG_PARA_CHAR_SHAPE":{
-          "PositonShapeIdPairList":{
-            "PositonShapeIdPairList_0":{
-              "ShapeId":0,
-              "Position":0
-            },
-            "PositonShapeIdPairList_1":{
-              "ShapeId":7,
-              "Position":1
-            }
-          }
-        },
-        "PARA_6_HWPTAG_PARA_HEADER":{
+        "PARA_1_HWPTAG_PARA_HEADER":{
           "DivideSort":{
             "DivideMultiColumn":false,
             "DivideSection":false,
@@ -1665,7 +1809,7 @@
             "DividePage":false
           },
           "CharShapeCount":2,
-          "ShapeId":0,
+          "ShapeId":21,
           "CharacterCount":3,
           "InstanceID":0,
           "IsMergedByTrack":0,
@@ -1673,7 +1817,29 @@
           "LineAlignCount":1,
           "StyleId":0
         },
-        "PARA_5_HWPTAG_PARA_HEADER":{
+        "PARA_0_HWPTAG_PARA_HEADER":{
+          "DivideSort":{
+            "DivideMultiColumn":true,
+            "DivideSection":true,
+            "DivideColumn":false,
+            "DividePage":false
+          },
+          "CharShapeCount":2,
+          "ShapeId":20,
+          "CharacterCount":19,
+          "InstanceID":-1173777198,
+          "IsMergedByTrack":0,
+          "RangeTagCount":0,
+          "LineAlignCount":1,
+          "StyleId":0
+        },
+        "PARA_0_HWPTAG_RANGE_TAG":{
+          "HWPTAG_PARA_RANGE_TAG":null
+        },
+        "PARA_3_HWPTAG_RANGE_TAG":{
+          "HWPTAG_PARA_RANGE_TAG":null
+        },
+        "PARA_2_HWPTAG_PARA_HEADER":{
           "DivideSort":{
             "DivideMultiColumn":false,
             "DivideSection":false,
@@ -1691,127 +1857,6 @@
         },
         "PARA_2_HWPTAG_RANGE_TAG":{
           "HWPTAG_PARA_RANGE_TAG":null
-        },
-        "PARA_3_HWPTAG_PARA_CHAR_SHAPE":{
-          "PositonShapeIdPairList":{
-            "PositonShapeIdPairList_0":{
-              "ShapeId":0,
-              "Position":0
-            }
-          }
-        },
-        "PARA_4_HWPTAG_PARA_CHAR_SHAPE":{
-          "PositonShapeIdPairList":{
-            "PositonShapeIdPairList_0":{
-              "ShapeId":0,
-              "Position":0
-            },
-            "PositonShapeIdPairList_1":{
-              "ShapeId":7,
-              "Position":1
-            }
-          }
-        },
-        "PARA_5_HWPTAG_PARA_CHAR_SHAPE":{
-          "PositonShapeIdPairList":{
-            "PositonShapeIdPairList_0":{
-              "ShapeId":0,
-              "Position":0
-            },
-            "PositonShapeIdPairList_1":{
-              "ShapeId":7,
-              "Position":1
-            }
-          }
-        },
-        "PARA_2_HWPTAG_PARA_CHAR_SHAPE":{
-          "PositonShapeIdPairList":{
-            "PositonShapeIdPairList_0":{
-              "ShapeId":0,
-              "Position":0
-            }
-          }
-        },
-        "PARA_0_HWPTAG_PARA_CHAR_SHAPE":{
-          "PositonShapeIdPairList":{
-            "PositonShapeIdPairList_0":{
-              "ShapeId":0,
-              "Position":0
-            },
-            "PositonShapeIdPairList_2":{
-              "ShapeId":0,
-              "Position":33
-            },
-            "PositonShapeIdPairList_1":{
-              "ShapeId":7,
-              "Position":19
-            }
-          }
-        },
-        "PARA_1_HWPTAG_PARA_CHAR_SHAPE":{
-          "PositonShapeIdPairList":{
-            "PositonShapeIdPairList_0":{
-              "ShapeId":0,
-              "Position":0
-            }
-          }
-        },
-        "PARA_1_HWPTAG_PARA_HEADER":{
-          "DivideSort":{
-            "DivideMultiColumn":false,
-            "DivideSection":false,
-            "DivideColumn":false,
-            "DividePage":false
-          },
-          "CharShapeCount":1,
-          "ShapeId":0,
-          "CharacterCount":1,
-          "InstanceID":0,
-          "IsMergedByTrack":0,
-          "RangeTagCount":0,
-          "LineAlignCount":1,
-          "StyleId":0
-        },
-        "PARA_0_HWPTAG_PARA_HEADER":{
-          "DivideSort":{
-            "DivideMultiColumn":true,
-            "DivideSection":true,
-            "DivideColumn":false,
-            "DividePage":false
-          },
-          "CharShapeCount":3,
-          "ShapeId":0,
-          "CharacterCount":36,
-          "InstanceID":-1173777198,
-          "IsMergedByTrack":0,
-          "RangeTagCount":0,
-          "LineAlignCount":1,
-          "StyleId":0
-        },
-        "PARA_0_HWPTAG_RANGE_TAG":{
-          "HWPTAG_PARA_RANGE_TAG":null
-        },
-        "PARA_5_HWPTAG_RANGE_TAG":{
-          "HWPTAG_PARA_RANGE_TAG":null
-        },
-        "PARA_3_HWPTAG_RANGE_TAG":{
-          "HWPTAG_PARA_RANGE_TAG":null
-        },
-        "PARA_2_HWPTAG_PARA_HEADER":{
-          "DivideSort":{
-            "DivideMultiColumn":false,
-            "DivideSection":false,
-            "DivideColumn":false,
-            "DividePage":false
-          },
-          "CharShapeCount":1,
-          "ShapeId":0,
-          "CharacterCount":1,
-          "InstanceID":0,
-          "IsMergedByTrack":0,
-          "RangeTagCount":0,
-          "LineAlignCount":1,
-          "StyleId":0
         },
         "PARA_3_HWPTAG_PARA_HEADER":{
           "DivideSort":{
@@ -1832,39 +1877,61 @@
         "PARA_1_HWPTAG_RANGE_TAG":{
           "HWPTAG_PARA_RANGE_TAG":null
         },
-        "PARA_4_HWPTAG_PARA_HEADER":{
-          "DivideSort":{
-            "DivideMultiColumn":false,
-            "DivideSection":false,
-            "DivideColumn":false,
-            "DividePage":false
-          },
-          "CharShapeCount":2,
-          "ShapeId":0,
-          "CharacterCount":3,
-          "InstanceID":0,
-          "IsMergedByTrack":0,
-          "RangeTagCount":0,
-          "LineAlignCount":1,
-          "StyleId":0
+        "PARA_3_HWPTAG_PARA_CHAR_SHAPE":{
+          "PositonShapeIdPairList":{
+            "PositonShapeIdPairList_0":{
+              "ShapeId":7,
+              "Position":0
+            }
+          }
         },
-        "PARA_6_HWPTAG_RANGE_TAG":{
-          "HWPTAG_PARA_RANGE_TAG":null
+        "PARA_2_HWPTAG_PARA_CHAR_SHAPE":{
+          "PositonShapeIdPairList":{
+            "PositonShapeIdPairList_0":{
+              "ShapeId":7,
+              "Position":0
+            },
+            "PositonShapeIdPairList_1":{
+              "ShapeId":8,
+              "Position":1
+            }
+          }
+        },
+        "PARA_0_HWPTAG_PARA_CHAR_SHAPE":{
+          "PositonShapeIdPairList":{
+            "PositonShapeIdPairList_0":{
+              "ShapeId":7,
+              "Position":0
+            },
+            "PositonShapeIdPairList_1":{
+              "ShapeId":8,
+              "Position":17
+            }
+          }
+        },
+        "PARA_1_HWPTAG_PARA_CHAR_SHAPE":{
+          "PositonShapeIdPairList":{
+            "PositonShapeIdPairList_0":{
+              "ShapeId":7,
+              "Position":0
+            },
+            "PositonShapeIdPairList_1":{
+              "ShapeId":8,
+              "Position":1
+            }
+          }
         }
       },
       "HWPTAG_PARA_TEXT":{
         "PARA":{
-          "PARA 5":{
-            "Text":"bb"
-          },
-          "PARA 4":{
-            "Text":"bb"
-          },
-          "PARA 6":{
-            "Text":"bb"
+          "PARA 1":{
+            "Text":"aa"
           },
           "PARA 0":{
-            "Text":"bbdsadd         asd"
+            "Text":"aa"
+          },
+          "PARA 2":{
+            "Text":"aa"
           }
         }
       },
@@ -1875,70 +1942,7 @@
               "Test Part Height":1000,
               "Line Height":1000,
               "Text Start Position":0,
-              "Line Vertical Position":9600,
-              "Distance Base Line To Line Vertical Position":850,
-              "Tag":{
-                "isFirstLineAtColumn":false,
-                "isEmptySegment":false,
-                "isFirstLineAtPage":false,
-                "property":false,
-                "isAdjustBullet":false,
-                "isAutoHyphenation":false,
-                "isAdjustIndentation":false
-              },
-              "Line Space":600,
-              "Segment Width":42520,
-              "Start Position From Column":0
-            }
-          },
-          "PARA_LINE_SEG 4":{
-            "Line_ItemList 0":{
-              "Test Part Height":1000,
-              "Line Height":1000,
-              "Text Start Position":0,
-              "Line Vertical Position":9600,
-              "Distance Base Line To Line Vertical Position":850,
-              "Tag":{
-                "isFirstLineAtColumn":false,
-                "isEmptySegment":false,
-                "isFirstLineAtPage":false,
-                "property":false,
-                "isAdjustBullet":false,
-                "isAutoHyphenation":false,
-                "isAdjustIndentation":false
-              },
-              "Line Space":600,
-              "Segment Width":42520,
-              "Start Position From Column":0
-            }
-          },
-          "PARA_LINE_SEG 5":{
-            "Line_ItemList 0":{
-              "Test Part Height":1000,
-              "Line Height":1000,
-              "Text Start Position":0,
-              "Line Vertical Position":9600,
-              "Distance Base Line To Line Vertical Position":850,
-              "Tag":{
-                "isFirstLineAtColumn":false,
-                "isEmptySegment":false,
-                "isFirstLineAtPage":false,
-                "property":false,
-                "isAdjustBullet":false,
-                "isAutoHyphenation":false,
-                "isAdjustIndentation":false
-              },
-              "Line Space":600,
-              "Segment Width":42520,
-              "Start Position From Column":0
-            }
-          },
-          "PARA_LINE_SEG 6":{
-            "Line_ItemList 0":{
-              "Test Part Height":1000,
-              "Line Height":1000,
-              "Text Start Position":0,
-              "Line Vertical Position":9600,
+              "Line Vertical Position":3200,
               "Distance Base Line To Line Vertical Position":850,
               "Tag":{
                 "isFirstLineAtColumn":false,
@@ -1959,7 +1963,7 @@
               "Test Part Height":1000,
               "Line Height":1000,
               "Text Start Position":0,
-              "Line Vertical Position":9600,
+              "Line Vertical Position":3200,
               "Distance Base Line To Line Vertical Position":850,
               "Tag":{
                 "isFirstLineAtColumn":false,
@@ -1980,7 +1984,7 @@
               "Test Part Height":1000,
               "Line Height":1000,
               "Text Start Position":0,
-              "Line Vertical Position":9600,
+              "Line Vertical Position":3200,
               "Distance Base Line To Line Vertical Position":850,
               "Tag":{
                 "isFirstLineAtColumn":false,
@@ -2001,7 +2005,7 @@
               "Test Part Height":1000,
               "Line Height":1000,
               "Text Start Position":0,
-              "Line Vertical Position":9600,
+              "Line Vertical Position":3200,
               "Distance Base Line To Line Vertical Position":850,
               "Tag":{
                 "isFirstLineAtColumn":false,
@@ -2299,9 +2303,9 @@
     },
     "HWPTAG_DOCUMENT_PROPERTIES":{
       "CaretPosition_ListID":0,
-      "CaretPosition_ParagraphID":3,
+      "CaretPosition_ParagraphID":2,
       "StartNumber_Footnote":1,
-      "CaretPosition_PositionInParagraph":0,
+      "CaretPosition_PositionInParagraph":2,
       "StartNumber_Table":1,
       "StartNumber_Picture":1,
       "StartNumber_Equation":1,

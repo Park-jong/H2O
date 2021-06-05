@@ -38,6 +38,8 @@ namespace H2O__
 
             xm.CreateODT();
 
+            xm.SetPageLayout();
+
             make(xm, json);
 
             xm.SaveODT(xm.root);
@@ -183,24 +185,112 @@ namespace H2O__
                         bool isAutoAdjustGapHangulEnglish = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property2"]["isAutoAdjustGapHangulEnglish"].Value<bool>();
                         if (isAutoAdjustGapHangulEnglish)
                             xm.Paragraph.SetisAutoAdjustGapHangulEnglish(name, (XmlDocument)xm.docs["content.xml"]);
+
+
+                        //정렬
+                        string paraAlign = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["Alignment"].Value<string>();
+                        if (paraAlign.Equals("Right"))
+                            xm.SetPAlign(name, "end");
+                        else if (paraAlign.Equals("Justify"))
+                            xm.SetPAlign(name, "justify");
+                        else if (paraAlign.Equals("Center"))
+                            xm.SetPAlign(name, "center");
+
+                        //첫줄 들여쓰기
+                        int indent = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Indent"].Value<int>();
+                        if(indent != 0)
+                        {
+                            xm.SetPIndent(name, (float)(indent / 200 * 0.0353));
+                        }
+
+
+
                     }
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
                     bool italic = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isItalic"].Value<bool>();
                     bool kerning = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isKerning"].Value<bool>();
+                    string underline = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["UnderLineSort"].Value<string>();
+                    int fontcolor = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharColor"].Value<int>();
+                    bool strikeline = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isStrikeLine"].Value<bool>();
 
-                    if (bold)
-                        xm.SetBold(name);
-                    if (italic)
-                        xm.SetItalic(name);
-                    if (kerning)
+                    if (j == 0 || currentstyle != pstyle)
                     {
-                        double baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<int>(); // pt * 100 값
-                        double kerningSpace = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharSpacebyLanguage"]["Hangul"].Value<int>(); // kerning percent 값
+                        //진하게
+                        if (bold)
+                            xm.SetBold(name);
+                        //기울임
+                        if (italic)
+                            xm.SetItalic(name);
 
-                        double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
-                        xm.SetKerning(name, baseSize.ToString() + "cm");
+                        //간격
+                        if (kerning)
+                        {
+                            double baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<int>(); // pt * 100 값
+                            double kerningSpace = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharSpacebyLanguage"]["Hangul"].Value<int>(); // kerning percent 값
+
+                            double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
+                            xm.SetKerning(name, baseSize.ToString() + "cm");
+                        }
+                        xm.SetFontSize(name, json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<float>() / 100);
+                        if (fontcolor != 0)
+                            xm.SetFontColor(name, "#" + fontcolor.ToString("X6"));
+
+
+                        //윗줄 밑줄
+                        if (underline.Equals("Below Letters"))
+                        {
+                            int lineshape = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["UnderLineShape"].Value<int>();
+                            int linecolor = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["UnderLineColor"].Value<int>();
+                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X6"));
+                        }
+                        else if (underline.Equals("Above Letters"))
+                        {
+                            int lineshape = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["UnderLineShape"].Value<int>();
+                            int linecolor = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["UnderLineColor"].Value<int>();
+                            xm.SetOverline(name, lineshape, "#" + linecolor.ToString("X6"));
+                        }
+
+                        //취소선 odt에서는 종류 제한, 색상 선택 불가
+                        if (strikeline)
+                        {
+                            int lineshape = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["StrikeLineShape"].Value<int>();
+                            xm.SetThroughline(name, lineshape);
+                        }
+
+                        //외곽선 한글에 종류 여러개지만 odt에서는 한개
+                        if(!json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["OutterLineSort"].Value<string>().Equals("None"))
+                        {
+                            xm.SetOutline(name);
+                        }
+
+                        //그림자 odt한종류
+                        if(!json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["ShadowSort"].Value<string>().Equals("None"))
+                        {
+                            xm.SetShadow(name);
+                        }
+
+                        //음각 양각
+                        if(json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isEmboss"].Value<bool>())
+                        {
+                            xm.SetRelief(name);
+                        }else if(json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isEngrave"].Value<bool>())
+                        {
+                            xm.SetRelief(name, "engraved");
+                        }
+
+                        //위첨자
+                        //아래첨자
+                        if (json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isSuperScript"].Value<bool>())
+                        {
+                            xm.SetSuper(name);
+                        }
+                        else if (json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isSubScript"].Value<bool>())
+                        {
+                            xm.SetSub(name);
+                        }
                     }
+
                 }
             }
         }
