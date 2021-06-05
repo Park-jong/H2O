@@ -900,7 +900,7 @@ namespace H2O__
             return spanname;
         }
 
-        public void SetPageLayout(float left = 3, float right = 3, float top = 3, float bottom = 3)
+        public void SetPageLayout(float left = 3, float right = 3, float top = (float)3.5, float bottom = 3)
         {
             XmlNode styles = (XmlNode)root.child["styles.xml"];
 
