@@ -17,6 +17,7 @@ namespace H2O__
         private const string header_fo = "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0";
         private const string header_office = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
         private const string header_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+        private const string header_svg = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
         private static int numP = 1;
         private static int numSpan = 1;
 
@@ -215,13 +216,13 @@ namespace H2O__
             }
         }
 
+        //글꼴 적용
         public void SetFont(string name, string font)
         {
             {
-                XmlNode content = (XmlNode)root.child["content.xml"];
+                XmlDocument doc = (XmlDocument)docs["content.xml"];
 
-                XmlDocument doc = content.doc;
-
+                //office:font-face-decls에 폰트 중복 체크
                 XmlNodeList list = doc.GetElementsByTagName("font-face", header_style);
                 for(int i = 0; i < list.Count; i++)
                 {
@@ -235,9 +236,10 @@ namespace H2O__
                         XmlElement e1 = doc.CreateElement("style:font-face", header_style);
 
                         e1.SetAttribute("name", header_style, font);
-                        e1.SetAttribute("font-family", "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0", font);
+                        e1.SetAttribute("font-family", header_svg, font);
                         e1.SetAttribute("font-family-generic", header_style, "system");
                         e1.SetAttribute("font-pitch", header_style, "variable");
+                        //panose 제외
 
                         addfont.AppendChild(e1);
 
@@ -260,6 +262,9 @@ namespace H2O__
                             e1 = doc.CreateElement("style:text-properties", header_style);
                         }
                         e1.SetAttribute("font-name", header_style, font);
+
+                        //font-name-asian 제외
+                        //font-name-complex 제외
 
                         e.AppendChild(e1);
                         break;
