@@ -36,9 +36,10 @@ namespace WindowsFormsApp1
             // 
             // btn_load
             // 
-            this.btn_load.Location = new System.Drawing.Point(89, 49);
+            this.btn_load.Location = new System.Drawing.Point(69, 37);
+            this.btn_load.Margin = new System.Windows.Forms.Padding(2);
             this.btn_load.Name = "btn_load";
-            this.btn_load.Size = new System.Drawing.Size(94, 29);
+            this.btn_load.Size = new System.Drawing.Size(73, 22);
             this.btn_load.TabIndex = 0;
             this.btn_load.Text = "Select file";
             this.btn_load.UseVisualStyleBackColor = true;
@@ -52,9 +53,10 @@ namespace WindowsFormsApp1
             // 
             // bnt_convert
             // 
-            this.bnt_convert.Location = new System.Drawing.Point(71, 123);
+            this.bnt_convert.Location = new System.Drawing.Point(55, 92);
+            this.bnt_convert.Margin = new System.Windows.Forms.Padding(2);
             this.bnt_convert.Name = "bnt_convert";
-            this.bnt_convert.Size = new System.Drawing.Size(130, 29);
+            this.bnt_convert.Size = new System.Drawing.Size(101, 22);
             this.bnt_convert.TabIndex = 1;
             this.bnt_convert.Text = "Convert File";
             this.bnt_convert.UseVisualStyleBackColor = true;
@@ -62,13 +64,15 @@ namespace WindowsFormsApp1
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(268, 208);
+            this.ClientSize = new System.Drawing.Size(208, 156);
             this.Controls.Add(this.bnt_convert);
             this.Controls.Add(this.btn_load);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
 
         }

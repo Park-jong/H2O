@@ -101,6 +101,13 @@ namespace WindowsFormsApp1
         private void bnt_convert_Click(object sender, EventArgs e)
         {
             FileManager fm = new FileManager(currentPath);
+            MessageBoxButtons button = MessageBoxButtons.OK;
+            MessageBox.Show("변환 완료.", "Success", button);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
