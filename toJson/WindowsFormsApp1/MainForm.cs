@@ -56,6 +56,7 @@ namespace WindowsFormsApp1
                 }
             }
         }
+
         public void ExecuteCommandSync(Object filepath)
         {
             String path = System.IO.Directory.GetCurrentDirectory();

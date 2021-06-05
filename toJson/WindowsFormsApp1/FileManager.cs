@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-//using System.Windows.Forms;
+using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -42,12 +42,12 @@ namespace WindowsFormsApp1
 
             try
             {
-                ZipFile.CreateFromDirectory(appPath + @"\New File", appPath + @"\New.odt");
+                ZipFile.CreateFromDirectory(Application.StartupPath + @"\New File", appPath + @"\New.odt");
             }
             catch (IOException)
             {
                 File.Delete(appPath + @"\New.odt");
-                ZipFile.CreateFromDirectory(appPath + @"\New File", appPath + @"\New.odt");
+                ZipFile.CreateFromDirectory(Application.StartupPath + @"\New File", appPath + @"\New.odt");
             }
 
             //xm.Create_Document(appPath + loadName);
