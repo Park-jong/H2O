@@ -263,7 +263,8 @@ namespace WindowsFormsApp1
                             e1 = doc.CreateElement("style:text-properties", header_style);
                         }
                         e1.SetAttribute("font-name", header_style, font);
-
+                        e1.SetAttribute("font-name-asian", header_style, font);
+                        e1.SetAttribute("font-name-complex", header_style, font);
                         //font-name-asian 제외
                         //font-name-complex 제외
 
