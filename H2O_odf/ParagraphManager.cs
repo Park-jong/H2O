@@ -20,22 +20,23 @@ namespace H2O__
         public void SetLineSpace(string name, XmlDocument doc, int lineSpace)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
-            XmlElement e = ((XmlElement)list.Item(0));
-
-            string check_name = e.GetAttribute("name", header_style);
-            if (check_name.Equals(name))
+            foreach (XmlElement e in list)
             {
-                XmlElement e1 = null;
-                string type = e.GetAttribute("family", header_style);
-
-                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
-                if (e1 == null)
+                string check_name = e.GetAttribute("name", header_style);
+                if (check_name.Equals(name))
                 {
-                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    XmlElement e1 = null;
+                    string type = e.GetAttribute("family", header_style);
+
+                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    }
+                    e1.SetAttribute("line-height", header_fo, lineSpace.ToString() + "%");
+
+                    e.AppendChild(e1);
                 }
-                e1.SetAttribute("line-height", header_fo, lineSpace.ToString() + "%");
-                
-                e.AppendChild(e1);
             }
         }
 
@@ -43,23 +44,24 @@ namespace H2O__
         public void SetByWord(string name, XmlDocument doc)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
-            XmlElement e = ((XmlElement)list.Item(0));
-
-            string check_name = e.GetAttribute("name", header_style);
-            if (check_name.Equals(name))
+            foreach (XmlElement e in list)
             {
-                XmlElement e1 = null;
-                string type = e.GetAttribute("family", header_style);
-
-                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
-                if (e1 == null)
+                string check_name = e.GetAttribute("name", header_style);
+                if (check_name.Equals(name))
                 {
-                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    XmlElement e1 = null;
+                    string type = e.GetAttribute("family", header_style);
+
+                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    }
+
+                    e1.SetAttribute("line-break", header_style, "strict");
+
+                    e.AppendChild(e1);
                 }
-
-                e1.SetAttribute("line-break", header_style, "strict");
-
-                e.AppendChild(e1);
             }
         }
 
@@ -67,23 +69,24 @@ namespace H2O__
         public void SetisProtectPara(string name, XmlDocument doc)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
-            XmlElement e = ((XmlElement)list.Item(0));
-
-            string check_name = e.GetAttribute("name", header_style);
-            if (check_name.Equals(name))
+            foreach (XmlElement e in list)
             {
-                XmlElement e1 = null;
-                string type = e.GetAttribute("family", header_style);
-
-                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
-                if (e1 == null)
+                string check_name = e.GetAttribute("name", header_style);
+                if (check_name.Equals(name))
                 {
-                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    XmlElement e1 = null;
+                    string type = e.GetAttribute("family", header_style);
+
+                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    }
+
+                    e1.SetAttribute("keep-together", header_fo, "always");
+
+                    e.AppendChild(e1);
                 }
-
-                e1.SetAttribute("keep-together", header_fo, "always");
-
-                e.AppendChild(e1);
             }
         }
 
@@ -91,23 +94,24 @@ namespace H2O__
         public void SetisAutoAdjustGapHangulEnglish(string name, XmlDocument doc)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
-            XmlElement e = ((XmlElement)list.Item(0));
-
-            string check_name = e.GetAttribute("name", header_style);
-            if (check_name.Equals(name))
+            foreach (XmlElement e in list)
             {
-                XmlElement e1 = null;
-                string type = e.GetAttribute("family", header_style);
-
-                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
-                if (e1 == null)
+                string check_name = e.GetAttribute("name", header_style);
+                if (check_name.Equals(name))
                 {
-                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    XmlElement e1 = null;
+                    string type = e.GetAttribute("family", header_style);
+
+                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    }
+
+                    e1.SetAttribute("text-autospace", header_style, "ideograph-alpha");
+
+                    e.AppendChild(e1);
                 }
-
-                e1.SetAttribute("text-autospace", header_style, "ideograph-alpha");
-
-                e.AppendChild(e1);
             }
         }
 
@@ -115,24 +119,25 @@ namespace H2O__
         public void SetisProtectLoner(string name, XmlDocument doc)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
-            XmlElement e = ((XmlElement)list.Item(0));
-
-            string check_name = e.GetAttribute("name", header_style);
-            if (check_name.Equals(name))
+            foreach (XmlElement e in list)
             {
-                XmlElement e1 = null;
-                string type = e.GetAttribute("family", header_style);
-
-                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
-                if (e1 == null)
+                string check_name = e.GetAttribute("name", header_style);
+                if (check_name.Equals(name))
                 {
-                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    XmlElement e1 = null;
+                    string type = e.GetAttribute("family", header_style);
+
+                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    }
+
+                    e1.SetAttribute("widows", header_fo, "2");
+                    e1.SetAttribute("orphans", header_fo, "2");
+
+                    e.AppendChild(e1);
                 }
-
-                e1.SetAttribute("widows", header_fo, "2");
-                e1.SetAttribute("orphans", header_fo, "2");
-
-                e.AppendChild(e1);
             }
         }
         
@@ -140,23 +145,24 @@ namespace H2O__
         public void SetisTogetherNextPara(string name, XmlDocument doc)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
-            XmlElement e = ((XmlElement)list.Item(0));
-
-            string check_name = e.GetAttribute("name", header_style);
-            if (check_name.Equals(name))
+            foreach (XmlElement e in list)
             {
-                XmlElement e1 = null;
-                string type = e.GetAttribute("family", header_style);
-
-                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
-                if (e1 == null)
+                string check_name = e.GetAttribute("name", header_style);
+                if (check_name.Equals(name))
                 {
-                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    XmlElement e1 = null;
+                    string type = e.GetAttribute("family", header_style);
+
+                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    }
+
+                    e1.SetAttribute("keep-with-next", header_fo, "always");
+
+                    e.AppendChild(e1);
                 }
-
-                e1.SetAttribute("keep-with-next", header_fo, "always");
-
-                e.AppendChild(e1);
             }
         }
 
@@ -164,29 +170,30 @@ namespace H2O__
         public void SetBorderSpace(string name, XmlDocument doc, double top, double bottom, double left, double right)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
-            XmlElement e = ((XmlElement)list.Item(0));
-
-            string check_name = e.GetAttribute("name", header_style);
-            if (check_name.Equals(name))
+            foreach (XmlElement e in list)
             {
-                XmlElement e1 = null;
-                string type = e.GetAttribute("family", header_style);
-
-                e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
-                if (e1 == null)
+                string check_name = e.GetAttribute("name", header_style);
+                if (check_name.Equals(name))
                 {
-                    e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    XmlElement e1 = null;
+                    string type = e.GetAttribute("family", header_style);
+
+                    e1 = (XmlElement)e.GetElementsByTagName(type + "-properties", header_style).Item(0);
+                    if (e1 == null)
+                    {
+                        e1 = doc.CreateElement("style:" + type + "-properties", header_style);
+                    }
+
+                    e1.SetAttribute("margin-top", header_fo, top.ToString() + "in");
+                    e1.SetAttribute("margin-bottom", header_fo, bottom.ToString() + "in");
+                    e1.SetAttribute("margin-left", header_fo, left.ToString() + "in");
+                    e1.SetAttribute("margin-right", header_fo, right.ToString() + "in");
+
+                    XmlElement e2 = doc.CreateElement("style:tab-stops", header_style);
+                    e1.AppendChild(e2); //이건 뭔지 모르겠음 그냥 추가됨
+
+                    e.AppendChild(e1);
                 }
-
-                e1.SetAttribute("margin-top", header_fo, top.ToString() + "in");
-                e1.SetAttribute("margin-bottom", header_fo, bottom.ToString() + "in");
-                e1.SetAttribute("margin-left", header_fo, left.ToString() + "in");
-                e1.SetAttribute("margin-right", header_fo, right.ToString() + "in");
-
-                XmlElement e2 = doc.CreateElement("style:tab-stops", header_style);
-                e1.AppendChild(e2); //이건 뭔지 모르겠음 그냥 추가됨
-
-                e.AppendChild(e1);
             }
         }
     }
