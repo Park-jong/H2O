@@ -36,7 +36,7 @@ namespace WindowsFormsApp1
             // 
             // btn_load
             // 
-            this.btn_load.Location = new System.Drawing.Point(37, 32);
+            this.btn_load.Location = new System.Drawing.Point(89, 49);
             this.btn_load.Name = "btn_load";
             this.btn_load.Size = new System.Drawing.Size(94, 29);
             this.btn_load.TabIndex = 0;
@@ -52,7 +52,7 @@ namespace WindowsFormsApp1
             // 
             // bnt_convert
             // 
-            this.bnt_convert.Location = new System.Drawing.Point(37, 106);
+            this.bnt_convert.Location = new System.Drawing.Point(71, 123);
             this.bnt_convert.Name = "bnt_convert";
             this.bnt_convert.Size = new System.Drawing.Size(130, 29);
             this.bnt_convert.TabIndex = 1;
@@ -64,7 +64,7 @@ namespace WindowsFormsApp1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(268, 208);
             this.Controls.Add(this.bnt_convert);
             this.Controls.Add(this.btn_load);
             this.Name = "MainForm";
