@@ -16,13 +16,14 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
 
+        String filePath;
         private void btn_load_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    var filePath = ofd.FileName;
+                    filePath = ofd.FileName;
                     var size = new FileInfo(filePath).Length;
                     var extension = Path.GetExtension(filePath);
 
@@ -41,8 +42,7 @@ namespace WindowsFormsApp1
                         else
                         {
                             MessageBox.Show("불러오기 완료.", "Success", button);
-                            ExecuteCommandSync(filePath);
-
+                    
                             
                             DirectoryInfo parentDir = Directory.GetParent(filePath);
                             currentPath = parentDir.FullName;
@@ -51,8 +51,8 @@ namespace WindowsFormsApp1
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
-                    $"Details:\n\n{ex.StackTrace}");
+                    MessageBoxButtons button = MessageBoxButtons.OK;
+                    MessageBox.Show("파일을 닫은 후 실행해주세요.", "Fail", button);
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace WindowsFormsApp1
                 procStartInfo.RedirectStandardOutput = true;
                 procStartInfo.UseShellExecute = false;
                 // Do not create the black window.
-                procStartInfo.CreateNoWindow = false;
+                procStartInfo.CreateNoWindow = true;
 
                 // Now we create a process, assign its ProcessStartInfo and start it
                 System.Diagnostics.Process proc = new System.Diagnostics.Process();
@@ -100,6 +100,8 @@ namespace WindowsFormsApp1
         string currentPath;
         private void bnt_convert_Click(object sender, EventArgs e)
         {
+            ExecuteCommandSync(filePath);
+
             FileManager fm = new FileManager(currentPath);
             MessageBoxButtons button = MessageBoxButtons.OK;
             MessageBox.Show("변환 완료.", "Success", button);
