@@ -238,7 +238,7 @@ namespace WindowsFormsApp1
                             byte[] bit = BitConverter.GetBytes(fontcolor);
                             Array.Reverse(bit);
                             fontcolor = BitConverter.ToInt32(bit, 0);
-                            xm.SetFontColor(name, "#" + fontcolor.ToString("X6"));
+                            xm.SetFontColor(name, "#" + fontcolor.ToString("X8").Substring(0, 6));
                         }
 
 
@@ -250,7 +250,7 @@ namespace WindowsFormsApp1
                             byte[] bit = BitConverter.GetBytes(linecolor);
                             Array.Reverse(bit);
                             linecolor = BitConverter.ToInt32(bit, 0);
-                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X6"));
+                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0,6));
                         }
                         else if (underline.Equals("Above Letters"))
                         {
@@ -259,7 +259,7 @@ namespace WindowsFormsApp1
                             byte[] bit = BitConverter.GetBytes(linecolor);
                             Array.Reverse(bit);
                             linecolor = BitConverter.ToInt32(bit, 0);
-                            xm.SetOverline(name, lineshape, "#" + linecolor.ToString("X6"));
+                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0,6));
                         }
 
                         //취소선 odt에서는 종류 제한, 색상 선택 불가
