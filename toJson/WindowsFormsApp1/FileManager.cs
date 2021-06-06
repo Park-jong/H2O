@@ -230,9 +230,16 @@ namespace WindowsFormsApp1
                             double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
                             xm.SetKerning(name, baseSize.ToString() + "cm");
                         }
+                        
+                        //폰트 사이즈, 폰트 색
                         xm.SetFontSize(name, json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<float>() / 100);
                         if (fontcolor != 0)
+                        {
+                            byte[] bit = BitConverter.GetBytes(fontcolor);
+                            Array.Reverse(bit);
+                            fontcolor = BitConverter.ToInt32(bit, 0);
                             xm.SetFontColor(name, "#" + fontcolor.ToString("X6"));
+                        }
 
 
                         //윗줄 밑줄
@@ -240,12 +247,18 @@ namespace WindowsFormsApp1
                         {
                             int lineshape = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["UnderLineShape"].Value<int>();
                             int linecolor = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["UnderLineColor"].Value<int>();
+                            byte[] bit = BitConverter.GetBytes(linecolor);
+                            Array.Reverse(bit);
+                            linecolor = BitConverter.ToInt32(bit, 0);
                             xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X6"));
                         }
                         else if (underline.Equals("Above Letters"))
                         {
                             int lineshape = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["UnderLineShape"].Value<int>();
                             int linecolor = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["UnderLineColor"].Value<int>();
+                            byte[] bit = BitConverter.GetBytes(linecolor);
+                            Array.Reverse(bit);
+                            linecolor = BitConverter.ToInt32(bit, 0);
                             xm.SetOverline(name, lineshape, "#" + linecolor.ToString("X6"));
                         }
 
