@@ -49,6 +49,9 @@ namespace WindowsFormsApp1
                 File.Delete(appPath + @"\New.odt");
                 ZipFile.CreateFromDirectory(Application.StartupPath + @"\New File", appPath + @"\New.odt");
             }
+            
+            reader.Close();
+            file.Close();
 
             //xm.Create_Document(appPath + loadName);
 
