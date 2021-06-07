@@ -29,6 +29,8 @@ namespace WindowsFormsApp1
         public XmlManager()
         {
             Paragraph = new ParagraphManager();
+            numP = 1;
+            numSpan = 1;
         }
 
         public void CreateODT()
