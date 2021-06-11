@@ -98,7 +98,8 @@ namespace WindowsFormsApp1
                 int current_position;
                 int next_position;
 
-                string name = "P" + (i + 1);
+                string pname = "P" + (i + 1);
+                string name = pname;
 
                 // 텍스트별 위치 비교해서 자르기
                 for (int j = 0; j < spancount; j++)
@@ -135,7 +136,7 @@ namespace WindowsFormsApp1
                     else if (currentstyle == pstyle)
                         xm.AddContentP(i, subcontent); //pstyle과 같으면 텍스트만 추가
                     else
-                        name = xm.AddContentSpan(name, subcontent); //pstyle과 다르면 span 생성 후 텍스트 추가
+                        name = xm.AddContentSpan(pname, subcontent); //pstyle과 다르면 span 생성 후 텍스트 추가
 
 
                     //스타일 속성 추가
