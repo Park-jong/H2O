@@ -211,10 +211,18 @@ namespace WindowsFormsApp1
                             xm.SetPAlign(name, "center");
 
                         //첫줄 들여쓰기
-                        int indent = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Indent"].Value<int>();
-                        if(indent != 0)
+                        //margin
+                        double indent = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Indent"].Value<double>();
+                        double topspace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["TopParaSpace"].Value<double>();
+                        double bottomspace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["BottomParaSpace"].Value<double>();
+                        double leftmargin = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["BottomParaSpace"].Value<double>();
+                        double rightmargin = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["BottomParaSpace"].Value<double>();
+                        if (indent != 0 || topspace != 0 || bottomspace != 0 || leftmargin != 0 || rightmargin != 0)
                         {
                             xm.SetPIndent(name, (float)(indent / 200 * 0.0353));
+                            if (indent < 0)
+                                leftmargin = -indent + leftmargin;
+                            xm.SetPMargin(name, (float)(leftmargin / 200 * 0.0353), (float)(rightmargin / 200 * 0.0353), (float)(topspace / 200 * 0.0353), (float)(bottomspace / 200 * 0.0353));
                         }
 
 
