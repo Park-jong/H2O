@@ -131,12 +131,24 @@ namespace WindowsFormsApp1
                     //스타일의 아이디
                     int currentstyle = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_" + j]["ShapeId"].Value<int>();
 
-                    if (j == 0)
+                    /////////////////////////////////////
+                    /*if (j == 0)
                         name = xm.AddContentP(subcontent);
                     else if (currentstyle == pstyle)
                         xm.AddContentP(i, subcontent); //pstyle과 같으면 텍스트만 추가
                     else
-                        name = xm.AddContentSpan(pname, subcontent); //pstyle과 다르면 span 생성 후 텍스트 추가
+                        name = xm.AddContentSpan(pname, subcontent); //pstyle과 다르면 span 생성 후 텍스트 추가*/
+                    ///////////////////////////////////////////////추가 수정 필요
+                    if (spancount == 1)
+                        name = xm.AddContentP(pcontent);
+                    else if (j == 0)
+                    {
+                        name = xm.AddContentP("");
+                        name = xm.AddContentSpan(pname, subcontent);
+                    }
+                    else
+                        name = xm.AddContentSpan(pname, subcontent);
+                    //
 
 
                     //스타일 속성 추가
