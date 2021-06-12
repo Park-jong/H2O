@@ -235,6 +235,7 @@ namespace WindowsFormsApp1
                     string underline = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["UnderLineSort"].Value<string>();
                     int fontcolor = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharColor"].Value<int>();
                     bool strikeline = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isStrikeLine"].Value<bool>();
+                    double baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<double>(); // pt * 100 값
 
                     if (j == 0 || currentstyle != pstyle)
                     {
@@ -248,7 +249,7 @@ namespace WindowsFormsApp1
                         //간격
                         if (kerning)
                         {
-                            double baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<int>(); // pt * 100 값
+                            baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<int>(); // pt * 100 값
                             double kerningSpace = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharSpacebyLanguage"]["Hangul"].Value<int>(); // kerning percent 값
 
                             double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
@@ -330,6 +331,11 @@ namespace WindowsFormsApp1
                         int fontID = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["FontNameidbyLanguage"]["Hangul"].Value<int>();
                         string fontName = json["DocInfo 2"]["HWPTAG_FACE_NAME"]["FONT_NAME"]["FONT_NAME_" + fontID.ToString()]["FaceName"].Value<string>();
                         xm.SetFont(name, fontName);
+                        
+                        //글자간격
+                        double charspace = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharSpacebyLanguage"]["Hangul"].Value<double>();
+                        if (charspace != 0)
+                            xm.SetLetterSpace(name, (float)(baseSize * 0.01 * charspace * 0.01 * 0.0353));
 
                     }
 
