@@ -61,6 +61,12 @@ namespace WindowsFormsApp1
             this.bnt_convert.Text = "Convert File";
             this.bnt_convert.UseVisualStyleBackColor = true;
             this.bnt_convert.Click += new System.EventHandler(this.bnt_convert_Click);
+            //
+            //sfd
+            //
+            this.sfd.FileName = "NewFile";
+            this.sfd.Filter = "odt files (*.odt)|*.odt";
+            this.sfd.Title = "Save file";
             // 
             // MainForm
             // 
@@ -82,5 +88,6 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.Button btn_load;
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.Button bnt_convert;
+        private System.Windows.Forms.SaveFileDialog sfd;
     }
 }
