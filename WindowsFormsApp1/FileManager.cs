@@ -226,7 +226,7 @@ namespace WindowsFormsApp1
                     bool strikeline = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isStrikeLine"].Value<bool>();
                     double baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<double>(); // pt * 100 값
 
-                    if (j == 0 || currentstyle != pstyle)
+                    if (j == 0)
                     {
                         //진하게
                         if (bold)
