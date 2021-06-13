@@ -38,17 +38,6 @@ namespace WindowsFormsApp1
             make(xm, json);
 
             xm.SaveODT(xm.root);
-
-
-            try
-            {
-                ZipFile.CreateFromDirectory(Application.StartupPath + @"\New File", appPath + @"\New.odt");
-            }
-            catch (IOException)
-            {
-                File.Delete(appPath + @"\New.odt");
-                ZipFile.CreateFromDirectory(Application.StartupPath + @"\New File", appPath + @"\New.odt");
-            }
             
             reader.Close();
             file.Close();
