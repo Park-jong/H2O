@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 using System.Windows.Forms;
 
@@ -105,6 +106,22 @@ namespace WindowsFormsApp1
             FileManager fm = new FileManager(currentPath);
             MessageBoxButtons button = MessageBoxButtons.OK;
             MessageBox.Show("변환 완료.", "Success", button);
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string savefile = sfd.FileName;
+                if (Path.GetExtension(savefile) != ".odt")
+                    savefile += ".odt";
+                try
+                {
+                    ZipFile.CreateFromDirectory(Application.StartupPath + @"\New File", savefile);
+                }
+                catch (IOException)
+                {
+                    File.Delete(savefile);
+                    ZipFile.CreateFromDirectory(Application.StartupPath + @"\New File", savefile);
+                }
+                MessageBox.Show("저장 완료.", "Success", button);
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
