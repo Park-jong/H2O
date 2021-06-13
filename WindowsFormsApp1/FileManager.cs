@@ -38,7 +38,7 @@ namespace WindowsFormsApp1
             make(xm, json);
 
             xm.SaveODT(xm.root);
-            
+
             reader.Close();
             file.Close();
 
@@ -70,10 +70,10 @@ namespace WindowsFormsApp1
                 {
                     object obj = json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"]["PARA " + i].Value<object>();
 
-                    if(obj != null)
+                    if (obj != null)
                         pcontent = json["BodyText"]["Section_0"]["HWPTAG_PARA_TEXT"]["PARA"]["PARA " + i]["Text"].Value<string>();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     xm.AddContentP(); // para null 인 경우 처리
                     continue;
@@ -83,7 +83,7 @@ namespace WindowsFormsApp1
                 int spancount = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"].Count(); // p 안 text style count
                 // 스타일별 텍스트 아이디
                 int pstyle = json["BodyText"]["Section_0"]["PARAMETER_List"]["PARA_" + i + "_HWPTAG_PARA_CHAR_SHAPE"]["PositonShapeIdPairList"]["PositonShapeIdPairList_0"]["ShapeId"].Value<int>();
-                
+
                 int current_position;
                 int next_position;
 
@@ -146,7 +146,7 @@ namespace WindowsFormsApp1
                     {
                         //줄 간격
                         int lineSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["LineSpace"].Value<int>();
-                        xm.Paragraph.SetLineSpace(name, (XmlDocument)xm.docs["content.xml"], lineSpace);
+                        xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace);
 
                         //문단 테두리 간격
                         double topborderSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["TopBorderSpace"].Value<double>();
@@ -159,45 +159,45 @@ namespace WindowsFormsApp1
                         leftBorderSpace *= 0.01;
                         rightBorderSpace *= 0.01;
 
-                        xm.Paragraph.SetBorderSpace(name, (XmlDocument)xm.docs["content.xml"], topborderSpace, bottomBorderSpace, leftBorderSpace, rightBorderSpace);
+                        xm.Paragraph.SetBorderSpace(pname, (XmlDocument)xm.docs["content.xml"], topborderSpace, bottomBorderSpace, leftBorderSpace, rightBorderSpace);
 
                         //줄 나눔
                         //한글이 ByWord일 경우 적용 (한글, 영어 모두)
                         string byWord = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["LineDivideForHangul"].Value<string>();
                         if (byWord.Equals("ByWord"))
                         {
-                            xm.Paragraph.SetByWord(name, (XmlDocument)xm.docs["content.xml"]);
+                            xm.Paragraph.SetByWord(pname, (XmlDocument)xm.docs["content.xml"]);
                         }
 
                         //외톨이줄 보호 여부
                         bool isProtectLoner = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["isProtectLoner"].Value<bool>();
                         if (isProtectLoner)
-                            xm.Paragraph.SetisProtectLoner(name, (XmlDocument)xm.docs["content.xml"]);
+                            xm.Paragraph.SetisProtectLoner(pname, (XmlDocument)xm.docs["content.xml"]);
 
                         //다음 문단과 함께 여부
                         bool isTogetherNextPara = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["isTogetherNextPara"].Value<bool>();
-                        if(isTogetherNextPara)
-                            xm.Paragraph.SetisTogetherNextPara(name, (XmlDocument)xm.docs["content.xml"]);
+                        if (isTogetherNextPara)
+                            xm.Paragraph.SetisTogetherNextPara(pname, (XmlDocument)xm.docs["content.xml"]);
 
                         //문단 보호 여부
                         bool isProtectPara = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["isProtectPara"].Value<bool>();
                         if (isProtectPara)
-                            xm.Paragraph.SetisProtectPara(name, (XmlDocument)xm.docs["content.xml"]);
+                            xm.Paragraph.SetisProtectPara(pname, (XmlDocument)xm.docs["content.xml"]);
 
                         //한글과 영어 간격을 자동 조절 여부
                         bool isAutoAdjustGapHangulEnglish = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property2"]["isAutoAdjustGapHangulEnglish"].Value<bool>();
                         if (isAutoAdjustGapHangulEnglish)
-                            xm.Paragraph.SetisAutoAdjustGapHangulEnglish(name, (XmlDocument)xm.docs["content.xml"]);
+                            xm.Paragraph.SetisAutoAdjustGapHangulEnglish(pname, (XmlDocument)xm.docs["content.xml"]);
 
 
                         //정렬
                         string paraAlign = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["Property1"]["Alignment"].Value<string>();
                         if (paraAlign.Equals("Right"))
-                            xm.SetPAlign(name, "end");
+                            xm.SetPAlign(pname, "end");
                         else if (paraAlign.Equals("Justify"))
-                            xm.SetPAlign(name, "justify");
+                            xm.SetPAlign(pname, "justify");
                         else if (paraAlign.Equals("Center"))
-                            xm.SetPAlign(name, "center");
+                            xm.SetPAlign(pname, "center");
 
                         //첫줄 들여쓰기
                         //margin
@@ -208,10 +208,10 @@ namespace WindowsFormsApp1
                         double rightmargin = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["BottomParaSpace"].Value<double>();
                         if (indent != 0 || topspace != 0 || bottomspace != 0 || leftmargin != 0 || rightmargin != 0)
                         {
-                            xm.SetPIndent(name, (float)(indent / 200 * 0.0353));
+                            xm.SetPIndent(pname, (float)(indent / 200 * 0.0353));
                             if (indent < 0)
                                 leftmargin = -indent + leftmargin;
-                            xm.SetPMargin(name, (float)(leftmargin / 200 * 0.0353), (float)(rightmargin / 200 * 0.0353), (float)(topspace / 200 * 0.0353), (float)(bottomspace / 200 * 0.0353));
+                            xm.SetPMargin(pname, (float)(leftmargin / 200 * 0.0353), (float)(rightmargin / 200 * 0.0353), (float)(topspace / 200 * 0.0353), (float)(bottomspace / 200 * 0.0353));
                         }
 
 
@@ -244,7 +244,7 @@ namespace WindowsFormsApp1
                             double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
                             xm.SetKerning(name, baseSize.ToString() + "cm");
                         }
-                        
+
                         //폰트 사이즈, 폰트 색
                         xm.SetFontSize(name, json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<float>() / 100);
                         if (fontcolor != 0)
@@ -264,7 +264,7 @@ namespace WindowsFormsApp1
                             byte[] bit = BitConverter.GetBytes(linecolor);
                             Array.Reverse(bit);
                             linecolor = BitConverter.ToInt32(bit, 0);
-                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0,6));
+                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0, 6));
                         }
                         else if (underline.Equals("Above Letters"))
                         {
@@ -273,7 +273,7 @@ namespace WindowsFormsApp1
                             byte[] bit = BitConverter.GetBytes(linecolor);
                             Array.Reverse(bit);
                             linecolor = BitConverter.ToInt32(bit, 0);
-                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0,6));
+                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0, 6));
                         }
 
                         //취소선 odt에서는 종류 제한, 색상 선택 불가
@@ -284,22 +284,23 @@ namespace WindowsFormsApp1
                         }
 
                         //외곽선 한글에 종류 여러개지만 odt에서는 한개
-                        if(!json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["OutterLineSort"].Value<string>().Equals("None"))
+                        if (!json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["OutterLineSort"].Value<string>().Equals("None"))
                         {
                             xm.SetOutline(name);
                         }
 
                         //그림자 odt한종류
-                        if(!json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["ShadowSort"].Value<string>().Equals("None"))
+                        if (!json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["ShadowSort"].Value<string>().Equals("None"))
                         {
                             xm.SetShadow(name);
                         }
 
                         //음각 양각
-                        if(json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isEmboss"].Value<bool>())
+                        if (json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isEmboss"].Value<bool>())
                         {
                             xm.SetRelief(name);
-                        }else if(json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isEngrave"].Value<bool>())
+                        }
+                        else if (json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isEngrave"].Value<bool>())
                         {
                             xm.SetRelief(name, "engraved");
                         }
@@ -320,7 +321,7 @@ namespace WindowsFormsApp1
                         int fontID = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["FontNameidbyLanguage"]["Hangul"].Value<int>();
                         string fontName = json["DocInfo 2"]["HWPTAG_FACE_NAME"]["FONT_NAME"]["FONT_NAME_" + fontID.ToString()]["FaceName"].Value<string>();
                         xm.SetFont(name, fontName);
-                        
+
                         //글자간격
                         double charspace = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharSpacebyLanguage"]["Hangul"].Value<double>();
                         if (charspace != 0)
