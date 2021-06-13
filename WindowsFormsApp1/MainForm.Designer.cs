@@ -32,6 +32,8 @@ namespace WindowsFormsApp1
             this.btn_load = new System.Windows.Forms.Button();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.bnt_convert = new System.Windows.Forms.Button();
+            this.sfd = new System.Windows.Forms.OpenFileDialog();
+
             this.SuspendLayout();
             // 
             // btn_load
