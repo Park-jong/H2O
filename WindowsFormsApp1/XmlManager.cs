@@ -774,6 +774,11 @@ namespace WindowsFormsApp1
 
         public void SetPAlign(string name, string align)
         {
+            string set_align = align;
+            if (align.Equals("Divide") || align.Equals("Distribute"))
+            {
+                set_align = "justify";
+            }
             XmlNode content = (XmlNode)root.child["content.xml"];
 
             XmlDocument doc = content.doc;
@@ -791,9 +796,17 @@ namespace WindowsFormsApp1
                     {
                         e1 = doc.CreateElement("style:paragraph-properties", header_style);
                     }
-                    e1.SetAttribute("text-align", header_fo, align);
+                    e1.SetAttribute("text-align", header_fo, set_align);
                     e1.SetAttribute("justify-single-word", header_style, "false");
-
+                    if (align.Equals("Divide"))
+                    {
+                        e1.SetAttribute("text-align-last", header_fo, set_align);
+                    }
+                    else if(align.Equals("Distribute"))
+                    {
+                        e1.SetAttribute("text-align-last", header_fo, set_align);
+                        e1.SetAttribute("justify-single-word", header_style, "true");
+                    }
 
                     e.PrependChild(e1);
                     break;
