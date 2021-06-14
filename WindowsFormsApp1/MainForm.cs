@@ -122,6 +122,7 @@ namespace WindowsFormsApp1
                 }
                 MessageBox.Show("저장 완료.", "Success", button);
             }
+            sfd.FileName = "NewFile";
         }
 
         private void MainForm_Load(object sender, EventArgs e)
