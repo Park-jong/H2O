@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Windows.Forms;
@@ -58,6 +58,7 @@ namespace WindowsFormsApp1
         {
             // 문단 내 텍스트 별로 subcontent 만들기
             // p 생성
+            int pcount = 1;
             for (int i = 0; i < json["BodyText"]["Section_0"]["HWPTAG_PARA_LINE_SEG"]["PARA LINE SEG"].Count(); i++)
             {
                 // 문단 ID 가져오기
@@ -87,7 +88,8 @@ namespace WindowsFormsApp1
                 int current_position;
                 int next_position;
 
-                string pname = "P" + (i + 1);
+                string pname = "P" + pcount;
+                pcount++;
                 string name = pname;
 
                 // 텍스트별 위치 비교해서 자르기
