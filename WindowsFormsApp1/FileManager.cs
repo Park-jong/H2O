@@ -201,6 +201,10 @@ namespace WindowsFormsApp1
                             xm.SetPAlign(pname, "justify");
                         else if (paraAlign.Equals("Center"))
                             xm.SetPAlign(pname, "center");
+                        else if(paraAlign.Equals("Divide"))
+                            xm.SetPAlign(pname, "Divide");
+                        else if(paraAlign.Equals("Distribute"))
+                            xm.SetPAlign(pname, "Distribute");
 
                         //첫줄 들여쓰기
                         //margin
