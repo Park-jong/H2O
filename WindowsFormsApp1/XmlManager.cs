@@ -869,7 +869,7 @@ namespace WindowsFormsApp1
         }
 
         // text 추가
-        public void AddContentP(int p_number, string text)
+        public void AddContentP(string pname, string text)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -877,7 +877,15 @@ namespace WindowsFormsApp1
             XmlNodeList list = doc.GetElementsByTagName("p", header_text);
 
             XmlText xmltext = doc.CreateTextNode(text);
-            list.Item(p_number).AppendChild(xmltext);
+            foreach (XmlElement e in list)
+            {
+                string namecheck = e.GetAttribute("name", header_style);
+                if (namecheck.Equals(pname))
+                {
+                    e.AppendChild(xmltext);
+                    break;
+                }
+            }
 
         }
 
