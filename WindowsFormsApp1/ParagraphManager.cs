@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -17,7 +17,7 @@ namespace WindowsFormsApp1
         }
 
         //줄 간격
-        public void SetLineSpace(string name, XmlDocument doc, int lineSpace)
+        public void SetLineSpace(string name, XmlDocument doc, double lineSpace)
         {
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
             foreach (XmlElement e in list)
@@ -33,7 +33,7 @@ namespace WindowsFormsApp1
                     {
                         e1 = doc.CreateElement("style:" + type + "-properties", header_style);
                     }
-                    e1.SetAttribute("line-height", header_fo, lineSpace.ToString() + "%");
+                    e1.SetAttribute("line-height", header_fo, lineSpace.ToString() + "cm");//%에서 cm로 수정 한글의 % odt에서와 기준이 다름
 
                     e.AppendChild(e1);
                 }
@@ -198,3 +198,4 @@ namespace WindowsFormsApp1
         }
     }
 }
+
