@@ -145,11 +145,13 @@ namespace WindowsFormsApp1
 
                     //스타일 속성 추가
                     //문단 속성 추가
+                    double baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<double>(); // pt * 100 값
+
                     if (j == 0)
                     {
                         //줄 간격
                         int lineSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["LineSpace"].Value<int>();
-                        xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace);
+                        xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace * 0.01 * baseSize * 0.01 * 0.03527);
 
                         //문단 테두리 간격
                         double topborderSpace = json["DocInfo 2"]["HWPTAG_PARA_SHAPE"]["PARA_SHAPE"]["PARA_SHAPE_" + sID]["TopBorderSpace"].Value<double>();
@@ -227,11 +229,11 @@ namespace WindowsFormsApp1
 
                     bool bold = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isBold"].Value<bool>();
                     bool italic = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isItalic"].Value<bool>();
-                    bool kerning = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isKerning"].Value<bool>();
+                    //bool kerning = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isKerning"].Value<bool>();
                     string underline = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["UnderLineSort"].Value<string>();
                     int fontcolor = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["CharColor"].Value<int>();
                     bool strikeline = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["Property"]["isStrikeLine"].Value<bool>();
-                    double baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<double>(); // pt * 100 값
+                    
 
                     if (true)
                     {
@@ -242,7 +244,8 @@ namespace WindowsFormsApp1
                         if (italic)
                             xm.SetItalic(name);
 
-                        //간격
+                        //커닝 odt에서 지원하지 않는 기능
+                        /*
                         if (kerning)
                         {
                             baseSize = json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<int>(); // pt * 100 값
@@ -251,6 +254,7 @@ namespace WindowsFormsApp1
                             double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
                             xm.SetKerning(name, baseSize.ToString() + "cm");
                         }
+                        */
 
                         //폰트 사이즈, 폰트 색
                         xm.SetFontSize(name, json["DocInfo 2"]["HWPTAG_CHAR_SHAPE"]["CHAR_SHAPE"]["CHAR_SHAPE_" + currentstyle]["BaseSize"].Value<float>() / 100);
