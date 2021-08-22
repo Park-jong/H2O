@@ -33,15 +33,13 @@ namespace WindowsFormsApp1
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.bnt_convert = new System.Windows.Forms.Button();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-
             this.SuspendLayout();
             // 
             // btn_load
             // 
-            this.btn_load.Location = new System.Drawing.Point(69, 37);
-            this.btn_load.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_load.Location = new System.Drawing.Point(104, 60);
             this.btn_load.Name = "btn_load";
-            this.btn_load.Size = new System.Drawing.Size(73, 22);
+            this.btn_load.Size = new System.Drawing.Size(130, 29);
             this.btn_load.TabIndex = 0;
             this.btn_load.Text = "Select file";
             this.btn_load.UseVisualStyleBackColor = true;
@@ -55,31 +53,29 @@ namespace WindowsFormsApp1
             // 
             // bnt_convert
             // 
-            this.bnt_convert.Location = new System.Drawing.Point(55, 92);
-            this.bnt_convert.Margin = new System.Windows.Forms.Padding(2);
+            this.bnt_convert.Location = new System.Drawing.Point(104, 117);
             this.bnt_convert.Name = "bnt_convert";
-            this.bnt_convert.Size = new System.Drawing.Size(101, 22);
+            this.bnt_convert.Size = new System.Drawing.Size(130, 29);
             this.bnt_convert.TabIndex = 1;
             this.bnt_convert.Text = "Convert File";
             this.bnt_convert.UseVisualStyleBackColor = true;
             this.bnt_convert.Click += new System.EventHandler(this.bnt_convert_Click);
-            //
-            //sfd
-            //
+            // 
+            // sfd
+            // 
             this.sfd.FileName = "NewFile";
             this.sfd.Filter = "odt files (*.odt)|*.odt";
             this.sfd.Title = "Save file";
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(208, 156);
+            this.ClientSize = new System.Drawing.Size(332, 211);
             this.Controls.Add(this.bnt_convert);
             this.Controls.Add(this.btn_load);
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "H2O : HWP to ODT";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
 

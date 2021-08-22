@@ -18,7 +18,7 @@ namespace WindowsFormsApp1
         }
 
         String filePath;
-        private void btn_load_Click(object sender, EventArgs e)
+        private void btn_load_Click(object sender, EventArgs e) 
         {
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -36,7 +36,7 @@ namespace WindowsFormsApp1
                         {
                             MessageBox.Show("Hwp 파일만 불러올 수 있습니다.", "Fail", button);
                         }
-                        else if (size > 20971520)
+                        else if (size > 209715)
                         {
                             MessageBox.Show("20mb 이하의 파일만 불러올 수 있습니다.", "Fail", button);
                         }
