@@ -774,6 +774,11 @@ namespace WindowsFormsApp1
 
         public void SetPAlign(string name, string align)
         {
+            string set_align = align;
+            if (align.Equals("Divide") || align.Equals("Distribute"))
+            {
+                set_align = "justify";
+            }
             XmlNode content = (XmlNode)root.child["content.xml"];
 
             XmlDocument doc = content.doc;
@@ -791,9 +796,17 @@ namespace WindowsFormsApp1
                     {
                         e1 = doc.CreateElement("style:paragraph-properties", header_style);
                     }
-                    e1.SetAttribute("text-align", header_fo, align);
+                    e1.SetAttribute("text-align", header_fo, set_align);
                     e1.SetAttribute("justify-single-word", header_style, "false");
-
+                    if (align.Equals("Divide"))
+                    {
+                        e1.SetAttribute("text-align-last", header_fo, set_align);
+                    }
+                    else if(align.Equals("Distribute"))
+                    {
+                        e1.SetAttribute("text-align-last", header_fo, set_align);
+                        e1.SetAttribute("justify-single-word", header_style, "true");
+                    }
 
                     e.PrependChild(e1);
                     break;
@@ -838,25 +851,39 @@ namespace WindowsFormsApp1
         }
 
         // p 생성 : null
-        public void AddContentP()
+        public string AddContentP()
         {
-            string pname = "P" + (numP-1).ToString();
-            if (numP == 1)
-                pname = "P1";
+            string pname = "P" + numP.ToString();
+
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
-            XmlNodeList list = doc.GetElementsByTagName("text", header_office);
 
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
             XmlElement e = (XmlElement)list.Item(0);
+
+            // 문단 스타일 생성
+            XmlElement e1 = doc.CreateElement("style:style", header_style);
+            e1.SetAttribute("name", header_style, pname);
+            e1.SetAttribute("family", header_style, "paragraph");
+            e1.SetAttribute("parent-style-name", header_style, "Standard");
+            e.AppendChild(e1);
+
+            list = doc.GetElementsByTagName("text", header_office);
+            e = (XmlElement)list.Item(0);
 
             XmlElement text_element = doc.CreateElement("text:p", header_text);
 
             text_element.SetAttribute("style-name", header_text, pname);
             e.AppendChild(text_element);
+
+            numP++;
+
+            return pname;
         }
 
         // text 추가
-        public void AddContentP(int p_number, string text)
+        public void AddContentP(string pname, string text)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -864,7 +891,15 @@ namespace WindowsFormsApp1
             XmlNodeList list = doc.GetElementsByTagName("p", header_text);
 
             XmlText xmltext = doc.CreateTextNode(text);
-            list.Item(p_number).AppendChild(xmltext);
+            foreach (XmlElement e in list)
+            {
+                string namecheck = e.GetAttribute("name", header_style);
+                if (namecheck.Equals(pname))
+                {
+                    e.AppendChild(xmltext);
+                    break;
+                }
+            }
 
         }
 
