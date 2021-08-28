@@ -939,7 +939,7 @@ namespace WindowsFormsApp1
             return spanname;
         }
 
-        public void SetPageLayout(float left = 3, float right = 3, float top = (float)3.5, float bottom = 3)
+        public void SetPageLayout(double left, double right, double top, double bottom)
         {
             XmlNode styles = (XmlNode)root.child["styles.xml"];
 
