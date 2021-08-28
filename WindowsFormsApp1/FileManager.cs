@@ -31,9 +31,7 @@ namespace WindowsFormsApp1
 
             XmlManager xm = new XmlManager();
 
-            xm.CreateODT();
-
-            xm.SetPageLayout();
+            xm.CreateODT();           
 
             make(xm, json);
 
@@ -56,6 +54,14 @@ namespace WindowsFormsApp1
 
         private void make(XmlManager xm, JObject json)
         {
+            double pageMarginLeft = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["leftMargin"].Value<double>() * 0.01 * 0.0352778, 3);
+            double pageMarginRight = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["rightMargin"].Value<double>() * 0.01 * 0.0352778, 3);
+            double pageMarginTop = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["topMargin"].Value<double>() * 0.01 * 0.0352778, 3);
+            double pageMarginBottom = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["bottomMargin"].Value<double>() * 0.01 * 0.0352778, 3);
+            double pageMarginHeader = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["headerMargin"].Value<double>() * 0.01 * 0.0352778, 3);
+            double pageMarginFooter = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["footerMargin"].Value<double>() * 0.01 * 0.0352778, 3);
+            xm.SetPageLayout(pageMarginLeft, pageMarginRight, pageMarginTop + pageMarginHeader, pageMarginBottom + pageMarginFooter);
+
             // 문단 내 텍스트 별로 subcontent 만들기
             // p 생성
             for (int i = 0; i < json["BodyText"]["Section_0"]["HWPTAG_PARA_LINE_SEG"]["PARA LINE SEG"].Count(); i++)
