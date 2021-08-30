@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -19,8 +19,10 @@ namespace WindowsFormsApp1
         private const string header_office = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
         private const string header_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
         private const string header_svg = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
-        private static int numP = 1;
-        private static int numSpan = 1;
+        private static int numP = 0;
+        private static int numSpan = 0;
+        private static int numMP = 0;
+        private static int numMT = 0;
 
         public Hashtable docs = new Hashtable();
 
@@ -29,8 +31,8 @@ namespace WindowsFormsApp1
         public XmlManager()
         {
             Paragraph = new ParagraphManager();
-            numP = 1;
-            numSpan = 1;
+            numP = 0;
+            numSpan = 0;
         }
 
         public void CreateODT()
@@ -278,6 +280,7 @@ namespace WindowsFormsApp1
                 XmlNode styles = (XmlNode)root.child["styles.xml"];
                 doc = styles.doc;
 
+                list = doc.GetElementsByTagName("font-face", header_style);
                 for (int i = 0; i < list.Count; i++)
                 {
                     string fontname = ((XmlElement)list.Item(i)).GetAttribute("name", header_style);
@@ -817,7 +820,7 @@ namespace WindowsFormsApp1
         // p 생성
         public string AddContentP(string text)
         {
-            string pname = "P" + numP.ToString();
+            string pname = "P" + (numP+1).ToString();
 
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -853,7 +856,7 @@ namespace WindowsFormsApp1
         // p 생성 : null
         public string AddContentP()
         {
-            string pname = "P" + numP.ToString();
+            string pname = "P" + (numP+1).ToString();
 
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -906,7 +909,7 @@ namespace WindowsFormsApp1
         // span 추가
         public string AddContentSpan(string pname, string text)
         {
-            string spanname = "T" + numSpan.ToString();
+            string spanname = "T" + (numSpan+1).ToString();
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
 
@@ -922,11 +925,12 @@ namespace WindowsFormsApp1
 
             list = doc.GetElementsByTagName("p", header_text);
 
+            //현재는 모든 p가 이름이 다르기 때문에 가능 수정?
             foreach(XmlElement element in list)
             {
                 string name_check = element.GetAttribute("style-name", header_text);
                 if (name_check.Equals(pname))
-                {
+                { 
                     XmlElement text_element = doc.CreateElement("text:span", header_text);
 
                     text_element.SetAttribute("style-name", header_text, spanname);
@@ -950,6 +954,140 @@ namespace WindowsFormsApp1
             pagelayout.SetAttribute("margin-right", header_fo, right +"cm");
             pagelayout.SetAttribute("margin-top", header_fo, top + "cm");
             pagelayout.SetAttribute("margin-bottom", header_fo, bottom + "cm");   
+        }
+
+        public void SetHeader(double headermargin, double left, double right, double bottom)
+        {
+            XmlNode styles = (XmlNode)root.child["styles.xml"];
+
+            XmlDocument doc = styles.doc;
+
+            XmlElement headerstyle = (XmlElement)doc.GetElementsByTagName("header-style", header_style).Item(0);
+            XmlElement header_footer_properties = doc.CreateElement("style:header-footer-properties", header_style);
+            header_footer_properties.SetAttribute("height", header_svg, headermargin + "cm");
+            header_footer_properties.SetAttribute("margin-left", header_fo, left + "cm");
+            header_footer_properties.SetAttribute("margin-right", header_fo, right + "cm");
+            header_footer_properties.SetAttribute("margin-bottom", header_fo, bottom + "cm");
+            header_footer_properties.SetAttribute("dynamic-spacing", header_style, "false");
+            header_footer_properties.SetAttribute("background-color", header_fo, "transparent");
+            header_footer_properties.SetAttribute("fill", "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0", "none");
+            headerstyle.AppendChild(header_footer_properties);
+        }
+
+        public void SetFooter(double footermargin, double left, double right, double top)
+        {
+            XmlNode styles = (XmlNode)root.child["styles.xml"];
+
+            XmlDocument doc = styles.doc;
+
+            XmlElement footerstyle = (XmlElement)doc.GetElementsByTagName("footer-style", header_style).Item(0);
+            XmlElement header_footer_properties = doc.CreateElement("style:header-footer-properties", header_style);
+            header_footer_properties.SetAttribute("height", header_svg, footermargin + "cm");
+            header_footer_properties.SetAttribute("margin-left", header_fo, left + "cm");
+            header_footer_properties.SetAttribute("margin-right", header_fo, right + "cm");
+            header_footer_properties.SetAttribute("margin-bottom", header_fo, top + "cm");
+            header_footer_properties.SetAttribute("dynamic-spacing", header_style, "false");
+            header_footer_properties.SetAttribute("background-color", header_fo, "transparent");
+            header_footer_properties.SetAttribute("fill", "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0", "none");
+            footerstyle.AppendChild(header_footer_properties);
+        }
+
+        public string AddHeader()
+        {
+            string name = "MP" + (numMP+1).ToString();
+            XmlNode styles = (XmlNode)root.child["styles.xml"];
+
+            XmlDocument doc = styles.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
+            XmlElement element = (XmlElement)list.Item(0);
+
+            XmlElement styleElement = doc.CreateElement("style:style", header_style);
+            styleElement.SetAttribute("name", header_style, name);
+            styleElement.SetAttribute("familyname", header_style, "paragraph");
+            styleElement.SetAttribute("parent-style-name", header_style, "Header");
+            element.PrependChild(styleElement);
+
+            XmlElement text_properties = doc.CreateElement("style:text-properties", header_style);
+            styleElement.AppendChild(text_properties);
+
+            XmlElement master_page = (XmlElement)doc.GetElementsByTagName("master-page", header_style).Item(0);
+            XmlElement header = (XmlElement)master_page.GetElementsByTagName("header", header_style).Item(0);
+            if(header == null)
+            {
+                header = doc.CreateElement("style:header", header_style);
+                master_page.AppendChild(header);
+            }
+            XmlElement p = doc.CreateElement("text:p", header_text);
+            p.SetAttribute("style-name", header_text, name);
+            header.AppendChild(p);
+            numMP++;
+
+            return name;
+        }
+
+        public string AddFooter()
+        {
+            string name = "MP" + (numMP + 1).ToString();
+            XmlNode styles = (XmlNode)root.child["styles.xml"];
+
+            XmlDocument doc = styles.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
+            XmlElement element = (XmlElement)list.Item(0);
+
+            XmlElement styleElement = doc.CreateElement("style:style", header_style);
+            styleElement.SetAttribute("name", header_style, name);
+            styleElement.SetAttribute("familyname", header_style, "paragraph");
+            styleElement.SetAttribute("parent-style-name", header_style, "Footer");
+            element.PrependChild(styleElement);
+
+            XmlElement text_properties = doc.CreateElement("style:text-properties", header_style);
+            styleElement.AppendChild(text_properties);
+
+            XmlElement master_page = (XmlElement)doc.GetElementsByTagName("master-page", header_style).Item(0);
+            XmlElement footer = (XmlElement)master_page.GetElementsByTagName("footer", header_style).Item(0);
+            if (footer == null)
+            {
+                footer = doc.CreateElement("style:footer", header_style);
+                master_page.AppendChild(footer);
+            }
+            XmlElement p = doc.CreateElement("text:p", header_text);
+            p.SetAttribute("style-name", header_text, name);
+            footer.AppendChild(p);
+            numMP++;
+
+            return name;
+        }
+
+        public string AddHeaderFooterSpan(string p, string text)
+        {
+            string name = "MT" + (numMT + 1).ToString();
+            XmlNode styles = (XmlNode)root.child["styles.xml"];
+
+            XmlDocument doc = styles.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
+            XmlElement element = (XmlElement)list.Item(0);
+
+            XmlElement styleElement = doc.CreateElement("style:style", header_style);
+            styleElement.SetAttribute("name", header_style, name);
+            styleElement.SetAttribute("familyname", header_style, "text");
+            element.AppendChild(styleElement);
+
+            XmlElement text_properties = doc.CreateElement("style:text-properties", header_style);
+            styleElement.AppendChild(text_properties);
+
+            XmlElement master_page = (XmlElement)doc.GetElementsByTagName("master-page", header_style).Item(0);
+            list = master_page.GetElementsByTagName("p", header_text);
+            XmlElement e = (XmlElement)list.Item(list.Count - 1);
+            XmlElement span = doc.CreateElement("text:span", header_text);
+            span.SetAttribute("style-name", header_text, name);
+            span.InnerText = text;
+            e.AppendChild(span);
+            numMT++;
+
+            return name;
         }
 
         public void SetStandardMargin(float left, float right, float top, float bottom)
@@ -985,8 +1123,8 @@ namespace WindowsFormsApp1
             }
 
             //update meta
-            int paragraph_count = text.Split("\n").Length;
-            int word_count = text.Split(" ").Length;
+            int paragraph_count = text.Split('\n').Length;
+            int word_count = text.Split(' ').Length;
             int character_count = text.Length;
 
             XmlNodeList meta_list = meta.GetElementsByTagName("document-statistic", meta_meta);
