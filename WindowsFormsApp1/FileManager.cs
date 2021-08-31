@@ -61,6 +61,7 @@ namespace WindowsFormsApp1
             double pageMarginHeader = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["headerMargin"].Value<double>() * 0.01 * 0.0352778, 3);
             double pageMarginFooter = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["footerMargin"].Value<double>() * 0.01 * 0.0352778, 3);
             xm.SetPageLayout(pageMarginLeft, pageMarginRight, pageMarginTop + pageMarginHeader, pageMarginBottom + pageMarginFooter);
+            xm.ContentXml = true;
 
             // 문단 내 텍스트 별로 subcontent 만들기
             // p 생성
