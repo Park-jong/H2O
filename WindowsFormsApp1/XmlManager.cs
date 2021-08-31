@@ -24,6 +24,8 @@ namespace WindowsFormsApp1
         private static int numMP = 0;
         private static int numMT = 0;
 
+        public bool ContentXml { get; set; }//본문인지 아닌지 판별
+
         public Hashtable docs = new Hashtable();
 
         public ParagraphManager Paragraph;
@@ -128,7 +130,11 @@ namespace WindowsFormsApp1
         public void SetFontSize(string name, float size)
         {
             {
-                XmlNode content = (XmlNode)root.child["content.xml"];
+                XmlNode content;
+                if(ContentXml == true)
+                    content = (XmlNode)root.child["content.xml"];           
+                else
+                    content = (XmlNode)root.child["styles.xml"];
 
                 XmlDocument doc = content.doc;
 
@@ -161,7 +167,11 @@ namespace WindowsFormsApp1
         public void SetFontColor(string name, string color)
         {
             {
-                XmlNode content = (XmlNode)root.child["content.xml"];
+                XmlNode content;
+                if (ContentXml == true)
+                    content = (XmlNode)root.child["content.xml"];
+                else
+                    content = (XmlNode)root.child["styles.xml"];
 
                 XmlDocument doc = content.doc;
 
@@ -194,7 +204,11 @@ namespace WindowsFormsApp1
         public void SetLetterSpace(string name, float space)
         {
             {
-                XmlNode content = (XmlNode)root.child["content.xml"];
+                XmlNode content;
+                if (ContentXml == true)
+                    content = (XmlNode)root.child["content.xml"];
+                else
+                    content = (XmlNode)root.child["styles.xml"];
 
                 XmlDocument doc = content.doc;
 
@@ -225,7 +239,11 @@ namespace WindowsFormsApp1
         public void SetFont(string name, string font)
         {
             {
-                XmlDocument doc = (XmlDocument)docs["content.xml"];
+                XmlDocument doc;
+                if (ContentXml == true)
+                    doc = (XmlDocument)docs["content.xml"];
+                else
+                    doc = (XmlDocument)docs["styles.xml"];
 
                 //office:font-face-decls에 폰트 중복 체크
                 XmlNodeList list = doc.GetElementsByTagName("font-face", header_style);
@@ -306,7 +324,11 @@ namespace WindowsFormsApp1
 
         public void SetBold(string name)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -336,7 +358,11 @@ namespace WindowsFormsApp1
 
         public void SetItalic(string name)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -366,7 +392,11 @@ namespace WindowsFormsApp1
 
         public void SetKerning(string name, string kerningValue)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
             XmlDocument doc = content.doc;
 
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
@@ -431,7 +461,11 @@ namespace WindowsFormsApp1
                 default:
                     break;
             }
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -504,7 +538,11 @@ namespace WindowsFormsApp1
                     break;
             }
 
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -553,7 +591,11 @@ namespace WindowsFormsApp1
                     break;
             }
 
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -582,7 +624,11 @@ namespace WindowsFormsApp1
 
         public void SetOutline(string name)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -610,7 +656,11 @@ namespace WindowsFormsApp1
 
         public void SetShadow(string name)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -638,7 +688,11 @@ namespace WindowsFormsApp1
 
         public void SetRelief(string name, string type = "embossed")
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -666,7 +720,11 @@ namespace WindowsFormsApp1
 
         public void SetSuper(string name)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -693,7 +751,11 @@ namespace WindowsFormsApp1
 
         public void SetSub(string name)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -720,7 +782,11 @@ namespace WindowsFormsApp1
 
         public void SetPMargin(string name, float left, float right, float top, float bottom)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -750,7 +816,11 @@ namespace WindowsFormsApp1
 
         public void SetPIndent(string name, float ident)
         {
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -782,7 +852,11 @@ namespace WindowsFormsApp1
             {
                 set_align = "justify";
             }
-            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlNode content;
+            if (ContentXml == true)
+                content = (XmlNode)root.child["content.xml"];
+            else
+                content = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = content.doc;
 
@@ -1004,7 +1078,7 @@ namespace WindowsFormsApp1
 
             XmlElement styleElement = doc.CreateElement("style:style", header_style);
             styleElement.SetAttribute("name", header_style, name);
-            styleElement.SetAttribute("familyname", header_style, "paragraph");
+            styleElement.SetAttribute("family", header_style, "paragraph");
             styleElement.SetAttribute("parent-style-name", header_style, "Header");
             element.PrependChild(styleElement);
 
@@ -1038,7 +1112,7 @@ namespace WindowsFormsApp1
 
             XmlElement styleElement = doc.CreateElement("style:style", header_style);
             styleElement.SetAttribute("name", header_style, name);
-            styleElement.SetAttribute("familyname", header_style, "paragraph");
+            styleElement.SetAttribute("family", header_style, "paragraph");
             styleElement.SetAttribute("parent-style-name", header_style, "Footer");
             element.PrependChild(styleElement);
 
@@ -1072,7 +1146,7 @@ namespace WindowsFormsApp1
 
             XmlElement styleElement = doc.CreateElement("style:style", header_style);
             styleElement.SetAttribute("name", header_style, name);
-            styleElement.SetAttribute("familyname", header_style, "text");
+            styleElement.SetAttribute("family", header_style, "text");
             element.AppendChild(styleElement);
 
             XmlElement text_properties = doc.CreateElement("style:text-properties", header_style);
