@@ -13,6 +13,8 @@ namespace WindowsFormsApp1
     {
         public FileManager(string currentPath)
         {
+
+
             this.appPath = currentPath;
             this.jsonpath = currentPath + @"\test.json";
             this.jsontextpath = currentPath + @"\onlytext.json";
