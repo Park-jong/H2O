@@ -8,22 +8,21 @@ namespace WindowsFormsApp1
 {
     public class HwpToOdt
     {
-
-        FuncToXml.TextToXml ttx;
-
         public HwpToOdt()
         {
-            ttx = new FuncToXml.TextToXml();
         }
 
-
-        
-
-        public void Convert(string filePath, string currentPath)
+        public void Convert()
         {
-            ExecuteCommandSync(filePath);
+            //HwpToJson
+            HwpToJson hj = new HwpToJson();
+            hj.Run();
 
-            JsonToOdt fm = new JsonToOdt(currentPath);
+            //JsonToOdt
+            JsonToOdt jo = new JsonToOdt();
+            jo.setJson(hj.getJson());
+            jo.setJsonT(hj.getJsonT());
+            jo.Run();
 
             string[] files = new string[] { "content.xml", "manifest.xml", "settings.xml", "styles.xml" };
             foreach (string filename in files)
@@ -36,45 +35,6 @@ namespace WindowsFormsApp1
                 //  (, ) 가 json에 (,\n+공백)로 줄바꿈 입력됨 이유는 모름 나중에 수정가능성
                 rewrite = Regex.Replace(rewrite, @",\n             ", ", ");
                 System.IO.File.WriteAllText(Application.StartupPath + @"\New File\" + filename, rewrite);
-            }
-        }
-        public void ExecuteCommandSync(Object filepath)
-        {
-            String path = System.IO.Directory.GetCurrentDirectory();
-
-            try
-
-            {
-                // create the ProcessStartInfo using "cmd" as the program to be run,
-                // and "/c " as the parameters.
-                // Incidentally, /c tells cmd that we want it to execute the command that follows,
-                // and then exit.
-                System.Diagnostics.ProcessStartInfo procStartInfo =
-                    new System.Diagnostics.ProcessStartInfo("java", @"-jar temp44-0.0.1-jar-with-dependencies.jar " + "\"" + filepath + "\" " + Environment.NewLine);
-
-                // The following commands are needed to redirect the standard output.
-                // This means that it will be redirected to the Process.StandardOutput StreamReader.
-                procStartInfo.WorkingDirectory = path;
-                procStartInfo.RedirectStandardOutput = true;
-                procStartInfo.UseShellExecute = false;
-                // Do not create the black window.
-                procStartInfo.CreateNoWindow = true;
-
-                // Now we create a process, assign its ProcessStartInfo and start it
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.StartInfo = procStartInfo;
-                proc.Start();
-                /*             proc.StandardInput.WriteLine(filepath);
-                             proc.StandardInput.Close();
-                */             // Get the output into a string
-                string result = proc.StandardOutput.ReadToEnd();
-                // Display the command output.
-                Console.WriteLine(result);
-
-            }
-            catch (Exception objException)
-            {
-                // Log the exception
             }
         }
     }

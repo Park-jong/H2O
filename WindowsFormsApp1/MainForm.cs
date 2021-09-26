@@ -18,8 +18,6 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
 
-        string filePath;
-        string currentPath;
         string extension;
 
         private void btn_load_Click(object sender, EventArgs e) 
@@ -28,9 +26,9 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    filePath = ofd.FileName;
-                    extension = Path.GetExtension(filePath);
-                    long size = new FileInfo(filePath).Length;
+                    Data.filePath = ofd.FileName;
+                    extension = Path.GetExtension(Data.filePath);
+                    long size = new FileInfo(Data.filePath).Length;
 
                     MessageBoxButtons button = MessageBoxButtons.OK;
 
@@ -47,8 +45,8 @@ namespace WindowsFormsApp1
                             MessageBox.Show("불러오기 완료.", "Success", button);
 
 
-                            DirectoryInfo parentDir = Directory.GetParent(filePath);
-                            currentPath = parentDir.FullName;
+                            DirectoryInfo parentDir = Directory.GetParent(Data.filePath);
+                            Data.currentPath = parentDir.FullName;
                         }
                     }
                 }
@@ -87,7 +85,7 @@ namespace WindowsFormsApp1
             if(extension == ".hwp")
             {
                 HwpToOdt hto = new HwpToOdt();
-                hto.Convert(filePath, currentPath);
+                hto.Convert();
             }
             else if (extension == ".odt")
             {
