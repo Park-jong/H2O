@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,7 +22,7 @@ namespace WindowsFormsApp1
         string currentPath;
         string extension;
 
-        private void btn_load_Click(object sender, EventArgs e) 
+        private void btn_load_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -42,7 +42,7 @@ namespace WindowsFormsApp1
                         excheck = CheckFileExtension(extension, button);
                         sicheck = CheckFileSize(size, button);
 
-                        if(excheck && sicheck)
+                        if (excheck && sicheck)
                         {
                             MessageBox.Show("불러오기 완료.", "Success", button);
 
@@ -84,20 +84,24 @@ namespace WindowsFormsApp1
 
         private void bnt_convert_Click(object sender, EventArgs e)
         {
-            if(extension == ".hwp")
+            if (extension == ".hwp")
             {
                 HwpToOdt hto = new HwpToOdt();
                 hto.Convert(filePath, currentPath);
+                SaveOdtFile();
             }
             else if (extension == ".odt")
             {
-
+                OdtToHwp oth = new OdtToHwp();
+                oth.Convert(filePath, currentPath);
+                MessageBoxButtons button = MessageBoxButtons.OK;
+                MessageBox.Show("변환 완료.", "Success", button);
             }
 
-            SaveFile();
+            
         }
 
-        private void SaveFile()
+        private void SaveOdtFile()
         {
             MessageBoxButtons button = MessageBoxButtons.OK;
             MessageBox.Show("변환 완료.", "Success", button);
