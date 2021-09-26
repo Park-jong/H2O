@@ -8,17 +8,22 @@ namespace WindowsFormsApp1
 {
     public class HwpToOdt
     {
+
+        FuncToXml.TextToXml ttx;
+
         public HwpToOdt()
         {
-
+            ttx = new FuncToXml.TextToXml();
         }
 
+
+        
 
         public void Convert(string filePath, string currentPath)
         {
             ExecuteCommandSync(filePath);
 
-            FileManager fm = new FileManager(currentPath);
+            JsonToOdt fm = new JsonToOdt(currentPath);
 
             string[] files = new string[] { "content.xml", "manifest.xml", "settings.xml", "styles.xml" };
             foreach (string filename in files)

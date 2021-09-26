@@ -9,12 +9,10 @@ using System.Xml;
 
 namespace WindowsFormsApp1
 {
-    class FileManager
+    class JsonToOdt
     {
-        public FileManager(string currentPath)
+        public JsonToOdt(string currentPath)
         {
-
-
             this.appPath = currentPath;
             this.jsonpath = currentPath + @"\test.json";
             this.jsontextpath = currentPath + @"\onlytext.json";
