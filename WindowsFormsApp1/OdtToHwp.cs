@@ -37,6 +37,8 @@ namespace WindowsFormsApp1
             doc.Load(xmlStyles);
             json = JsonConvert.SerializeXmlNode(doc);
             File.WriteAllText(currentPath + @"\styles.json", json);
+            
+            Directory.Delete(currentPath + @"\OdtToHwp", true);
         }
     }
 }
