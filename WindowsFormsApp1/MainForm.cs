@@ -86,16 +86,18 @@ namespace WindowsFormsApp1
             {
                 HwpToOdt hto = new HwpToOdt();
                 hto.Convert();
+                SaveOdtFile()
             }
             else if (extension == ".odt")
             {
-
+                OdtToHwp oth = new OdtToHwp();
+                oth.Convert(filePath, currentPath);
+                MessageBoxButtons button = MessageBoxButtons.OK;
+                MessageBox.Show("변환 완료.", "Success", button);
             }
-
-            SaveFile();
         }
 
-        private void SaveFile()
+        private void SaveOdtFile()
         {
             MessageBoxButtons button = MessageBoxButtons.OK;
             MessageBox.Show("변환 완료.", "Success", button);
