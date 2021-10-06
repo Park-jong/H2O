@@ -51,7 +51,7 @@ namespace WindowsFormsApp1
 
             StreamReader file2 = File.OpenText(jsontextpath);
             JsonTextReader reader2 = new JsonTextReader(file2);
-            JObject jsonT = (JObject)JToken.ReadFrom(reader2);
+            jsonT = (JObject)JToken.ReadFrom(reader2);
 
             file2.Close();
             reader2.Close();
