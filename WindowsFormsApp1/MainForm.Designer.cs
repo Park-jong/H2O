@@ -48,7 +48,7 @@ namespace WindowsFormsApp1
             // ofd
             // 
             this.ofd.FileName = "Select a file";
-            this.ofd.Filter = "Hwp files (*.hwp)|*.hwp";
+            this.ofd.Filter = "Hwp files (*.hwp)|*.hwp|Odt files (*.odt)|*.odt|모든 파일(*.*)|*.*";
             this.ofd.Title = "Open hwp file";
             // 
             // bnt_convert

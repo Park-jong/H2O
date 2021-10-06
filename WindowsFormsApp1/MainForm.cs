@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,36 +18,35 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
 
-        String filePath;
-        private void btn_load_Click(object sender, EventArgs e) 
+        string extension;
+
+        private void btn_load_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    filePath = ofd.FileName;
-                    var size = new FileInfo(filePath).Length;
-                    var extension = Path.GetExtension(filePath);
+                    Data.filePath = ofd.FileName;
+                    extension = Path.GetExtension(Data.filePath);
+                    long size = new FileInfo(Data.filePath).Length;
 
                     MessageBoxButtons button = MessageBoxButtons.OK;
 
                     using (Stream str = ofd.OpenFile())
                     {
-                        if (extension != ".hwp")
-                        {
-                            MessageBox.Show("Hwp 파일만 불러올 수 있습니다.", "Fail", button);
-                        }
-                        else if (size > 209715)
-                        {
-                            MessageBox.Show("20mb 이하의 파일만 불러올 수 있습니다.", "Fail", button);
-                        }
-                        else
+                        bool excheck = false;
+                        bool sicheck = false;
+
+                        excheck = CheckFileExtension(extension, button);
+                        sicheck = CheckFileSize(size, button);
+
+                        if (excheck && sicheck)
                         {
                             MessageBox.Show("불러오기 완료.", "Success", button);
-                    
-                            
-                            DirectoryInfo parentDir = Directory.GetParent(filePath);
-                            currentPath = parentDir.FullName;
+
+
+                            DirectoryInfo parentDir = Directory.GetParent(Data.filePath);
+                            Data.currentPath = parentDir.FullName;
                         }
                     }
                 }
@@ -59,66 +58,47 @@ namespace WindowsFormsApp1
             }
         }
 
-        public void ExecuteCommandSync(Object filepath)
+        private bool CheckFileExtension(string extension, MessageBoxButtons button)
         {
-            String path = System.IO.Directory.GetCurrentDirectory();
-
-            try
-
+            if (extension == ".hwp" || extension == ".odt")
             {
-                // create the ProcessStartInfo using "cmd" as the program to be run,
-                // and "/c " as the parameters.
-                // Incidentally, /c tells cmd that we want it to execute the command that follows,
-                // and then exit.
-                System.Diagnostics.ProcessStartInfo procStartInfo =
-                    new System.Diagnostics.ProcessStartInfo("java", @"-jar temp44-0.0.1-jar-with-dependencies.jar " + "\"" + filepath + "\" " + Environment.NewLine);
-
-                // The following commands are needed to redirect the standard output.
-                // This means that it will be redirected to the Process.StandardOutput StreamReader.
-                procStartInfo.WorkingDirectory = path;
-                procStartInfo.RedirectStandardOutput = true;
-                procStartInfo.UseShellExecute = false;
-                // Do not create the black window.
-                procStartInfo.CreateNoWindow = true;
-
-                // Now we create a process, assign its ProcessStartInfo and start it
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.StartInfo = procStartInfo;
-                proc.Start();
-                /*             proc.StandardInput.WriteLine(filepath);
-                             proc.StandardInput.Close();
-                */             // Get the output into a string
-                string result = proc.StandardOutput.ReadToEnd();
-                // Display the command output.
-                Console.WriteLine(result);
-
+                return true;
             }
-            catch (Exception objException)
+
+            MessageBox.Show("파일 확장자를 확인해주세요.", "Fail", button);
+            return false;
+        }
+
+        private bool CheckFileSize(long size, MessageBoxButtons button)
+        {
+            if (size < 209715000)
             {
-                // Log the exception
+                return true;
+            }
+
+            MessageBox.Show("20mb 이하의 파일만 불러올 수 있습니다.", "Fail", button);
+            return false;
+        }
+
+        private void bnt_convert_Click(object sender, EventArgs e)
+        {
+            if (extension == ".hwp")
+            {
+                HwpToOdt hto = new HwpToOdt();
+                hto.Convert();
+                SaveOdtFile();
+            }
+            else if (extension == ".odt")
+            {
+                OdtToHwp oth = new OdtToHwp();
+                oth.Convert();
+                MessageBoxButtons button = MessageBoxButtons.OK;
+                MessageBox.Show("변환 완료.", "Success", button);
             }
         }
 
-        string currentPath;
-        private void bnt_convert_Click(object sender, EventArgs e)
+        private void SaveOdtFile()
         {
-            ExecuteCommandSync(filePath);
-
-            FileManager fm = new FileManager(currentPath);
-            
-            string[] files = new string[] { "content.xml", "manifest.xml", "settings.xml", "styles.xml"};
-            foreach(string filename in files)
-            {
-                string rewrite = System.IO.File.ReadAllText(Application.StartupPath + @"\New File\" + filename);
-                int index = rewrite.IndexOf("\n");
-                string subString1 = rewrite.Substring(0, index+1);
-                string subString2 = rewrite.Substring(index + 1);
-                rewrite = subString1 + Regex.Replace(subString2, @">\r\n( )*<", "><");
-                //  (, ) 가 json에 (,\n+공백)로 줄바꿈 입력됨 이유는 모름 나중에 수정가능성
-                rewrite = Regex.Replace(rewrite, @",\n             ", ", ");
-                System.IO.File.WriteAllText(Application.StartupPath + @"\New File\" + filename, rewrite);
-            }
-            
             MessageBoxButtons button = MessageBoxButtons.OK;
             MessageBox.Show("변환 완료.", "Success", button);
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -146,3 +126,4 @@ namespace WindowsFormsApp1
         }
     }
 }
+
