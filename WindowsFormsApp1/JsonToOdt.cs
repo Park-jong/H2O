@@ -29,7 +29,7 @@ namespace WindowsFormsApp1
         {
             CreateFolder();
 
-            ttx.Run(xm, json, jsonT);
+            ttx.Run(xm, json);
 
 
             SaveODT();

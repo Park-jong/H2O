@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace WindowsFormsApp1.FuncToXml
 {
-    public class TextToXml
+    public class TextToXml  
     {
         public TextToXml()
         {
@@ -20,7 +20,7 @@ namespace WindowsFormsApp1.FuncToXml
             return (int)(temp & b);
         }
 
-        public void Run(XmlManager xm, JObject json, JObject jsonT)
+        public void Run(XmlManager xm, JObject json)
         {
             double pageMarginLeft = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["leftMargin"].Value<double>() * 0.01 * 0.0352778, 3);
             double pageMarginRight = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["rightMargin"].Value<double>() * 0.01 * 0.0352778, 3);
@@ -44,10 +44,10 @@ namespace WindowsFormsApp1.FuncToXml
                     string pcontent = null; // p text
                     try
                     {
-                        object obj = jsonT["section " + s]["para_" + i].Value<object>();
+                        object obj = json["bodyText"]["sectionList"][s]["paragraphList"][i]["text"].Value<object>();
 
                         if (obj != null)
-                            pcontent = jsonT["section " + s]["para_" + i].Value<string>();
+                            pcontent = json["bodyText"]["sectionList"][s]["paragraphList"][i]["text"].Value<string>();
                     }
                     /////////////////////////////////////////////////////////////글자가 없을 때
                     catch (Exception e)
