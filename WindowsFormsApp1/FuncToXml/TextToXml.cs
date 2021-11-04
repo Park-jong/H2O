@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace WindowsFormsApp1.FuncToXml
 {
-    public class TextToXml  
+    public class TextToXml
     {
         public TextToXml()
         {
@@ -28,8 +28,33 @@ namespace WindowsFormsApp1.FuncToXml
             double pageMarginBottom = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["bottomMargin"].Value<double>() * 0.01 * 0.0352778, 3);
             double pageMarginHeader = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["headerMargin"].Value<double>() * 0.01 * 0.0352778, 3);
             double pageMarginFooter = Math.Round(json["bodyText"]["sectionList"][0]["paragraphList"][0]["controlList"][0]["pageDef"]["footerMargin"].Value<double>() * 0.01 * 0.0352778, 3);
+            //머리 꼬리 없으면
             xm.SetPageLayout(pageMarginLeft, pageMarginRight, pageMarginTop + pageMarginHeader, pageMarginBottom + pageMarginFooter);
-            xm.ContentXml = true;
+            //머리 꼬리 있으면
+            /*수정예정
+            {
+                xm.ContentXml = false;
+                xm.SetPageLayout(pageMarginLeft, pageMarginRight, pageMarginTop, pageMarginBottom);
+                {
+                    xm.SetHeader(pageMarginHeader, 0, 0, 0);
+                    string name = xm.AddHeader();
+                    name = xm.AddHeader();
+                    name = xm.AddHeaderFooterSpan(name, "123");
+                    name = xm.AddHeader();
+                    name = xm.AddHeaderFooterSpan(name, "456");
+                    xm.SetBold(name);
+                }
+                {
+                    xm.SetFooter(pageMarginHeader, 0, 0, 0);
+                    xm.AddFooter();
+                    string name = xm.AddFooter();
+                    xm.AddHeaderFooterSpan(name, "789");
+                    name = xm.AddFooter();
+                    xm.AddHeaderFooterSpan(name, "1011");
+                }
+                xm.ContentXml = true;
+
+            }*/
 
             // 문단 내 텍스트 별로 subcontent 만들기
             // p 생성
@@ -278,115 +303,157 @@ namespace WindowsFormsApp1.FuncToXml
                         int strikeline = bitcal(charPro, 18, 0x7);
 
 
-                        if (true)
+
+                        //진하게
+                        if (bold == 1)
+                            xm.SetBold(name);
+                        //기울임
+                        if (italic == 1)
+                            xm.SetItalic(name);
+
+                        //커닝 odt에서 지원하지 않는 기능
+                        /*
+                        if (kerning)
                         {
-                            //진하게
-                            if (bold == 1)
-                                xm.SetBold(name);
-                            //기울임
-                            if (italic == 1)
-                                xm.SetItalic(name);
+                            baseSize = json["docInfo"]["charShapeList"][currentstyle]["baseSize"].Value<int>(); // pt * 100 값
+                            double kerningSpace = json["docInfo"]["charShapeList"][currentstyle]["CharSpacebyLanguage"]["Hangul"].Value<int>(); // kerning percent 값
+                            double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
+                            xm.SetKerning(name, baseSize.ToString() + "cm");
+                        }
+                        */
 
-                            //커닝 odt에서 지원하지 않는 기능
-                            /*
-                            if (kerning)
-                            {
-                                baseSize = json["docInfo"]["charShapeList"][currentstyle]["baseSize"].Value<int>(); // pt * 100 값
-                                double kerningSpace = json["docInfo"]["charShapeList"][currentstyle]["CharSpacebyLanguage"]["Hangul"].Value<int>(); // kerning percent 값
-
-                                double value = baseSize * (kerningSpace / 100) / 100 * 0.0353; //pt로 환산 후 cm로 환산
-                                xm.SetKerning(name, baseSize.ToString() + "cm");
-                            }
-                            */
-
-                            //폰트 사이즈, 폰트 색
-                            xm.SetFontSize(name, json["docInfo"]["charShapeList"][currentstyle]["baseSize"].Value<float>() / 100);
-                            if (fontcolor != 0)
-                            {
-                                byte[] bit = BitConverter.GetBytes(fontcolor);
-                                Array.Reverse(bit);
-                                fontcolor = BitConverter.ToInt32(bit, 0);
-                                xm.SetFontColor(name, "#" + fontcolor.ToString("X8").Substring(0, 6));
-                            }
-
-
-                            //윗줄 밑줄
-                            if (underline.Equals(1))
-                            {
-                                int templineshape = json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>();
-                                int lineshape = bitcal(templineshape, 4, 0xf);
-                                int linecolor = json["docInfo"]["charShapeList"][currentstyle]["underLineColor"]["value"].Value<int>();
-                                byte[] bit = BitConverter.GetBytes(linecolor);
-                                Array.Reverse(bit);
-                                linecolor = BitConverter.ToInt32(bit, 0);
-                                ///lineshape 값? 왜 이렇게들어가느지
-                                xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0, 6));
-                            }
-                            else if (underline.Equals(3))
-                            {
-                                int templineshape = json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>();
-                                int lineshape = bitcal(templineshape, 4, 0xf);
-                                int linecolor = json["docInfo"]["charShapeList"][currentstyle]["underLineColor"]["value"].Value<int>();
-                                byte[] bit = BitConverter.GetBytes(linecolor);
-                                Array.Reverse(bit);
-                                linecolor = BitConverter.ToInt32(bit, 0);
-                                xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0, 6));
-                            }
-
-                            //취소선 odt에서는 종류 제한, 색상 선택 불가
-                            if (strikeline > 0)
-                            {
-                                int templineshape = json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>();
-                                int lineshape = bitcal(templineshape, 4, 0xf);
-                                xm.SetThroughline(name, lineshape);
-                            }
-
-                            //외곽선 한글에 종류 여러개지만 odt에서는 한개
-                            if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 8, 0x7) != 0)
-                            {
-                                xm.SetOutline(name);
-                            }
-
-                            //그림자 odt한종류
-                            if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 11, 0x3) != 0)
-                            {
-                                xm.SetShadow(name);
-                            }
-
-                            //음각 양각
-                            if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 13, 0x1) != 0)
-                            {
-                                xm.SetRelief(name);
-                            }
-                            else if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 14, 0x1) != 0)
-                            {
-                                xm.SetRelief(name, "engraved");
-                            }
-
-                            //위첨자
-                            //아래첨자
-                            if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 15, 0x1) != 0)
-                            {
-                                xm.SetSuper(name);
-                            }
-                            else if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 16, 0x1) != 0)
-                            {
-                                xm.SetSub(name);
-                            }
-
-                            //글꼴 적용
-
-                            int fontID = json["docInfo"]["charShapeList"][currentstyle]["faceNameIds"]["array"][0].Value<int>();
-                            string fontName = json["docInfo"]["hangulFaceNameList"][fontID]["name"].Value<string>();
-                            xm.SetFont(name, fontName);
-
-                            //글자간격
-                            double charspace = json["docInfo"]["charShapeList"][currentstyle]["charSpaces"]["array"][0].Value<double>();
-                            if (charspace != 0)
-                                xm.SetLetterSpace(name, (float)(baseSize * 0.01 * charspace * 0.01 * 0.0353));
-
+                        //폰트 사이즈, 폰트 색
+                        xm.SetFontSize(name, json["docInfo"]["charShapeList"][currentstyle]["baseSize"].Value<float>() / 100);
+                        if (fontcolor != 0)
+                        {
+                            byte[] bit = BitConverter.GetBytes(fontcolor);
+                            Array.Reverse(bit);
+                            fontcolor = BitConverter.ToInt32(bit, 0);
+                            xm.SetFontColor(name, "#" + fontcolor.ToString("X8").Substring(0, 6));
                         }
 
+
+                        //윗줄 밑줄
+                        if (underline.Equals(1))
+                        {
+                            int templineshape = json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>();
+                            int lineshape = bitcal(templineshape, 4, 0xf);
+                            int linecolor = json["docInfo"]["charShapeList"][currentstyle]["underLineColor"]["value"].Value<int>();
+                            byte[] bit = BitConverter.GetBytes(linecolor);
+                            Array.Reverse(bit);
+                            linecolor = BitConverter.ToInt32(bit, 0);
+                            ///lineshape 값? 왜 이렇게들어가느지
+                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0, 6));
+                        }
+                        else if (underline.Equals(3))
+                        {
+                            int templineshape = json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>();
+                            int lineshape = bitcal(templineshape, 4, 0xf);
+                            int linecolor = json["docInfo"]["charShapeList"][currentstyle]["underLineColor"]["value"].Value<int>();
+                            byte[] bit = BitConverter.GetBytes(linecolor);
+                            Array.Reverse(bit);
+                            linecolor = BitConverter.ToInt32(bit, 0);
+                            xm.SetUnderline(name, lineshape, "#" + linecolor.ToString("X8").Substring(0, 6));
+                        }
+
+                        //취소선 odt에서는 종류 제한, 색상 선택 불가
+                        if (strikeline > 0)
+                        {
+                            int templineshape = json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>();
+                            int lineshape = bitcal(templineshape, 4, 0xf);
+                            xm.SetThroughline(name, lineshape);
+                        }
+
+                        //외곽선 한글에 종류 여러개지만 odt에서는 한개
+                        if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 8, 0x7) != 0)
+                        {
+                            xm.SetOutline(name);
+                        }
+
+                        //그림자 odt한종류
+                        if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 11, 0x3) != 0)
+                        {
+                            xm.SetShadow(name);
+                        }
+
+                        //음각 양각
+                        if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 13, 0x1) != 0)
+                        {
+                            xm.SetRelief(name);
+                        }
+                        else if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 14, 0x1) != 0)
+                        {
+                            xm.SetRelief(name, "engraved");
+                        }
+
+                        //위첨자
+                        //아래첨자
+                        if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 15, 0x1) != 0)
+                        {
+                            xm.SetSuper(name);
+                        }
+                        else if (bitcal((json["docInfo"]["charShapeList"][currentstyle]["property"]["value"].Value<int>()), 16, 0x1) != 0)
+                        {
+                            xm.SetSub(name);
+                        }
+
+                        //글꼴 적용
+
+                        int fontID = json["docInfo"]["charShapeList"][currentstyle]["faceNameIds"]["array"][0].Value<int>();
+                        string fontName = json["docInfo"]["hangulFaceNameList"][fontID]["name"].Value<string>();
+                        xm.SetFont(name, fontName);
+
+                        //글자간격
+                        double charspace = json["docInfo"]["charShapeList"][currentstyle]["charSpaces"]["array"][0].Value<double>();
+                        if (charspace != 0)
+                            xm.SetLetterSpace(name, (float)(baseSize * 0.01 * charspace * 0.01 * 0.0353));
+
+
+
+                    }
+
+                    //table있는지 체크
+                    bool hasTable = false;
+                    int hasTableControlNum;
+                    int controlListCount = 0;
+                    try
+                    {
+                        controlListCount = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"].Count();
+                    }
+                    catch (System.ArgumentNullException e)
+                    {
+                        controlListCount = 0;
+                    }
+                    for (int controlList = 0; controlList < controlListCount; controlList++)
+                    {
+                        try
+                        {
+                            object existTable = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"].Value<object>();
+                            hasTable = true;
+                            hasTableControlNum = controlList;
+                        }
+                        catch(System.ArgumentNullException e)
+                        {
+                            hasTable = false;             
+                        }
+                        //table이 존재할때만 실행
+                        if (hasTable)
+                        {
+                            int rowCount = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"]["rowCount"].Value<int>();
+                            int columnCount = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"]["columnCount"].Value<int>();
+                            string table = xm.MakeTable(rowCount, columnCount);
+                            xm.setTable(table, Math.Round(json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["header"]["width"].Value<int>() * 0.01 * 0.0352778, 3));
+                            for(int c = 0; c < columnCount; c++)
+                            {
+                                int colWidth = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][0]["cellList"][c]["listHeader"]["width"].Value<int>();
+                                xm.setCol(table, c, Math.Round(colWidth * 0.01 * 0.0352778, 3));
+                            }
+                            for (int c = 0; c < rowCount; c++)
+                            {
+                                int rowHeight = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][c]["cellList"][0]["listHeader"]["height"].Value<int>();
+                                xm.setRow(table, c, Math.Round(rowHeight * 0.01 * 0.0352778, 3));
+                            }
+                        }
                     }
                 }
         }
