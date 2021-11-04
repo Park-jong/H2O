@@ -19,10 +19,12 @@ namespace WindowsFormsApp1
         private const string header_office = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
         private const string header_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
         private const string header_svg = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
+        private const string header_table = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
         private static int numP = 0;
         private static int numSpan = 0;
         private static int numMP = 0;
         private static int numMT = 0;
+        private static int numTable = 0;
 
         public bool ContentXml { get; set; }//본문인지 아닌지 판별
 
@@ -48,8 +50,8 @@ namespace WindowsFormsApp1
             //Create File
 
             string[] list1 = { "Configurations2", "META-INF", "Thumbnails" };
-            
-            foreach(string s in list1)
+
+            foreach (string s in list1)
             {
                 FolderNode node = new FolderNode(s, root);
             }
@@ -73,9 +75,9 @@ namespace WindowsFormsApp1
             string[] file1 = { "content.xml", "manifest.xml", "meta.xml", "mimetype", "settings.xml", "styles.xml" };
 
             foreach (string s in file1)
-            { 
+            {
                 XmlNode node = new XmlNode(s, root);
-                
+
                 node.LoadXml(path + @"\data" + @"\" + node.name);
 
                 docs.Add(node.name, node.doc);
@@ -99,11 +101,11 @@ namespace WindowsFormsApp1
             if (node.GetType() == typeof(FolderNode))
             {
                 DirectoryInfo di = new DirectoryInfo(node.path);
-                if(!di.Exists) { di.Create(); }
+                if (!di.Exists) { di.Create(); }
             }
             else if (node.GetType() == typeof(XmlNode))
             {
-                if(((XmlNode)node).name == "mimetype")
+                if (((XmlNode)node).name == "mimetype")
                 {
                     StreamWriter sw = File.CreateText(((XmlNode)node).path);
                     sw.Write("application/vnd.oasis.opendocument.text");
@@ -118,7 +120,7 @@ namespace WindowsFormsApp1
             if (node.child == null)
                 return;
 
-            foreach(FileNode child in node.child.Values)
+            foreach (FileNode child in node.child.Values)
             {
                 SaveODT(child);
             }
@@ -131,8 +133,8 @@ namespace WindowsFormsApp1
         {
             {
                 XmlNode content;
-                if(ContentXml == true)
-                    content = (XmlNode)root.child["content.xml"];           
+                if (ContentXml == true)
+                    content = (XmlNode)root.child["content.xml"];
                 else
                     content = (XmlNode)root.child["styles.xml"];
 
@@ -226,7 +228,7 @@ namespace WindowsFormsApp1
                         {
                             e1 = doc.CreateElement("style:text-properties", header_style);
                         }
-                        e1.SetAttribute("letter-spacing", header_fo, space+"cm");
+                        e1.SetAttribute("letter-spacing", header_fo, space + "cm");
 
                         e.AppendChild(e1);
                         break;
@@ -247,12 +249,12 @@ namespace WindowsFormsApp1
 
                 //office:font-face-decls에 폰트 중복 체크
                 XmlNodeList list = doc.GetElementsByTagName("font-face", header_style);
-                for(int i = 0; i < list.Count; i++)
+                for (int i = 0; i < list.Count; i++)
                 {
                     string fontname = ((XmlElement)list.Item(i)).GetAttribute("name", header_style);
                     if (fontname.Equals(font))
                         break;
-                    if(i == list.Count - 1)
+                    if (i == list.Count - 1)
                     {
                         XmlNodeList fontlist = doc.GetElementsByTagName("font-face-decls", header_office);
                         XmlElement addfont = (XmlElement)fontlist.Item(0);
@@ -332,9 +334,9 @@ namespace WindowsFormsApp1
 
             XmlDocument doc = content.doc;
 
-            XmlNodeList list =  doc.GetElementsByTagName("style", header_style);
+            XmlNodeList list = doc.GetElementsByTagName("style", header_style);
 
-            foreach(XmlElement e in list)
+            foreach (XmlElement e in list)
             {
                 string check_name = e.GetAttribute("name", header_style);
 
@@ -486,7 +488,7 @@ namespace WindowsFormsApp1
                     e1.SetAttribute("text-underline-style", header_style, style);
                     e1.SetAttribute("text-underline-width", header_style, width);
                     e1.SetAttribute("text-underline-color", header_style, color);
-                    if(stylenum == 7 || stylenum == 12)
+                    if (stylenum == 7 || stylenum == 12)
                     {
                         e1.SetAttribute("text-underline-type", header_style, "double");
                     }
@@ -803,7 +805,7 @@ namespace WindowsFormsApp1
                     {
                         e1 = doc.CreateElement("style:paragraph-properties", header_style);
                     }
-                    e1.SetAttribute("margin-left", header_fo, left+"cm");
+                    e1.SetAttribute("margin-left", header_fo, left + "cm");
                     e1.SetAttribute("margin-right", header_fo, right + "cm");
                     e1.SetAttribute("margin-top", header_fo, top + "cm");
                     e1.SetAttribute("margin-bottom", header_fo, bottom + "cm");
@@ -879,7 +881,7 @@ namespace WindowsFormsApp1
                     {
                         e1.SetAttribute("text-align-last", header_fo, set_align);
                     }
-                    else if(align.Equals("Distribute"))
+                    else if (align.Equals("Distribute"))
                     {
                         e1.SetAttribute("text-align-last", header_fo, set_align);
                         e1.SetAttribute("justify-single-word", header_style, "true");
@@ -890,18 +892,18 @@ namespace WindowsFormsApp1
                 }
             }
         }
-        
+
         // p 생성
         public string AddContentP(string text)
         {
-            string pname = "P" + (numP+1).ToString();
+            string pname = "P" + (numP + 1).ToString();
 
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
 
             XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
             XmlElement e = (XmlElement)list.Item(0);
-            
+
             // 문단 스타일 생성
             XmlElement e1 = doc.CreateElement("style:style", header_style);
 
@@ -910,12 +912,12 @@ namespace WindowsFormsApp1
             e1.SetAttribute("parent-style-name", header_style, "Standard");
 
             e.AppendChild(e1);
-            
+
             // 문단 내용 생성
             list = doc.GetElementsByTagName("text", header_office);
 
             e = (XmlElement)list.Item(0);
-            
+
             XmlElement text_element = doc.CreateElement("text:p", header_text);
 
             text_element.SetAttribute("style-name", header_text, pname);
@@ -930,7 +932,7 @@ namespace WindowsFormsApp1
         // p 생성 : null
         public string AddContentP()
         {
-            string pname = "P" + (numP+1).ToString();
+            string pname = "P" + (numP + 1).ToString();
 
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -983,7 +985,7 @@ namespace WindowsFormsApp1
         // span 추가
         public string AddContentSpan(string pname, string text)
         {
-            string spanname = "T" + (numSpan+1).ToString();
+            string spanname = "T" + (numSpan + 1).ToString();
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
 
@@ -1000,11 +1002,11 @@ namespace WindowsFormsApp1
             list = doc.GetElementsByTagName("p", header_text);
 
             //현재는 모든 p가 이름이 다르기 때문에 가능 수정?
-            foreach(XmlElement element in list)
+            foreach (XmlElement element in list)
             {
                 string name_check = element.GetAttribute("style-name", header_text);
                 if (name_check.Equals(pname))
-                { 
+                {
                     XmlElement text_element = doc.CreateElement("text:span", header_text);
 
                     text_element.SetAttribute("style-name", header_text, spanname);
@@ -1025,9 +1027,9 @@ namespace WindowsFormsApp1
 
             XmlElement pagelayout = (XmlElement)doc.GetElementsByTagName("page-layout-properties", header_style).Item(0);
             pagelayout.SetAttribute("margin-left", header_fo, left + "cm");
-            pagelayout.SetAttribute("margin-right", header_fo, right +"cm");
+            pagelayout.SetAttribute("margin-right", header_fo, right + "cm");
             pagelayout.SetAttribute("margin-top", header_fo, top + "cm");
-            pagelayout.SetAttribute("margin-bottom", header_fo, bottom + "cm");   
+            pagelayout.SetAttribute("margin-bottom", header_fo, bottom + "cm");
         }
 
         public void SetHeader(double headermargin, double left, double right, double bottom)
@@ -1068,7 +1070,7 @@ namespace WindowsFormsApp1
 
         public string AddHeader()
         {
-            string name = "MP" + (numMP+1).ToString();
+            string name = "MP" + (numMP + 1).ToString();
             XmlNode styles = (XmlNode)root.child["styles.xml"];
 
             XmlDocument doc = styles.doc;
@@ -1087,7 +1089,7 @@ namespace WindowsFormsApp1
 
             XmlElement master_page = (XmlElement)doc.GetElementsByTagName("master-page", header_style).Item(0);
             XmlElement header = (XmlElement)master_page.GetElementsByTagName("header", header_style).Item(0);
-            if(header == null)
+            if (header == null)
             {
                 header = doc.CreateElement("style:header", header_style);
                 master_page.AppendChild(header);
@@ -1171,7 +1173,7 @@ namespace WindowsFormsApp1
             XmlDocument doc = styles.doc;
 
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
-            foreach(XmlElement e in list)
+            foreach (XmlElement e in list)
             {
                 string stylename = e.GetAttribute("name", header_style);
                 if (stylename.Equals("Standard"))
@@ -1215,6 +1217,124 @@ namespace WindowsFormsApp1
                 xa.Value = character_count.ToString();
             }
 
+        }
+
+        public string MakeTable(int row_n, int col_n)
+        {
+            String name = "표" + (numTable + 1).ToString();
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("text", header_office);
+
+            XmlElement e = (XmlElement)list.Item(0);
+
+            XmlElement table = doc.CreateElement("table:table", header_table);
+
+            table.SetAttribute("name", header_table, name);
+            table.SetAttribute("style-name", header_table, name);
+            e.AppendChild(table);
+
+            for(int i = 0; i < col_n; i++)
+            {
+                XmlElement column = doc.CreateElement("table:table-column", header_table);
+                table.AppendChild(column);
+            }
+            for (int i = 0; i < row_n; i++)
+            {
+                XmlElement row = doc.CreateElement("table:table-row", header_table);
+                table.AppendChild(row);
+                for (int j = 0; j < col_n; j++)
+                {
+                    XmlElement cell = doc.CreateElement("table:table-cell", header_table);
+                    row.AppendChild(cell);
+                }
+            }
+            numTable++;
+            return name;
+        }
+
+        public void setTable(string name, double width)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
+
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
+            XmlElement e = (XmlElement)list.Item(0);
+
+            XmlElement table = doc.CreateElement("style:style", header_style);
+            table.SetAttribute("name", header_style, name);
+            table.SetAttribute("family", header_style, "table");
+
+            XmlElement tablestyle = doc.CreateElement("style:table-properties", header_style);
+            tablestyle.SetAttribute("width", header_style, width+"cm");
+            tablestyle.SetAttribute("align", header_table, "margins");
+            table.AppendChild(tablestyle);
+
+            e.AppendChild(table);
+        }
+
+        public void setCol(string name, int col_num, double width)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
+
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
+            XmlElement e = (XmlElement)list.Item(0);
+
+            XmlElement col = doc.CreateElement("style:style", header_style);
+            string col_name;
+            if (col_num < 26)
+                col_name = ((char)('A' + col_num)).ToString();
+            else
+            {
+                col_name = ((char)('A' + (col_num / 26))).ToString() + ((char)('A' + (col_num % 26))).ToString();
+            }
+            col_name = name + "." + col_name;
+            col.SetAttribute("name", header_style, col_name);
+            col.SetAttribute("family", header_style, "table-column");
+
+            XmlElement colStyle = doc.CreateElement("style:table-column-properties", header_style);
+            colStyle.SetAttribute("width", header_style, width + "cm");
+
+            col.AppendChild(colStyle);
+            e.AppendChild(col);
+
+            list = doc.GetElementsByTagName("table", header_table);
+            e = (XmlElement)list.Item(numTable - 1);
+
+            XmlElement column = (XmlElement)e.GetElementsByTagName("table-column", header_table).Item(col_num);
+            column.SetAttribute("style-name", header_table, col_name);
+        }
+
+        public void setRow(string name, int row_num, double height)
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
+
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
+            XmlElement e = (XmlElement)list.Item(0);
+
+            XmlElement row = doc.CreateElement("style:style", header_style);
+            string row_name = name + "." + row_num;
+
+            row.SetAttribute("name", header_style, row_name);
+            row.SetAttribute("family", header_style, "table-row");
+
+            XmlElement rowStyle = doc.CreateElement("style:table-row-properties", header_style);
+            rowStyle.SetAttribute("min-row-height", header_style, height + "cm");
+
+            row.AppendChild(rowStyle);
+            e.AppendChild(row);
+
+            list = doc.GetElementsByTagName("table", header_table);
+            e = (XmlElement)list.Item(numTable - 1);
+
+            XmlElement column = (XmlElement)e.GetElementsByTagName("table-row", header_table).Item(row_num);
+            column.SetAttribute("style-name", header_table, row_name);
         }
 
         static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
