@@ -21,7 +21,7 @@ namespace WindowsFormsApp1
             //JsonToOdt
             JsonToOdt jo = new JsonToOdt();
             jo.setJson(hj.getJson());
-            jo.setJsonT(hj.getJsonT());
+            
             jo.Run();
 
             string[] files = new string[] { "content.xml", "manifest.xml", "settings.xml", "styles.xml" };
