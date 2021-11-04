@@ -12,7 +12,6 @@ namespace WindowsFormsApp1
     public class JsonToOdt
     {
         JObject json;
-        JObject jsonT;
 
         XmlManager xm;
 
@@ -49,11 +48,5 @@ namespace WindowsFormsApp1
         {
             this.json = j;
         }
-
-        public void setJsonT(JObject jT)
-        {
-            this.jsonT = jT;
-        }
-
     }
 }
