@@ -11,7 +11,6 @@ namespace WindowsFormsApp1
     public class HwpToJson
     {
         private string jsonpath;
-        private string jsontextpath;
 
         JObject json;
         JObject jsonT;
@@ -19,7 +18,6 @@ namespace WindowsFormsApp1
         public HwpToJson()
         {
             this.jsonpath = Data.currentPath + @"\test.json";
-            this.jsontextpath = Data.currentPath + @"\onlytext.json";
         }
 
         public void Run()
@@ -47,15 +45,6 @@ namespace WindowsFormsApp1
 
             file.Close();
             reader.Close();
-
-
-            StreamReader file2 = File.OpenText(jsontextpath);
-            JsonTextReader reader2 = new JsonTextReader(file2);
-            jsonT = (JObject)JToken.ReadFrom(reader2);
-
-            file2.Close();
-            reader2.Close();
-
         }
 
 
