@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -13,7 +13,6 @@ namespace WindowsFormsApp1
         private string jsonpath;
 
         JObject json;
-        JObject jsonT;
 
         public HwpToJson()
         {
@@ -29,11 +28,6 @@ namespace WindowsFormsApp1
         public JObject getJson()
         {
             return this.json;
-        }
-
-        public JObject getJsonT()
-        {
-            return this.jsonT;
         }
 
         private void CreateJsonFile()
