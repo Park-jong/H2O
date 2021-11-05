@@ -55,7 +55,7 @@ namespace WindowsFormsApp1.FuncToXml
                 xm.ContentXml = true;
 
             }*/
-
+            xm.ContentXml = true;
             // 문단 내 텍스트 별로 subcontent 만들기
             // p 생성
             for (int s = 0; s < json["bodyText"]["sectionList"].Count(); s++)
