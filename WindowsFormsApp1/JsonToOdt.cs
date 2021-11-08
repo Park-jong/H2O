@@ -16,20 +16,33 @@ namespace WindowsFormsApp1
         XmlManager xm;
 
         FuncToXml.TextToXml ttx;
+        FuncToXml.GridToXml gtx;
 
         public JsonToOdt()
         {
             xm = new XmlManager();
 
             ttx = new FuncToXml.TextToXml();
+            gtx = new FuncToXml.GridToXml();
         }
 
         public void Run()
         {
             CreateFolder();
 
-            ttx.Run(xm, json);
+            for (int s = 0; s < json["bodyText"]["sectionList"].Count(); s++)
+                for (int i = 0; i < json["bodyText"]["sectionList"][s]["paragraphList"].Count(); i++)
+                {
+                    bool zeroCheck = i == 0 ? true : false;
 
+                    JToken nowJson = json["bodyText"]["sectionList"][s]["paragraphList"][i];
+                    JToken docJson = json["docInfo"];
+
+                    ttx.Run(xm, nowJson, docJson, zeroCheck);
+                    gtx.Run(xm, nowJson, docJson, zeroCheck);
+                }
+
+            //ttx.Run(xm, json);
 
             SaveODT();
         }
