@@ -37,7 +37,14 @@ namespace WindowsFormsApp1
             Paragraph = new ParagraphManager();
             numP = 0;
             numSpan = 0;
+<<<<<<< .merge_file_a37464
         }
+=======
+            numMP = 0;
+            numMT = 0;
+            numTable = 0;
+    }
+>>>>>>> .merge_file_a32368
 
         public void CreateODT()
         {
@@ -1372,6 +1379,86 @@ namespace WindowsFormsApp1
 
         }
 
+<<<<<<< .merge_file_a37464
+=======
+
+        public string AddTableContentP(string text, int row, int cell)
+        {
+            string pname = "P" + (numP + 1).ToString();
+
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
+            XmlElement e = (XmlElement)list.Item(0);
+
+            // 문단 스타일 생성
+            XmlElement e1 = doc.CreateElement("style:style", header_style);
+
+            e1.SetAttribute("name", header_style, pname);
+            e1.SetAttribute("family", header_style, "paragraph");
+            e1.SetAttribute("parent-style-name", header_style, "Standard");
+
+            e.AppendChild(e1);
+
+            // 문단 내용 생성
+            list = doc.GetElementsByTagName("table", header_table);
+
+            XmlElement table = (XmlElement)list.Item(numTable - 1);
+
+            XmlElement tableRow = (XmlElement)table.GetElementsByTagName("table-row", header_table).Item(row);
+
+            XmlElement tableCell = (XmlElement)tableRow.GetElementsByTagName("table-cell", header_table).Item(cell);
+
+            XmlElement text_element = doc.CreateElement("text:p", header_text);
+
+            text_element.SetAttribute("style-name", header_text, pname);
+            text_element.InnerText = text; // 구식
+            tableCell.AppendChild(text_element);
+
+            numP++;
+
+            return pname;
+        }
+
+        // p 생성 : null
+        public string AddTableContentP(int row, int cell)
+        {
+            string pname = "P" + (numP + 1).ToString();
+
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
+
+
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
+            XmlElement e = (XmlElement)list.Item(0);
+
+            // 문단 스타일 생성
+            XmlElement e1 = doc.CreateElement("style:style", header_style);
+            e1.SetAttribute("name", header_style, pname);
+            e1.SetAttribute("family", header_style, "paragraph");
+            e1.SetAttribute("parent-style-name", header_style, "Standard");
+            e.AppendChild(e1);
+
+            list = doc.GetElementsByTagName("table", header_table);
+
+            XmlElement table = (XmlElement)list.Item(numTable - 1);
+
+            XmlElement tableRow = (XmlElement)table.GetElementsByTagName("table-row", header_table).Item(row);
+
+            XmlElement tableCell = (XmlElement)tableRow.GetElementsByTagName("table-cell", header_table).Item(cell);
+
+            XmlElement text_element = doc.CreateElement("text:p", header_text);
+
+            text_element.SetAttribute("style-name", header_text, pname);
+            tableCell.AppendChild(text_element);
+
+            numP++;
+
+            return pname;
+        }
+
+>>>>>>> .merge_file_a32368
         static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
         static string meta_meta = "urn:oasis:names:tc:opendocument:xmlns:meta:1.0";
         private string mimetype;
