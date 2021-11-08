@@ -19,23 +19,26 @@ namespace WindowsFormsApp1
         }
 
         string extension;
-
         private void btn_load_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    Data.filePath = ofd.FileName;
-                    extension = Path.GetExtension(Data.filePath);
-                    long size = new FileInfo(Data.filePath).Length;
+                    Data.filePath = ofd.FileName; // full-path 저장
 
-                    MessageBoxButtons button = MessageBoxButtons.OK;
+                    DirectoryInfo parentDir = Directory.GetParent(Data.filePath);
+                    Data.currentPath = parentDir.FullName; //folder-path 저장
 
                     using (Stream str = ofd.OpenFile())
                     {
                         bool excheck = false;
                         bool sicheck = false;
+
+                        MessageBoxButtons button = MessageBoxButtons.OK;
+
+                        extension = Path.GetExtension(Data.filePath); //.hwp 확인
+                        long size = new FileInfo(Data.filePath).Length; //size 확인
 
                         excheck = CheckFileExtension(extension, button);
                         sicheck = CheckFileSize(size, button);
@@ -43,10 +46,6 @@ namespace WindowsFormsApp1
                         if (excheck && sicheck)
                         {
                             MessageBox.Show("불러오기 완료.", "Success", button);
-
-
-                            DirectoryInfo parentDir = Directory.GetParent(Data.filePath);
-                            Data.currentPath = parentDir.FullName;
                         }
                     }
                 }

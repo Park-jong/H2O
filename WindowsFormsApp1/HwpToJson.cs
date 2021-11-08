@@ -21,8 +21,8 @@ namespace WindowsFormsApp1
 
         public void Run()
         {
-            ExecuteCommandSync(Data.filePath);
-            CreateJsonFile();
+            ExecuteCommandSync(Data.filePath); // hwp path로 java program을 통해 json 생성
+            CreateJsonFile(); // json path로 json load
         }
 
         public JObject getJson()
