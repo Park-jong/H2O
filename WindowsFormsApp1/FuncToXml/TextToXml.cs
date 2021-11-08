@@ -432,26 +432,51 @@ namespace WindowsFormsApp1.FuncToXml
                             hasTable = true;
                             hasTableControlNum = controlList;
                         }
-                        catch(System.ArgumentNullException e)
+                        catch (System.ArgumentNullException e)
                         {
-                            hasTable = false;             
+                            hasTable = false;
                         }
                         //table이 존재할때만 실행
                         if (hasTable)
                         {
+
                             int rowCount = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"]["rowCount"].Value<int>();
                             int columnCount = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"]["columnCount"].Value<int>();
+                            double tableMatginTop = Math.Round(json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"]["topInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3);
+                            double tableMatginBottom = Math.Round(json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"]["bottomInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3);
+                            double tableMatginLeft = Math.Round(json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"]["leftInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3);
+                            double tableMatginRight = Math.Round(json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["table"]["rightInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3);;
+
                             string table = xm.MakeTable(rowCount, columnCount);
                             xm.setTable(table, Math.Round(json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["header"]["width"].Value<int>() * 0.01 * 0.0352778, 3));
-                            for(int c = 0; c < columnCount; c++)
+                            //for(int c = 0; c < columnCount; c++)
+                            //{
+                            //    int colWidth = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][0]["cellList"][c]["listHeader"]["width"].Value<int>();
+                            //    xm.setCol(table, c, Math.Round(colWidth * 0.01 * 0.0352778, 3));
+                            //}
+                            //for (int c = 0; c < rowCount; c++)
+                            //{
+                            //    int rowHeight = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][c]["cellList"][0]["listHeader"]["height"].Value<int>();
+                            //    xm.setRow(table, c, Math.Round(rowHeight * 0.01 * 0.0352778, 3));
+                            //}
+                            for (int rowIndex = 0; rowIndex < json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"].Count(); rowIndex++)
                             {
-                                int colWidth = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][0]["cellList"][c]["listHeader"]["width"].Value<int>();
-                                xm.setCol(table, c, Math.Round(colWidth * 0.01 * 0.0352778, 3));
-                            }
-                            for (int c = 0; c < rowCount; c++)
-                            {
-                                int rowHeight = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][c]["cellList"][0]["listHeader"]["height"].Value<int>();
-                                xm.setRow(table, c, Math.Round(rowHeight * 0.01 * 0.0352778, 3));
+                                for (int colIndex = 0; colIndex < json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"].Count(); colIndex++)
+                                {
+                                    int rowNum = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"].Count();
+                                    int colNum = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"].Count();
+                                    int cellWidth = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["listHeader"]["width"].Value<int>();
+                                    int cellHeight = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["listHeader"]["height"].Value<int>();
+                                    int column_index = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["listHeader"]["colIndex"].Value<int>();
+                                    int row_index = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["listHeader"]["rowIndex"].Value<int>();
+                                    int margin_top = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["listHeader"]["topMargin"].Value<int>();
+                                    int margin_bottom = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["listHeader"]["bottomMargin"].Value<int>();
+                                    int margin_left = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["listHeader"]["leftMargin"].Value<int>();
+                                    int margin_right = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["listHeader"]["rightMargin"].Value<int>();
+                                    xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
+                                    xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
+                                    xm.SetCell(table, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
+                                }
                             }
                         }
                     }
