@@ -40,7 +40,7 @@ namespace WindowsFormsApp1
             numMP = 0;
             numMT = 0;
             numTable = 0;
-    }
+        }
 
         public void CreateODT()
         {
@@ -1380,26 +1380,37 @@ namespace WindowsFormsApp1
             list = doc.GetElementsByTagName("table", header_table);
             e = (XmlElement)list.Item(numTable - 1);
 
-
-            XmlElement column = (XmlElement)e.GetElementsByTagName("table-cell", header_table).Item(row_index * column_num + column_index);
-            column.SetAttribute("style-name", header_table, cell_name);
-            column.SetAttribute("value-type", header_office, "string");
-
-            if (colSpan > 1)
+            list = e.GetElementsByTagName("table-row", header_table);
+            e = (XmlElement)list.Item(row_index);
+            try
             {
-                string colSpanNum = colSpan.ToString();
-                column.SetAttribute("number-columns-spanned", header_table, colSpanNum);
+                cell = (XmlElement)e.GetElementsByTagName("table-cell", header_table).Item(column_index);
+                cell.SetAttribute("style-name", header_table, cell_name);
+                cell.SetAttribute("value-type", header_office, "string");
+
+                if (colSpan > 1)
+                {
+                    string colSpanNum = colSpan.ToString();
+                    cell.SetAttribute("number-columns-spanned", header_table, colSpanNum);
+                }
+                if (rowSpan > 1)
+                {
+                    string rowSpanNum = rowSpan.ToString();
+                    cell.SetAttribute("number-rows-spanned", header_table, rowSpanNum);
+
+                }
             }
-            if (rowSpan > 1)
+            catch (System.NullReferenceException exp)
             {
-                string rowSpanNum = rowSpan.ToString();
-                column.SetAttribute("number-rows-spanned", header_table, rowSpanNum);
 
             }
+
+
+            
         }
 
 
-            public string AddTableContentP(string text, int row, int cell)
+        public string AddTableContentP(string text, int row, int cell)
         {
             string pname = "P" + (numP + 1).ToString();
 
