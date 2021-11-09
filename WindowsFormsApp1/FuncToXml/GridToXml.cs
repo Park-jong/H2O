@@ -1,4 +1,3 @@
-﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +31,7 @@ namespace WindowsFormsApp1.FuncToXml
             nCols = 0; //값 찾지 못함
             cellSpacing = jsonTable["cellSpacing"].Value<int>();
 
-            columnCount = jsonTable["columnCount"].Value<int>();
+            columnCount = jsonTable["columnCount"].Value<int>(); 
         }
         public void Run(XmlManager xm, JToken json, JToken docJson, bool zeroCheck)
         {
@@ -53,9 +52,9 @@ namespace WindowsFormsApp1.FuncToXml
                 try
                 {
                     //현재 테이블 JToken Setting
-                    jsonTable = json["controlList"][controlList]["table"];
-                    jsonRowList = json["controlList"][controlList]["rowList"];
-                    jsonHeader = json["controlList"][controlList]["header"];
+                    jsonTable = json["controlList"][controlList]["table"].Value<JToken>();
+                    jsonRowList = json["controlList"][controlList]["rowList"].Value<JToken>();
+                    jsonHeader = json["controlList"][controlList]["header"].Value<JToken>();
 
                     hasTable = true;
                     hasTableControlNum = controlList;
