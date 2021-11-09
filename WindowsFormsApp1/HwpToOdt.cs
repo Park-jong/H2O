@@ -24,7 +24,7 @@ namespace WindowsFormsApp1
             
             jo.Run();
 
-            string[] files = new string[] { "content.xml", "manifest.xml", "settings.xml", "styles.xml" };
+            string[] files = new string[] { "content.xml", "settings.xml", "styles.xml" };
             foreach (string filename in files)
             {
                 string rewrite = System.IO.File.ReadAllText(Application.StartupPath + @"\New File\" + filename);

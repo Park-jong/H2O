@@ -1,12 +1,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace WindowsFormsApp1.FuncToXml
@@ -15,7 +11,6 @@ namespace WindowsFormsApp1.FuncToXml
     {
         public GridToXml()
         {
-
         }
 
         JToken jsonTable;
@@ -112,9 +107,11 @@ namespace WindowsFormsApp1.FuncToXml
                             int margin_bottom = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["bottomMargin"].Value<int>();
                             int margin_left = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["leftMargin"].Value<int>();
                             int margin_right = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rightMargin"].Value<int>();
+                            int colSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colSpan"].Value<int>();
+                            int rowSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowSpan"].Value<int>();
 
-                            int tdtemp = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>();
-                            int textdirection = bitcal(tdtemp, 0, 0x1);
+
+                            int textdirection = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>(), 0, 0x1);
                             // textdirection 1이면 세로  0이면 가로   
 
                             int linechange = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>(), 3, 0x3);
@@ -125,32 +122,33 @@ namespace WindowsFormsApp1.FuncToXml
 
 
                             xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
-                            xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
-                            xm.SetCell(table, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
+                            xm.setRow(table, rowIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
+                            xm.SetCell(table, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
+
                         }
                     }
-                    for (int rowIndex = 0; rowIndex < json["controlList"][controlList]["rowList"].Count(); rowIndex++)
+                    for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
                     {
-                        for (int colIndex = 0; colIndex < json["controlList"][controlList]["rowList"][rowIndex]["cellList"].Count(); colIndex++)
+                        for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
                             //text
-                            for (int k = 0; k < json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count(); k++)
+                            for (int k = 0; k < jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count(); k++)
                             {
                                 //전체 텍스트 가져오기
                                 string pcontent = null; // p text
-                                int shapeId = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["header"]["paraShapeId"].Value<int>();
+                                int shapeId = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["header"]["paraShapeId"].Value<int>();
                                 int sID = shapeId;
                                 try
                                 {
-                                    object obj = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<object>();
+                                    object obj = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<object>();
 
                                     if (obj != null)
-                                        pcontent = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<string>();
+                                        pcontent = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<string>();
                                 }
                                 /////////////////////////////////////////////////////////////글자가 없을 때
                                 catch (Exception e)
                                 {
-                                    int nullPStyle = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
+                                    int nullPStyle = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
                                     float nullPFontSize = docJson["charShapeList"][nullPStyle]["baseSize"].Value<float>() / 100;
                                     string nullPName = xm.AddTableContentP(rowIndex, colIndex); // para null 인 경우 처리
                                     xm.SetFontSize(nullPName, nullPFontSize);
@@ -209,9 +207,9 @@ namespace WindowsFormsApp1.FuncToXml
                                 /////////////////////////////////////////////////////////////////
 
                                 // 스타일별 텍스트 개수
-                                int spancount = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"].Count(); // p 안 text style count
+                                int spancount = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"].Count(); // p 안 text style count
                                                                                                                                                                                                                   // 스타일별 텍스트 아이디
-                                int pstyle = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
+                                int pstyle = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
 
 
                                 string pname = "";
@@ -221,12 +219,12 @@ namespace WindowsFormsApp1.FuncToXml
                                 for (int j = 0; j < spancount; j++)
                                 {
                                     //스타일이 시작되는 위치
-                                    int current_position = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["position"].Value<int>();
+                                    int current_position = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["position"].Value<int>();
 
                                     string subcontent;
                                     if (j < spancount - 1)
                                     {
-                                        int next_position = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j + 1]["position"].Value<int>();
+                                        int next_position = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j + 1]["position"].Value<int>();
                                         if (zeroCheck)
                                         {
                                             //current_position = current_position - 16 < 0 ? 0 : current_position - 16;
@@ -245,7 +243,7 @@ namespace WindowsFormsApp1.FuncToXml
 
                                     //스타일 추가 및 내용 추가
                                     //스타일의 아이디
-                                    int currentstyle = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["shapeId"].Value<int>();
+                                    int currentstyle = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["shapeId"].Value<int>();
 
                                     /////////////////////////////////////
                                     /*if (j == 0)
@@ -482,59 +480,9 @@ namespace WindowsFormsApp1.FuncToXml
 
 
                                 }
-
-
                             }
                         }
                     }
-                }
-            }
-
-            bool hasImg = false;
-            int hasImgControlNum;
-            int ImgcontrolListCount = 0;
-            try
-            {
-                ImgcontrolListCount = json["controlList"].Count();
-            }
-            catch (System.ArgumentNullException e)
-            {
-                ImgcontrolListCount = 0;
-            }
-            for (int controlList = 0; controlList < ImgcontrolListCount; controlList++)
-            {
-                try
-                {
-                    object existImg = json["controlList"][controlList]["shapeComponentPicture"].Value<object>();
-                    hasImg = true;
-                    hasImgControlNum = controlList;
-                }
-                catch (System.ArgumentNullException e)
-                {
-                    hasImg = false;
-                }
-                //table이 존재할때만 실행
-                if (hasImg)
-                {
-                   // int borderColor = json["controlList"][controlList]["shapeComponentPicture"]["borderColor"].Value<int>();
-
-                    int imgWidth = json["controlList"][controlList]["shapeComponentPicture"]["imageWidth"].Value<int>();
-                    int imgHeight = json["controlList"][controlList]["shapeComponentPicture"]["imageHeight"].Value<int>();
-                    //int borderProperty = json["controlList"][controlList]["shapeComponentPicture"]["borderColor"].Value<int>();
-                    int leftTopX = json["controlList"][controlList]["shapeComponentPicture"]["leftTop"]["x"].Value<int>();
-                    int leftTopY = json["controlList"][controlList]["shapeComponentPicture"]["leftTop"]["y"].Value<int>();
-                    int rightTopX = json["controlList"][controlList]["shapeComponentPicture"]["rightTop"]["x"].Value<int>();
-                    int rightTopY = json["controlList"][controlList]["shapeComponentPicture"]["rightTop"]["y"].Value<int>();
-                    int leftBottomX = json["controlList"][controlList]["shapeComponentPicture"]["leftBottom"]["x"].Value<int>();
-                    int leftBottomY = json["controlList"][controlList]["shapeComponentPicture"]["leftBottom"]["y"].Value<int>();
-                    int rightBottomX = json["controlList"][controlList]["shapeComponentPicture"]["rightBottom"]["x"].Value<int>();
-                    int rightBottomY = json["controlList"][controlList]["shapeComponentPicture"]["rightBottom"]["y"].Value<int>();
-
-                    
-
-
-
-
                 }
             }
         }
