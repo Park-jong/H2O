@@ -1,12 +1,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace WindowsFormsApp1.FuncToXml
@@ -113,13 +109,13 @@ namespace WindowsFormsApp1.FuncToXml
                             int margin_left = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["leftMargin"].Value<int>();
                             int margin_right = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rightMargin"].Value<int>();
 
-                            int tdtemp = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>();
-                            int textdirection = bitcal(tdtemp, 0, 0x1);
+
+                            int textdirection = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 0, 0x1);
                             // textdirection 1이면 세로  0이면 가로   
 
-                            int linechange = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>(), 3, 0x3);
+                            int linechange = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 3, 0x3);
                             // linechange 가 0 이면 일반적줄바꿈 , 1 자간을조종하여 한줄유지, 2 내용에따라 폭늘어남
-                            int Verticalalign = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>(), 5, 0x3);
+                            int Verticalalign = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 5, 0x3);
                             // 0 top 1 center 2 bottom
                             int paraCount = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["paraCount"].Value<int>();
 
@@ -482,59 +478,9 @@ namespace WindowsFormsApp1.FuncToXml
 
 
                                 }
-
-
                             }
                         }
                     }
-                }
-            }
-
-            bool hasImg = false;
-            int hasImgControlNum;
-            int ImgcontrolListCount = 0;
-            try
-            {
-                ImgcontrolListCount = json["controlList"].Count();
-            }
-            catch (System.ArgumentNullException e)
-            {
-                ImgcontrolListCount = 0;
-            }
-            for (int controlList = 0; controlList < ImgcontrolListCount; controlList++)
-            {
-                try
-                {
-                    object existImg = json["controlList"][controlList]["shapeComponentPicture"].Value<object>();
-                    hasImg = true;
-                    hasImgControlNum = controlList;
-                }
-                catch (System.ArgumentNullException e)
-                {
-                    hasImg = false;
-                }
-                //table이 존재할때만 실행
-                if (hasImg)
-                {
-                   // int borderColor = json["controlList"][controlList]["shapeComponentPicture"]["borderColor"].Value<int>();
-
-                    int imgWidth = json["controlList"][controlList]["shapeComponentPicture"]["imageWidth"].Value<int>();
-                    int imgHeight = json["controlList"][controlList]["shapeComponentPicture"]["imageHeight"].Value<int>();
-                    //int borderProperty = json["controlList"][controlList]["shapeComponentPicture"]["borderColor"].Value<int>();
-                    int leftTopX = json["controlList"][controlList]["shapeComponentPicture"]["leftTop"]["x"].Value<int>();
-                    int leftTopY = json["controlList"][controlList]["shapeComponentPicture"]["leftTop"]["y"].Value<int>();
-                    int rightTopX = json["controlList"][controlList]["shapeComponentPicture"]["rightTop"]["x"].Value<int>();
-                    int rightTopY = json["controlList"][controlList]["shapeComponentPicture"]["rightTop"]["y"].Value<int>();
-                    int leftBottomX = json["controlList"][controlList]["shapeComponentPicture"]["leftBottom"]["x"].Value<int>();
-                    int leftBottomY = json["controlList"][controlList]["shapeComponentPicture"]["leftBottom"]["y"].Value<int>();
-                    int rightBottomX = json["controlList"][controlList]["shapeComponentPicture"]["rightBottom"]["x"].Value<int>();
-                    int rightBottomY = json["controlList"][controlList]["shapeComponentPicture"]["rightBottom"]["y"].Value<int>();
-
-                    
-
-
-
-
                 }
             }
         }

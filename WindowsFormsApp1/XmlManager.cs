@@ -20,15 +20,12 @@ namespace WindowsFormsApp1
         private const string header_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
         private const string header_svg = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
         private const string header_table = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
-        private const string header_draw = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
-        private const string header_xlink = "http://www.w3.org/1999/xlink";
         private static int numP = 0;
         private static int numSpan = 0;
         private static int numMP = 0;
         private static int numMT = 0;
         private static int numTable = 0;
-        private static int numImage = 0;
-        private static int imageStylenum = 0;
+
         public bool ContentXml { get; set; }//본문인지 아닌지 판별
 
         public Hashtable docs = new Hashtable();
@@ -43,7 +40,7 @@ namespace WindowsFormsApp1
             numMP = 0;
             numMT = 0;
             numTable = 0;
-        }
+    }
 
         public void CreateODT()
         {
@@ -55,7 +52,7 @@ namespace WindowsFormsApp1
 
             //Create File
 
-            string[] list1 = { "Configurations2", "META-INF", "Thumbnails", "Pictures" };
+            string[] list1 = { "Configurations2", "META-INF", "Thumbnails" };
 
             foreach (string s in list1)
             {
@@ -1261,25 +1258,25 @@ namespace WindowsFormsApp1
         }
 
         public void setTable(string name, double width)
-            {
-                XmlNode content = (XmlNode)root.child["content.xml"];
-                XmlDocument doc = content.doc;
+        {
+            XmlNode content = (XmlNode)root.child["content.xml"];
+            XmlDocument doc = content.doc;
 
 
-                XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
-                XmlElement e = (XmlElement)list.Item(0);
+            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
+            XmlElement e = (XmlElement)list.Item(0);
 
-                XmlElement table = doc.CreateElement("style:style", header_style);
-                table.SetAttribute("name", header_style, name);
-                table.SetAttribute("family", header_style, "table");
+            XmlElement table = doc.CreateElement("style:style", header_style);
+            table.SetAttribute("name", header_style, name);
+            table.SetAttribute("family", header_style, "table");
 
-                XmlElement tablestyle = doc.CreateElement("style:table-properties", header_style);
-                tablestyle.SetAttribute("width", header_style, width + "cm");
-                tablestyle.SetAttribute("align", header_table, "margins");
-                table.AppendChild(tablestyle);
-            
-                e.AppendChild(table);
-            }
+            XmlElement tablestyle = doc.CreateElement("style:table-properties", header_style);
+            tablestyle.SetAttribute("width", header_style, width + "cm");
+            tablestyle.SetAttribute("align", header_table, "margins");
+            table.AppendChild(tablestyle);
+
+            e.AppendChild(table);
+        }
 
         public void setCol(string name, int col_num, double width)
         {
@@ -1454,86 +1451,9 @@ namespace WindowsFormsApp1
 
             return pname;
         }
-        public void makeimg(double Width,double Height,String extension,String imagePath,double x,double y)
-        {
-            String name = "이미지" + (numImage +1).ToString();
-            String width = Width.ToString(); String height = Height.ToString();
-            String svgx = x.ToString(); String svgy = y.ToString(); 
-            XmlNode content = (XmlNode)root.child["content.xml"];
-            XmlDocument doc = content.doc;
 
-            XmlNodeList list = doc.GetElementsByTagName("text", header_office);
-
-            XmlElement e = (XmlElement)list.Item(0);
-
-            XmlElement image = doc.CreateElement("text:p", header_text);
-
-
-            image.SetAttribute("style-name", header_text, "Standard");
-            e.AppendChild(image);
-            
-                XmlElement draw = doc.CreateElement("draw:frame", header_draw);
-                draw.SetAttribute("name", header_draw, name);
-                draw.SetAttribute("style-name", header_draw, "fr" + imageStylenum); ;
-                draw.SetAttribute("z-index", header_draw,numImage.ToString());
-                draw.SetAttribute("width", header_svg , width +"cm");
-
-                draw.SetAttribute("height", header_svg , height + "cm");
-                draw.SetAttribute("y", header_svg , svgy + "cm");
-                draw.SetAttribute("x", header_svg , svgx + "cm");
-                
-                draw.SetAttribute("anchor-type",header_text, "char");
-
-                image.AppendChild(draw);
-                XmlElement ndraw = doc.CreateElement("draw:image", header_draw);
-                ndraw.SetAttribute("mime-type", header_draw, "image/" + extension);
-                ndraw.SetAttribute("actuate",header_xlink,"onLoad");
-                ndraw.SetAttribute("show", header_xlink, "embed");
-                ndraw.SetAttribute("type", header_xlink, "simple");
-                ndraw.SetAttribute("href", header_xlink, imagePath);
-                draw.AppendChild(ndraw);
-            numImage++;
-            
-        }
-        public void imgstyle(int i) {
-         String name = "fr" + (++imageStylenum).ToString();
-
-            XmlNode content = (XmlNode)root.child["content.xml"];
-        XmlDocument doc = content.doc;
-
-
-        XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
-        XmlElement e = (XmlElement)list.Item(0);
-
-        XmlElement image = doc.CreateElement("style:style", header_style);
-            image.SetAttribute("name", header_style, name);
-            image.SetAttribute("family", header_style, "graphic");
-            image.SetAttribute("parent-style-name", header_style, "Greaphics");
-            e.AppendChild(image);
-            XmlElement imgstyle = doc.CreateElement("style:graphic-properties", header_style);
-            imgstyle.SetAttribute("color-mode", header_draw, "standard");
-            imgstyle.SetAttribute("image-opacity", header_draw, "100%");
-            imgstyle.SetAttribute("color-inversion", header_draw, "false");
-            imgstyle.SetAttribute("color-gamma", header_draw, "100%");
-            imgstyle.SetAttribute("color-blue", header_draw, "0%");
-            imgstyle.SetAttribute("color-red", header_draw, "0%");
-            imgstyle.SetAttribute("color-green", header_draw, "0%");
-            imgstyle.SetAttribute("color-contrast", header_draw, "0%");
-            imgstyle.SetAttribute("color-luminance", header_draw, "0%");
-
-            imgstyle.SetAttribute("clip", header_fo, "rect(0cm,0cm,0cm,0cm)");
-            imgstyle.SetAttribute("mirror", header_style, "none");
-            imgstyle.SetAttribute("horizontal-rel", header_style, "paragraph");
-            imgstyle.SetAttribute("horizontal-pos", header_style, "from-left");
-            imgstyle.SetAttribute("vertical-rel", header_style, "paragraph");
-            imgstyle.SetAttribute("vertical-pos", header_style, "from-top");
-            image.AppendChild(imgstyle);
-
-
-        }
-
-    static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
-            static string meta_meta = "urn:oasis:names:tc:opendocument:xmlns:meta:1.0";
+        static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+        static string meta_meta = "urn:oasis:names:tc:opendocument:xmlns:meta:1.0";
         private string mimetype;
 
         private XmlDocument content;
