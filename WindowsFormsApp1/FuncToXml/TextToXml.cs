@@ -22,43 +22,7 @@ namespace WindowsFormsApp1.FuncToXml
 
         public void Run(XmlManager xm, JToken json, JToken docJson, bool zeroCheck)
         {
-            double pageMarginLeft = Math.Round(json["controlList"][0]["pageDef"]["leftMargin"].Value<double>() * 0.01 * 0.0352778, 3);
-            double pageMarginRight = Math.Round(json["controlList"][0]["pageDef"]["rightMargin"].Value<double>() * 0.01 * 0.0352778, 3);
-            double pageMarginTop = Math.Round(json["controlList"][0]["pageDef"]["topMargin"].Value<double>() * 0.01 * 0.0352778, 3);
-            double pageMarginBottom = Math.Round(json["controlList"][0]["pageDef"]["bottomMargin"].Value<double>() * 0.01 * 0.0352778, 3);
-            double pageMarginHeader = Math.Round(json["controlList"][0]["pageDef"]["headerMargin"].Value<double>() * 0.01 * 0.0352778, 3);
-            double pageMarginFooter = Math.Round(json["controlList"][0]["pageDef"]["footerMargin"].Value<double>() * 0.01 * 0.0352778, 3);
-            //머리 꼬리 없으면
-            xm.SetPageLayout(pageMarginLeft, pageMarginRight, pageMarginTop + pageMarginHeader, pageMarginBottom + pageMarginFooter);
-            //머리 꼬리 있으면
-            /*수정예정
-            {
-                xm.ContentXml = false;
-                xm.SetPageLayout(pageMarginLeft, pageMarginRight, pageMarginTop, pageMarginBottom);
-                {
-                    xm.SetHeader(pageMarginHeader, 0, 0, 0);
-                    string name = xm.AddHeader();
-                    name = xm.AddHeader();
-                    name = xm.AddHeaderFooterSpan(name, "123");
-                    name = xm.AddHeader();
-                    name = xm.AddHeaderFooterSpan(name, "456");
-                    xm.SetBold(name);
-                }
-                {
-                    xm.SetFooter(pageMarginHeader, 0, 0, 0);
-                    xm.AddFooter();
-                    string name = xm.AddFooter();
-                    xm.AddHeaderFooterSpan(name, "789");
-                    name = xm.AddFooter();
-                    xm.AddHeaderFooterSpan(name, "1011");
-                }
-                xm.ContentXml = true;
-
-            }*/
-            xm.ContentXml = true;
-            // 문단 내 텍스트 별로 subcontent 만들기
-            // p 생성
-
+            
             // 문단 ID 가져오기
             int shapeId = json["header"]["paraShapeId"].Value<int>();
             int sID = shapeId;
