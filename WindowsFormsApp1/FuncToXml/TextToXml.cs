@@ -257,7 +257,7 @@ namespace WindowsFormsApp1.FuncToXml
                 int charPro = docJson["charShapeList"][currentstyle]["property"]["value"].Value<int>();
 
                 int bold = bitcal(charPro, 1, 0x1);
-                int italic = bitcal(charPro, 1, 0x1);
+                int italic = bitcal(charPro, 0, 0x1);
                 int underline = bitcal(charPro, 2, 0x3);
                 //bool kerning = docJson["charShapeList"][currentstyle]["Property"]["isKerning"].Value<bool>();
 
