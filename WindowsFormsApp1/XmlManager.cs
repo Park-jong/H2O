@@ -116,7 +116,18 @@ namespace WindowsFormsApp1
                 }
                 else
                 {
-                    ((XmlNode)node).doc.Save(((XmlNode)node).path);
+                    string path;
+
+                    if (((XmlNode)node).path.Contains("New File\\manifest.xml"))
+                    {
+                        path = ((XmlNode)node).path.Replace(".xml", ".rdf");
+                    }
+                    else
+                    {
+                        path = ((XmlNode)node).path;
+                    }
+
+                    ((XmlNode)node).doc.Save(path);
                 }
             }
 
