@@ -110,12 +110,12 @@ namespace WindowsFormsApp1.FuncToXml
                             int margin_right = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rightMargin"].Value<int>();
 
 
-                            int textdirection = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][j]["listHeader"]["property"].Value<int>(), 0, 0x1);
+                            int textdirection = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 0, 0x1);
                             // textdirection 1이면 세로  0이면 가로   
 
-                            int linechange = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][j]["listHeader"]["property"].Value<int>(), 3, 0x3);
+                            int linechange = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 3, 0x3);
                             // linechange 가 0 이면 일반적줄바꿈 , 1 자간을조종하여 한줄유지, 2 내용에따라 폭늘어남
-                            int Verticalalign = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][j]["listHeader"]["property"].Value<int>(), 5, 0x3);
+                            int Verticalalign = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 5, 0x3);
                             // 0 top 1 center 2 bottom
                             int paraCount = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["paraCount"].Value<int>();
 
