@@ -108,6 +108,18 @@ namespace WindowsFormsApp1.FuncToXml
                             int margin_bottom = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["bottomMargin"].Value<int>();
                             int margin_left = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["leftMargin"].Value<int>();
                             int margin_right = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rightMargin"].Value<int>();
+
+
+                            int textdirection = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][j]["listHeader"]["property"].Value<int>(), 0, 0x1);
+                            // textdirection 1이면 세로  0이면 가로   
+
+                            int linechange = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][j]["listHeader"]["property"].Value<int>(), 3, 0x3);
+                            // linechange 가 0 이면 일반적줄바꿈 , 1 자간을조종하여 한줄유지, 2 내용에따라 폭늘어남
+                            int Verticalalign = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][j]["listHeader"]["property"].Value<int>(), 5, 0x3);
+                            // 0 top 1 center 2 bottom
+                            int paraCount = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["paraCount"].Value<int>();
+
+
                             xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
                             xm.SetCell(table, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
