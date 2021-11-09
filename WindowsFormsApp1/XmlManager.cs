@@ -37,14 +37,10 @@ namespace WindowsFormsApp1
             Paragraph = new ParagraphManager();
             numP = 0;
             numSpan = 0;
-<<<<<<< .merge_file_a37464
-        }
-=======
             numMP = 0;
             numMT = 0;
             numTable = 0;
     }
->>>>>>> .merge_file_a32368
 
         public void CreateODT()
         {
@@ -1379,8 +1375,6 @@ namespace WindowsFormsApp1
 
         }
 
-<<<<<<< .merge_file_a37464
-=======
 
         public string AddTableContentP(string text, int row, int cell)
         {
@@ -1458,7 +1452,6 @@ namespace WindowsFormsApp1
             return pname;
         }
 
->>>>>>> .merge_file_a32368
         static string content_text = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
         static string meta_meta = "urn:oasis:names:tc:opendocument:xmlns:meta:1.0";
         private string mimetype;
