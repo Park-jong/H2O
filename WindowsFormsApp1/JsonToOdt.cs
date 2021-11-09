@@ -6,6 +6,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Xml;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace WindowsFormsApp1
 {
@@ -17,6 +19,7 @@ namespace WindowsFormsApp1
 
         FuncToXml.TextToXml ttx;
         FuncToXml.GridToXml gtx;
+        FuncToXml.ImgToXml itx;
 
         public JsonToOdt()
         {
@@ -24,6 +27,7 @@ namespace WindowsFormsApp1
 
             ttx = new FuncToXml.TextToXml();
             gtx = new FuncToXml.GridToXml();
+            itx = new FuncToXml.ImgToXml();
         }
 
         public void Run()
@@ -68,6 +72,7 @@ namespace WindowsFormsApp1
 
 
 
+
             for (int s = 0; s < json["bodyText"]["sectionList"].Count(); s++)
                 for (int i = 0; i < json["bodyText"]["sectionList"][s]["paragraphList"].Count(); i++)
                 {
@@ -75,10 +80,14 @@ namespace WindowsFormsApp1
 
                     JToken nowJson = json["bodyText"]["sectionList"][s]["paragraphList"][i];
                     JToken docJson = json["docInfo"];
+                    JToken imgJson = json["binData"];
 
                     ttx.Run(xm, nowJson, docJson, zeroCheck);
                     gtx.Run(xm, nowJson, docJson, zeroCheck);
+                    itx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
                 }
+
+            //ttx.Run(xm, json);
 
             SaveODT();
         }
