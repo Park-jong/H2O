@@ -1351,7 +1351,7 @@ namespace WindowsFormsApp1
             column.SetAttribute("style-name", header_table, row_name);
         }
 
-        public void SetCell(string name, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right)
+        public void SetCell(string name, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -1383,11 +1383,23 @@ namespace WindowsFormsApp1
 
             XmlElement column = (XmlElement)e.GetElementsByTagName("table-cell", header_table).Item(row_index * column_num + column_index);
             column.SetAttribute("style-name", header_table, cell_name);
+            column.SetAttribute("value-type", header_office, "string");
 
+            if (colSpan > 1)
+            {
+                string colSpanNum = colSpan.ToString();
+                column.SetAttribute("number-columns-spanned", header_table, colSpanNum);
+            }
+            if (rowSpan > 1)
+            {
+                string rowSpanNum = rowSpan.ToString();
+                column.SetAttribute("number-rows-spanned", header_table, rowSpanNum);
+
+            }
         }
 
 
-        public string AddTableContentP(string text, int row, int cell)
+            public string AddTableContentP(string text, int row, int cell)
         {
             string pname = "P" + (numP + 1).ToString();
 
