@@ -61,7 +61,7 @@ namespace WindowsFormsApp1.FuncToXml
                 {
                     //현재 테이블 JToken Setting
                     jsonTable = json["controlList"][controlList]["table"].Value<JToken>();
-                    jsonRowList = jsonRowList.Value<JToken>();
+                    jsonRowList = json["controlList"][controlList]["rowList"].Value<JToken>();
                     jsonHeader = json["controlList"][controlList]["header"].Value<JToken>();
 
                     hasTable = true;
