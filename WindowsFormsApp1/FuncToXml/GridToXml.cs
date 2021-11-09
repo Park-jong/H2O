@@ -122,7 +122,7 @@ namespace WindowsFormsApp1.FuncToXml
                             {
                                 //전체 텍스트 가져오기
                                 string pcontent = null; // p text
-                                int shapeId = json["header"]["paraShapeId"].Value<int>();
+                                int shapeId = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["header"]["paraShapeId"].Value<int>();
                                 int sID = shapeId;
                                 try
                                 {
@@ -350,7 +350,7 @@ namespace WindowsFormsApp1.FuncToXml
                                     int charPro = docJson["charShapeList"][currentstyle]["property"]["value"].Value<int>();
 
                                     int bold = bitcal(charPro, 1, 0x1);
-                                    int italic = bitcal(charPro, 1, 0x1);
+                                    int italic = bitcal(charPro, 0, 0x1);
                                     int underline = bitcal(charPro, 2, 0x3);
                                     //bool kerning = docJson["charShapeList"][currentstyle]["Property"]["isKerning"].Value<bool>();
 
