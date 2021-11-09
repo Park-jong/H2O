@@ -40,7 +40,7 @@ namespace WindowsFormsApp1
             numMP = 0;
             numMT = 0;
             numTable = 0;
-    }
+        }
 
         public void CreateODT()
         {
@@ -116,7 +116,18 @@ namespace WindowsFormsApp1
                 }
                 else
                 {
-                    ((XmlNode)node).doc.Save(((XmlNode)node).path);
+                    string path;
+
+                    if (((XmlNode)node).path.Contains("New File\\manifest.xml"))
+                    {
+                        path = ((XmlNode)node).path.Replace(".xml", ".rdf");
+                    }
+                    else
+                    {
+                        path = ((XmlNode)node).path;
+                    }
+
+                    ((XmlNode)node).doc.Save(path);
                 }
             }
 
@@ -1340,17 +1351,46 @@ namespace WindowsFormsApp1
             column.SetAttribute("style-name", header_table, row_name);
         }
 
-        public void SetCell(string name, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right)
+        public void SetCell(string name, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
-
-
-            XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
-            XmlElement e = (XmlElement)list.Item(0);
-
-            XmlElement cell = doc.CreateElement("style:style", header_style);
             string cell_name = name + "." + row_index + "." + column_index;
+
+            XmlNodeList list = doc.GetElementsByTagName("table", header_table);
+            XmlElement e = (XmlElement)list.Item(numTable - 1);
+
+            list = e.GetElementsByTagName("table-row", header_table);
+            e = (XmlElement)list.Item(row_index);
+            XmlElement cell;
+            try
+            {
+                cell = (XmlElement)e.GetElementsByTagName("table-cell", header_table).Item(column_index);
+            }
+            catch (System.NullReferenceException exp)
+            {
+                return;
+            }
+            cell.SetAttribute("style-name", header_table, cell_name);
+            cell.SetAttribute("value-type", header_office, "string");
+
+            if (colSpan > 1)
+            {
+                string colSpanNum = colSpan.ToString();
+                cell.SetAttribute("number-columns-spanned", header_table, colSpanNum);
+            }
+            if (rowSpan > 1)
+            {
+                string rowSpanNum = rowSpan.ToString();
+                cell.SetAttribute("number-rows-spanned", header_table, rowSpanNum);
+
+            }
+
+
+            list = doc.GetElementsByTagName("automatic-styles", header_office);
+            e = (XmlElement)list.Item(0);
+
+            cell = doc.CreateElement("style:style", header_style);
 
             cell.SetAttribute("name", header_style, cell_name);
             cell.SetAttribute("family", header_style, "table-cell");
@@ -1364,15 +1404,7 @@ namespace WindowsFormsApp1
             cellStyle.SetAttribute("margin-right", header_fo, margin_right + "cm");
 
             cell.AppendChild(cellStyle);
-            e.AppendChild(cell);
-
-            list = doc.GetElementsByTagName("table", header_table);
-            e = (XmlElement)list.Item(numTable - 1);
-
-
-            XmlElement column = (XmlElement)e.GetElementsByTagName("table-cell", header_table).Item(row_index * column_num + column_index);
-            column.SetAttribute("style-name", header_table, cell_name);
-
+            e.AppendChild(cell);           
         }
 
 

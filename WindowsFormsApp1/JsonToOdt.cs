@@ -80,8 +80,6 @@ namespace WindowsFormsApp1
                     gtx.Run(xm, nowJson, docJson, zeroCheck);
                 }
 
-            //ttx.Run(xm, json);
-
             SaveODT();
         }
 

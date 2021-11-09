@@ -11,7 +11,6 @@ namespace WindowsFormsApp1.FuncToXml
     {
         public GridToXml()
         {
-
         }
 
         JToken jsonTable;
@@ -108,45 +107,48 @@ namespace WindowsFormsApp1.FuncToXml
                             int margin_bottom = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["bottomMargin"].Value<int>();
                             int margin_left = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["leftMargin"].Value<int>();
                             int margin_right = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rightMargin"].Value<int>();
+                            int colSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colSpan"].Value<int>();
+                            int rowSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowSpan"].Value<int>();
 
 
-                            int textdirection = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 0, 0x1);
+                            int textdirection = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>(), 0, 0x1);
                             // textdirection 1이면 세로  0이면 가로   
 
-                            int linechange = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 3, 0x3);
+                            int linechange = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>(), 3, 0x3);
                             // linechange 가 0 이면 일반적줄바꿈 , 1 자간을조종하여 한줄유지, 2 내용에따라 폭늘어남
-                            int Verticalalign = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["cellList"][colIndex]["listHeader"]["property"].Value<int>(), 5, 0x3);
+                            int Verticalalign = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>(), 5, 0x3);
                             // 0 top 1 center 2 bottom
                             int paraCount = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["paraCount"].Value<int>();
 
 
                             xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
-                            xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
-                            xm.SetCell(table, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
+                            xm.setRow(table, rowIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
+                            xm.SetCell(table, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
+
                         }
                     }
-                    for (int rowIndex = 0; rowIndex < json["controlList"][controlList]["rowList"].Count(); rowIndex++)
+                    for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
                     {
-                        for (int colIndex = 0; colIndex < json["controlList"][controlList]["rowList"][rowIndex]["cellList"].Count(); colIndex++)
+                        for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
                             //text
-                            for (int k = 0; k < json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count(); k++)
+                            for (int k = 0; k < jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count(); k++)
                             {
                                 //전체 텍스트 가져오기
                                 string pcontent = null; // p text
-                                int shapeId = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["header"]["paraShapeId"].Value<int>();
+                                int shapeId = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["header"]["paraShapeId"].Value<int>();
                                 int sID = shapeId;
                                 try
                                 {
-                                    object obj = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<object>();
+                                    object obj = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<object>();
 
                                     if (obj != null)
-                                        pcontent = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<string>();
+                                        pcontent = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<string>();
                                 }
                                 /////////////////////////////////////////////////////////////글자가 없을 때
                                 catch (Exception e)
                                 {
-                                    int nullPStyle = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
+                                    int nullPStyle = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
                                     float nullPFontSize = docJson["charShapeList"][nullPStyle]["baseSize"].Value<float>() / 100;
                                     string nullPName = xm.AddTableContentP(rowIndex, colIndex); // para null 인 경우 처리
                                     xm.SetFontSize(nullPName, nullPFontSize);
@@ -205,9 +207,9 @@ namespace WindowsFormsApp1.FuncToXml
                                 /////////////////////////////////////////////////////////////////
 
                                 // 스타일별 텍스트 개수
-                                int spancount = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"].Count(); // p 안 text style count
+                                int spancount = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"].Count(); // p 안 text style count
                                                                                                                                                                                                                   // 스타일별 텍스트 아이디
-                                int pstyle = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
+                                int pstyle = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
 
 
                                 string pname = "";
@@ -217,12 +219,12 @@ namespace WindowsFormsApp1.FuncToXml
                                 for (int j = 0; j < spancount; j++)
                                 {
                                     //스타일이 시작되는 위치
-                                    int current_position = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["position"].Value<int>();
+                                    int current_position = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["position"].Value<int>();
 
                                     string subcontent;
                                     if (j < spancount - 1)
                                     {
-                                        int next_position = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j + 1]["position"].Value<int>();
+                                        int next_position = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j + 1]["position"].Value<int>();
                                         if (zeroCheck)
                                         {
                                             //current_position = current_position - 16 < 0 ? 0 : current_position - 16;
@@ -241,7 +243,7 @@ namespace WindowsFormsApp1.FuncToXml
 
                                     //스타일 추가 및 내용 추가
                                     //스타일의 아이디
-                                    int currentstyle = json["controlList"][controlList]["rowList"][rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["shapeId"].Value<int>();
+                                    int currentstyle = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["shapeId"].Value<int>();
 
                                     /////////////////////////////////////
                                     /*if (j == 0)
