@@ -122,6 +122,7 @@ namespace WindowsFormsApp1.FuncToXml
 
 
                             xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
+                            xm.setRow(table, rowIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
                             xm.SetCell(table, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
 
                         }
