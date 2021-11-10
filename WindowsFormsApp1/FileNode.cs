@@ -36,7 +36,7 @@ namespace WindowsFormsApp1
         public void AddChild(FileNode node)
         {
             if (child == null) { child = new Hashtable(); }
-
+         
             child.Add(node.name, (FileNode)node);
             node.path = this.path + @"\" + node.name;
         }
