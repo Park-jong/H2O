@@ -79,8 +79,8 @@ namespace WindowsFormsApp1.FuncToXml
                     int imgWidth = bodyJson["controlList"][controlList]["header"]["width"].Value<int>();
                     int imgHeight = bodyJson["controlList"][controlList]["header"]["height"].Value<int>();
                     // String borderProperty = bodyJson["controlList"][controlList]["shapeComponentPicture"]["borderColor"].Value<String>();
-                    int leftTopX = bodyJson["controlList"][controlList]["shapeComponentPicture"]["leftTop"]["x"].Value<int>();
-                    int leftTopY = bodyJson["controlList"][controlList]["shapeComponentPicture"]["leftTop"]["y"].Value<int>();
+                    double leftTopX = bodyJson["controlList"][controlList]["header"]["xOffset"].Value<int>();
+                    double leftTopY = bodyJson["controlList"][controlList]["header"]["yOffset"].Value<int> ();
                     int rightTopX = bodyJson["controlList"][controlList]["shapeComponentPicture"]["rightTop"]["x"].Value<int>();
                     int rightTopY = bodyJson["controlList"][controlList]["shapeComponentPicture"]["rightTop"]["y"].Value<int>();
                     int leftBottomX = bodyJson["controlList"][controlList]["shapeComponentPicture"]["leftBottom"]["x"].Value<int>();
@@ -92,7 +92,7 @@ namespace WindowsFormsApp1.FuncToXml
 
                     JArray temp = binJson["embeddedBinaryDataList"][ID - 1]["data"].Value<JArray>();
                     sbyte[] items = temp.ToObject<sbyte[]>();
-
+                    
                     //ImgNode 생성 및 Pictures폴더 child 설정
                     ImgNode node = setPicturesChild(xm, name);
                     node.img = StringToImage(items);
@@ -107,7 +107,8 @@ namespace WindowsFormsApp1.FuncToXml
                     string currentPath = "Pictures/" + name;
                     xm.imgstyle(ID - 1);
                     xm.makeimg(width, height, extension, currentPath, lx, ly);
-                    xm.makeimgEntry(node);
+
+
                 }
             }
         }
@@ -116,7 +117,7 @@ namespace WindowsFormsApp1.FuncToXml
         {
             FolderNode pictures = (FolderNode)xm.root.child["Pictures"];
             ImgNode node = new ImgNode(name, pictures);
-            node.path = Application.StartupPath + @"New File\Pictures\" + name;
+            node.path = Application.StartupPath + @"\New File\Pictures\" + name;
 
             return node;
         }
