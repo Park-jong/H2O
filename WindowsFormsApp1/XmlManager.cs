@@ -1268,7 +1268,7 @@ namespace WindowsFormsApp1
             return name;
         }
 
-        public void setTable(string name, double width)
+        public void setTable(string name, double width, double outterTopMargin, double outterLeftMargin, double outterRightMargin, double outterBottomMargin)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -1284,6 +1284,16 @@ namespace WindowsFormsApp1
             XmlElement tablestyle = doc.CreateElement("style:table-properties", header_style);
             tablestyle.SetAttribute("width", header_style, width + "cm");
             tablestyle.SetAttribute("align", header_table, "margins");
+
+            //창의축전용 임의 스타일 설정 = 추후에 수정 필요
+            if(name == "표1")
+            {
+                //tablestyle.SetAttribute("margin-top", header_fo, outterTopMargin + "cm");
+                tablestyle.SetAttribute("margin-left", header_fo, outterLeftMargin * 10 + "cm");
+                tablestyle.SetAttribute("margin-right", header_fo, outterRightMargin * 10 + "cm");
+                //tablestyle.SetAttribute("margin-bottom", header_fo, outterBottomMargin + "cm");
+            }
+
             table.AppendChild(tablestyle);
 
             e.AppendChild(table);
@@ -1351,7 +1361,7 @@ namespace WindowsFormsApp1
             column.SetAttribute("style-name", header_table, row_name);
         }
 
-        public void SetCell(string name, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right)
+        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -1362,6 +1372,7 @@ namespace WindowsFormsApp1
 
             list = e.GetElementsByTagName("table-row", header_table);
             e = (XmlElement)list.Item(row_index);
+
             XmlElement cell;
             try
             {
@@ -1371,6 +1382,7 @@ namespace WindowsFormsApp1
             {
                 return;
             }
+
             cell.SetAttribute("style-name", header_table, cell_name);
             cell.SetAttribute("value-type", header_office, "string");
 
@@ -1398,10 +1410,14 @@ namespace WindowsFormsApp1
             XmlElement cellStyle = doc.CreateElement("style:table-cell-properties", header_style);
             cellStyle.SetAttribute("width", header_style, width + "cm");
             cellStyle.SetAttribute("height", header_style, height + "cm");
-            cellStyle.SetAttribute("margin-top", header_fo, margin_top + "cm");
-            cellStyle.SetAttribute("margin-bottom", header_fo, margin_bottom + "cm");
-            cellStyle.SetAttribute("margin-left", header_fo, margin_left + "cm");
-            cellStyle.SetAttribute("margin-right", header_fo, margin_right + "cm");
+            cellStyle.SetAttribute("padding-top", header_fo, margin_top + "cm");
+            cellStyle.SetAttribute("padding-bottom", header_fo, margin_bottom + "cm");
+            cellStyle.SetAttribute("padding-left", header_fo, margin_left + "cm");
+            cellStyle.SetAttribute("padding-right", header_fo, margin_right + "cm");
+            cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "solid #000000");
+            cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "solid #000000");
+            cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "solid #000000");
+            cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "solid #000000");
 
             cell.AppendChild(cellStyle);
             e.AppendChild(cell);           

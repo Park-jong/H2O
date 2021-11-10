@@ -12,7 +12,6 @@ namespace WindowsFormsApp1.FuncToXml
         public GridToXml()
         {
         }
-
         JToken jsonTable;
         JToken jsonRowList;
         JToken jsonHeader;
@@ -79,10 +78,15 @@ namespace WindowsFormsApp1.FuncToXml
                     double tableMatginTop = Math.Round(jsonTable["topInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3);
                     double tableMatginBottom = Math.Round(jsonTable["bottomInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3);
                     double tableMatginLeft = Math.Round(jsonTable["leftInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3);
-                    double tableMatginRight = Math.Round(jsonTable["rightInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3); ;
+                    double tableMatginRight = Math.Round(jsonTable["rightInnerMargin"].Value<int>() * 0.01 * 0.0352778, 3);
+
+                    double outterTopMargin = Math.Round(jsonHeader["outterMarginTop"].Value<int>() * 0.01 * 0.0352778, 3);
+                    double outterLeftMargin = Math.Round(jsonHeader["outterMarginLeft"].Value<int>() * 0.01 * 0.0352778, 3);
+                    double outterRightMargin = Math.Round(jsonHeader["outterMarginRight"].Value<int>() * 0.01 * 0.0352778, 3);
+                    double outterBottomMargin = Math.Round(jsonHeader["outterMarginBottom"].Value<int>() * 0.01 * 0.0352778, 3);
 
                     string table = xm.MakeTable(rowCount, columnCount);
-                    xm.setTable(table, Math.Round(jsonHeader["width"].Value<int>() * 0.01 * 0.0352778, 3));
+                    xm.setTable(table, Math.Round(jsonHeader["width"].Value<int>() * 0.009 * 0.0352778, 3), outterTopMargin, outterLeftMargin, outterRightMargin, outterBottomMargin);
                     //for(int c = 0; c < columnCount; c++)
                     //{
                     //    int colWidth = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][0]["cellList"][c]["listHeader"]["width"].Value<int>();
@@ -109,7 +113,7 @@ namespace WindowsFormsApp1.FuncToXml
                             int margin_right = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rightMargin"].Value<int>();
                             int colSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colSpan"].Value<int>();
                             int rowSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowSpan"].Value<int>();
-
+                            int borderFillId = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["borderFillId"].Value<int>();
 
                             int textdirection = bitcal(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["property"]["value"].Value<int>(), 0, 0x1);
                             // textdirection 1이면 세로  0이면 가로   
@@ -120,10 +124,20 @@ namespace WindowsFormsApp1.FuncToXml
                             // 0 top 1 center 2 bottom
                             int paraCount = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["paraCount"].Value<int>();
 
+                            
+                            string top = docJson["borderFillList"][borderFillId-1]["topBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
+                            string left = docJson["borderFillList"][borderFillId - 1]["leftBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
+                            string right = docJson["borderFillList"][borderFillId - 1]["rightBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
+                            string bottom = docJson["borderFillList"][borderFillId - 1]["bottomBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
+
+                            double topThickness = Math.Round(Double.Parse(top)*2.83465);
+                            double leftThickness = Math.Round(Double.Parse(left) * 2.83465);
+                            double rightThickness = Math.Round(Double.Parse(right) * 2.83465);
+                            double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465);
 
                             xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
-                            xm.setRow(table, rowIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
-                            xm.SetCell(table, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
+                            xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
+                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.05 * 0.0352778, 3), Math.Round(margin_bottom * 0.05 * 0.0352778, 3), Math.Round(margin_left * 0.07 * 0.0352778, 3), Math.Round(margin_right * 0.05 * 0.0352778, 3));
 
                         }
                     }
