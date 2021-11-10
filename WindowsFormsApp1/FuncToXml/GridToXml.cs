@@ -168,10 +168,10 @@ namespace WindowsFormsApp1.FuncToXml
                             string right = docJson["borderFillList"][borderFillId - 1]["rightBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
                             string bottom = docJson["borderFillList"][borderFillId - 1]["bottomBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
 
-                            double topThickness = Math.Round(Double.Parse(top) * 2.83465);
-                            double leftThickness = Math.Round(Double.Parse(left) * 2.83465);
-                            double rightThickness = Math.Round(Double.Parse(right) * 2.83465);
-                            double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465);
+                            double topThickness = Math.Round(Double.Parse(top) * 2.83465 , 2);
+                            double leftThickness = Math.Round(Double.Parse(left) * 2.83465 , 2);
+                            double rightThickness = Math.Round(Double.Parse(right) * 2.83465 , 2);
+                            double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465 , 2);
 
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
                             xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign);

@@ -139,7 +139,7 @@ namespace WindowsFormsApp1
             }
             else if(node.GetType() == typeof(ImgNode))
             {
-                SaveImage(node);
+                SaveImage((ImgNode)node);
             }
 
             if (node.child == null)
@@ -152,7 +152,7 @@ namespace WindowsFormsApp1
 
         }
 
-        void SaveImage(ImgNode node)
+        public void SaveImage(ImgNode node)
         {
             Image image = node.img;
             string filePath = node.path;
