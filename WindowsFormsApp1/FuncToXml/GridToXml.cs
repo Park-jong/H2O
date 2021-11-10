@@ -30,7 +30,7 @@ namespace WindowsFormsApp1.FuncToXml
             nCols = 0; //값 찾지 못함
             cellSpacing = jsonTable["cellSpacing"].Value<int>();
 
-            columnCount = jsonTable["columnCount"].Value<int>(); 
+            columnCount = jsonTable["columnCount"].Value<int>(); //표 병합 전 전체 column 개수를 가져온다.
         }
 
         public int bitcal(int i, int shift, byte b) //대부분 property에 있는 value를 bit별로 나누어서 넣을때 
