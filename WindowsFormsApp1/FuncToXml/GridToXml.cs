@@ -85,7 +85,9 @@ namespace WindowsFormsApp1.FuncToXml
                     double outterRightMargin = Math.Round(jsonHeader["outterMarginRight"].Value<int>() * 0.01 * 0.0352778, 3);
                     double outterBottomMargin = Math.Round(jsonHeader["outterMarginBottom"].Value<int>() * 0.01 * 0.0352778, 3);
 
+                    //본문 table-column-row-cell 틀 작성
                     string table = xm.MakeTable(rowCount, columnCount);
+                    //스타일 style:family table 작성
                     xm.setTable(table, Math.Round(jsonHeader["width"].Value<int>() * 0.009 * 0.0352778, 3), outterTopMargin, outterLeftMargin, outterRightMargin, outterBottomMargin);
                     //for(int c = 0; c < columnCount; c++)
                     //{
@@ -135,8 +137,11 @@ namespace WindowsFormsApp1.FuncToXml
                             double rightThickness = Math.Round(Double.Parse(right) * 2.83465);
                             double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465);
 
+                            //만들어진 column태그를 순서대로 가져와서 style정의 후 태그에 attribute추가해준다.
                             xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
+                            //만들어진 row태그를 순서대로 가져와서 style정의 후 태그에 attribute추가해준다.
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
+                            //만들어진 cell태그를 순서대로 가져와서 style정의 후 태그에 attribute추가해준다.
                             xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.05 * 0.0352778, 3), Math.Round(margin_bottom * 0.05 * 0.0352778, 3), Math.Round(margin_left * 0.07 * 0.0352778, 3), Math.Round(margin_right * 0.05 * 0.0352778, 3));
 
                         }
