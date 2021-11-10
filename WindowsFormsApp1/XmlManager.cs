@@ -1661,12 +1661,82 @@ namespace WindowsFormsApp1
             numImage++;
 
         }
-        public void imgstyle(int i)
+        public void imgstyle(int VertiRelTo,
+        int VertiRelToarray,
+        int HorzRelTo,
+        int HorzRelToarray)
         {
+        String vertrel ="";
+        String horzrel = "";
+        String verto="";
+        String horzto="";
+       
             String name = "fr" + (++imageStylenum).ToString();
 
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
+            if (VertiRelTo == 0)
+                vertrel = "paper";
+            else if (VertiRelTo == 1)
+                vertrel = "page";
+            else if (VertiRelTo == 2)
+                vertrel = "Paragraph";
+
+            if (VertiRelToarray == 0)
+                if (VertiRelTo == 0 || VertiRelTo == 1)
+                    verto = "from-top";
+                else
+                    verto = "from-left";
+            else if (VertiRelToarray == 1)
+                if (VertiRelTo == 0 || VertiRelTo == 1)
+                    verto = "center";
+                   
+            else if (VertiRelToarray == 2)
+                    if (VertiRelTo == 0 || VertiRelTo == 1)
+                        verto = "from-bottom";
+                    else
+                        verto = "from-right";
+
+                else if (VertiRelToarray == 3)
+                    if (VertiRelTo == 0 || VertiRelTo == 1)
+                        verto = "inside";
+
+                    else if (VertiRelToarray == 4)
+                        if (VertiRelTo == 0 || VertiRelTo == 1)
+                            verto = "outside";
+            if (HorzRelTo == 0)
+                horzrel = "paper";
+            else if (HorzRelTo == 1)
+                horzrel = "page";
+            else if (HorzRelTo == 2)
+                horzrel = "Paragraph";
+
+            if (HorzRelToarray == 0)
+                if (HorzRelTo == 0 || HorzRelTo == 1)
+                    horzto = "from-top";
+                else
+                    horzto = "from-left";
+            else if (HorzRelToarray == 1)
+                if (HorzRelTo == 0 || HorzRelTo == 1)
+                    horzto = "from-center";
+
+                else if (HorzRelToarray == 2)
+                    if (HorzRelTo == 0 || HorzRelTo == 1)
+                        horzto = "from-bottom";
+                    else
+                        horzto = "from-right";
+
+                else if (HorzRelToarray == 3)
+                    if (HorzRelTo == 0 || HorzRelTo == 1)
+                        horzto = "inside";
+
+                    else if (HorzRelToarray == 4)
+                        if (HorzRelTo == 0 || HorzRelTo == 1)
+                            horzto = "outside";
+
+
+
+
 
 
             XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
@@ -1690,10 +1760,10 @@ namespace WindowsFormsApp1
 
             imgstyle.SetAttribute("clip", header_fo, "rect(0cm,0cm,0cm,0cm)");
             imgstyle.SetAttribute("mirror", header_style, "none");
-            imgstyle.SetAttribute("horizontal-rel", header_style, "paragraph");
-            imgstyle.SetAttribute("horizontal-pos", header_style, "from-left");
-            imgstyle.SetAttribute("vertical-rel", header_style, "paragraph");
-            imgstyle.SetAttribute("vertical-pos", header_style, "from-top");
+            imgstyle.SetAttribute("horizontal-rel", header_style, horzrel);
+            imgstyle.SetAttribute("horizontal-pos", header_style, horzto);
+            imgstyle.SetAttribute("vertical-rel", header_style, vertrel);
+            imgstyle.SetAttribute("vertical-pos", header_style, verto);
             image.AppendChild(imgstyle);
 
 

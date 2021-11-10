@@ -81,12 +81,11 @@ namespace WindowsFormsApp1.FuncToXml
                     // String borderProperty = bodyJson["controlList"][controlList]["shapeComponentPicture"]["borderColor"].Value<String>();
                     double leftTopX = bodyJson["controlList"][controlList]["header"]["xOffset"].Value<int>();
                     double leftTopY = bodyJson["controlList"][controlList]["header"]["yOffset"].Value<int> ();
-                    int rightTopX = bodyJson["controlList"][controlList]["shapeComponentPicture"]["rightTop"]["x"].Value<int>();
-                    int rightTopY = bodyJson["controlList"][controlList]["shapeComponentPicture"]["rightTop"]["y"].Value<int>();
-                    int leftBottomX = bodyJson["controlList"][controlList]["shapeComponentPicture"]["leftBottom"]["x"].Value<int>();
-                    int leftBottomY = bodyJson["controlList"][controlList]["shapeComponentPicture"]["leftBottom"]["y"].Value<int>();
-                    int rightBottomX = bodyJson["controlList"][controlList]["shapeComponentPicture"]["rightBottom"]["x"].Value<int>();
-                    int rightBottomY = bodyJson["controlList"][controlList]["shapeComponentPicture"]["rightBottom"]["y"].Value<int>();
+                    int property = bodyJson["controlList"][controlList]["header"]["property"]["value"].Value<int>();
+                    int VertiRelTo = bitcal(property, 3, 0x3);
+                    int VertiRelToarray = bitcal(property, 5, 0x7);
+                    int HorzRelTo = bitcal(property, 8, 0x3);
+                    int HorzRelToarray = bitcal(property, 10, 0x7);
 
                     String name = binJson["embeddedBinaryDataList"][ID - 1]["name"].Value<String>();
 
@@ -105,7 +104,7 @@ namespace WindowsFormsApp1.FuncToXml
                     double width = Math.Round(imgWidth * 2.54 / 7200, 3);
                     double height = Math.Round(imgHeight * 2.54 / 7200, 3);
                     string currentPath = "Pictures/" + name;
-                    xm.imgstyle(ID - 1);
+                    xm.imgstyle(VertiRelTo,VertiRelToarray,HorzRelTo,HorzRelToarray);
                     xm.makeimg(width, height, extension, currentPath, lx, ly);
 
 
