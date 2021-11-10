@@ -94,7 +94,8 @@ namespace WindowsFormsApp1.FuncToXml
                         {
 
                             int cellWidth = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["width"].Value<int>();
-                            if (colIndex != 0) {
+                            if (colIndex != 0)
+                            {
                                 current += cellWidth;
                             }
                             else
@@ -113,7 +114,7 @@ namespace WindowsFormsApp1.FuncToXml
 
                     string table = xm.MakeTable(rowCount, columnCount);
                     xm.setTable(table, Math.Round((widthList[widthList.Count - 1]) * 0.01 * 0.0352778, 3), outterTopMargin, outterLeftMargin, outterRightMargin, outterBottomMargin);
-                    
+
                     for (int colIndex = 0; colIndex < jsonTable["columnCount"].Value<int>(); colIndex++)
                     {
                         int cellWidth;
@@ -123,7 +124,7 @@ namespace WindowsFormsApp1.FuncToXml
                             cellWidth = widthList[colIndex] - widthList[colIndex - 1];
                         xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
                     }
-                    
+
                     //for(int c = 0; c < columnCount; c++)
                     //{
                     //    int colWidth = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][0]["cellList"][c]["listHeader"]["width"].Value<int>();
@@ -173,7 +174,7 @@ namespace WindowsFormsApp1.FuncToXml
                             double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465);
 
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
-                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
+                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign);
 
                         }
                     }
