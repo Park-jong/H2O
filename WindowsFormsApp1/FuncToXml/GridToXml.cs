@@ -86,7 +86,7 @@ namespace WindowsFormsApp1.FuncToXml
                     double outterBottomMargin = Math.Round(jsonHeader["outterMarginBottom"].Value<int>() * 0.01 * 0.0352778, 3);
 
                     string table = xm.MakeTable(rowCount, columnCount);
-                    xm.setTable(table, Math.Round(jsonHeader["width"].Value<int>() * 0.009 * 0.0352778, 3), outterTopMargin, outterLeftMargin, outterRightMargin, outterBottomMargin);
+                    xm.setTable(table, Math.Round(jsonHeader["width"].Value<int>() * 0.01 * 0.0352778, 3), outterTopMargin, outterLeftMargin, outterRightMargin, outterBottomMargin);
                     //for(int c = 0; c < columnCount; c++)
                     //{
                     //    int colWidth = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][0]["cellList"][c]["listHeader"]["width"].Value<int>();
@@ -137,7 +137,7 @@ namespace WindowsFormsApp1.FuncToXml
 
                             xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
-                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.05 * 0.0352778, 3), Math.Round(margin_bottom * 0.05 * 0.0352778, 3), Math.Round(margin_left * 0.07 * 0.0352778, 3), Math.Round(margin_right * 0.05 * 0.0352778, 3));
+                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
 
                         }
                     }
