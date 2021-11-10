@@ -1477,7 +1477,7 @@ namespace WindowsFormsApp1
 
             for (int changeIndex = 1; changeIndex < colSpan; changeIndex++)
             {
-                XmlElement covered = doc.CreateElement("covered-table-cell", header_table);
+                XmlElement covered = doc.CreateElement("table:covered-table-cell", header_table);
                 list = row.GetElementsByTagName("table-cell", header_table);
                 XmlElement changed = (XmlElement)list.Item(col_index + 1);
                 row.ReplaceChild(covered, changed);
