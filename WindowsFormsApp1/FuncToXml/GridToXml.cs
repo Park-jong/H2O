@@ -145,6 +145,22 @@ namespace WindowsFormsApp1.FuncToXml
                     {
                         for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
+                            int row_index = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowIndex"].Value<int>();
+                            int colSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colSpan"].Value<int>();
+
+
+                            if(colSpan > 1)
+                            {
+                                   xm.replaceP(row_index, colIndex, colSpan);
+                            }
+                         
+
+                        }
+                    }
+                    for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
+                    {
+                        for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
+                        {
                             string[] contents = null;
                             //text
                             for (int k = 0; k < jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count(); k++)
@@ -453,6 +469,7 @@ namespace WindowsFormsApp1.FuncToXml
                             }
                         }
                     }
+                    
                 }
             }
         }
