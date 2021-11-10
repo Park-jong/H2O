@@ -173,7 +173,7 @@ namespace WindowsFormsApp1.FuncToXml
                             double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465);
 
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
-                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.05 * 0.0352778, 3), Math.Round(margin_bottom * 0.05 * 0.0352778, 3), Math.Round(margin_left * 0.07 * 0.0352778, 3), Math.Round(margin_right * 0.05 * 0.0352778, 3));
+                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
 
                         }
                     }

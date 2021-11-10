@@ -1324,7 +1324,7 @@ namespace WindowsFormsApp1
 
             XmlElement tablestyle = doc.CreateElement("style:table-properties", header_style);
             tablestyle.SetAttribute("width", header_style, width + "cm");
-            tablestyle.SetAttribute("align", header_table, "margins");
+            tablestyle.SetAttribute("align", header_table, "center");
 
             //창의축전용 임의 스타일 설정 = 추후에 수정 필요
             if (name == "표1")
