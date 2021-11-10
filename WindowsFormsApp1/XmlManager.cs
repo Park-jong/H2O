@@ -940,7 +940,19 @@ namespace WindowsFormsApp1
             XmlElement text_element = doc.CreateElement("text:p", header_text);
 
             text_element.SetAttribute("style-name", header_text, pname);
-            text_element.InnerText = text; // 구식
+            foreach(char eachtext in text)
+            {
+                if (eachtext.Equals(' '))
+                {
+                    XmlElement s = doc.CreateElement("text:s", header_text);
+                    text_element.AppendChild(s);
+                }
+                else
+                {
+                    XmlText t = doc.CreateTextNode(eachtext.ToString());
+                    text_element.AppendChild(t);
+                }
+            }
             e.AppendChild(text_element);
 
             numP++;
@@ -1029,7 +1041,19 @@ namespace WindowsFormsApp1
                     XmlElement text_element = doc.CreateElement("text:span", header_text);
 
                     text_element.SetAttribute("style-name", header_text, spanname);
-                    text_element.InnerText = text;
+                    foreach (char eachtext in text)
+                    {
+                        if (eachtext.Equals(' '))
+                        {
+                            XmlElement s = doc.CreateElement("text:s", header_text);
+                            text_element.AppendChild(s);
+                        }
+                        else
+                        {
+                            XmlText t = doc.CreateTextNode(eachtext.ToString());
+                            text_element.AppendChild(t);
+                        }
+                    }
                     element.AppendChild(text_element);
                     numSpan++;
                     break;
@@ -1178,7 +1202,19 @@ namespace WindowsFormsApp1
             XmlElement e = (XmlElement)list.Item(list.Count - 1);
             XmlElement span = doc.CreateElement("text:span", header_text);
             span.SetAttribute("style-name", header_text, name);
-            span.InnerText = text;
+            foreach (char eachtext in text)
+            {
+                if (eachtext.Equals(' '))
+                {
+                    XmlElement s = doc.CreateElement("text:s", header_text);
+                    span.AppendChild(s);
+                }
+                else
+                {
+                    XmlText t = doc.CreateTextNode(eachtext.ToString());
+                    span.AppendChild(t);
+                }
+            }
             e.AppendChild(span);
             numMT++;
 
@@ -1291,7 +1327,7 @@ namespace WindowsFormsApp1
             tablestyle.SetAttribute("align", header_table, "margins");
 
             //창의축전용 임의 스타일 설정 = 추후에 수정 필요
-            if(name == "표1")
+            if (name == "표1")
             {
                 //tablestyle.SetAttribute("margin-top", header_fo, outterTopMargin + "cm");
                 tablestyle.SetAttribute("margin-left", header_fo, outterLeftMargin * 10 + "cm");
@@ -1460,7 +1496,19 @@ namespace WindowsFormsApp1
             XmlElement text_element = doc.CreateElement("text:p", header_text);
 
             text_element.SetAttribute("style-name", header_text, pname);
-            text_element.InnerText = text; // 구식
+            foreach (char eachtext in text)
+            {
+                if (eachtext.Equals(' '))
+                {
+                    XmlElement s = doc.CreateElement("text:s", header_text);
+                    text_element.AppendChild(s);
+                }
+                else
+                {
+                    XmlText t = doc.CreateTextNode(eachtext.ToString());
+                    text_element.AppendChild(t);
+                }
+            }
             tableCell.AppendChild(text_element);
 
             numP++;
