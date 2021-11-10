@@ -42,21 +42,6 @@ namespace WindowsFormsApp1.FuncToXml
             return returnImage;
 
         }
-        void SaveImage(Image image, string filePath)
-        {
-            string fileExtension = Path.GetExtension(filePath);
-            switch (fileExtension.ToLower())
-            {
-
-                case ".bmp": image.Save(filePath, ImageFormat.Bmp); break;
-                case ".exif": image.Save(filePath, ImageFormat.Exif); break;
-                case ".gif": image.Save(filePath, ImageFormat.Gif); break;
-                case ".jpg": case ".jpeg": image.Save(filePath, ImageFormat.Jpeg); break;
-                case ".png": image.Save(filePath, ImageFormat.Png); break;
-                case ".tif": case ".tiff": image.Save(filePath, ImageFormat.Tiff); break;
-
-            }
-        }
 
 
         public void Run(XmlManager xm, JToken binJson, JToken bodyJson, JToken docJson, bool zeroCheck)
@@ -103,15 +88,16 @@ namespace WindowsFormsApp1.FuncToXml
                     int rightBottomX = bodyJson["controlList"][controlList]["shapeComponentPicture"]["rightBottom"]["x"].Value<int>();
                     int rightBottomY = bodyJson["controlList"][controlList]["shapeComponentPicture"]["rightBottom"]["y"].Value<int>();
 
+                    String name = binJson["embeddedBinaryDataList"][ID - 1]["name"].Value<String>();
 
                     JArray temp = binJson["embeddedBinaryDataList"][ID - 1]["data"].Value<JArray>();
                     sbyte[] items = temp.ToObject<sbyte[]>();
+                    
+                    //ImgNode 생성 및 Pictures폴더 child 설정
+                    ImgNode node = setPicturesChild(xm, name);
+                    node.img = StringToImage(items);
 
-                    Image img1 = StringToImage(items);
-                    String name = binJson["embeddedBinaryDataList"][ID - 1]["name"].Value<String>();
-                    string path = Application.StartupPath + @"\New File\Pictures\" + name;
                     String extension = docJson["binDataList"][ID - 1]["extensionForEmbedding"].Value<String>();
-                    SaveImage(img1, path);
 
                     double lx = Math.Round(leftTopX * 2.54 / 7200, 3);
                     double ly = Math.Round(leftTopY * 2.54 / 7200, 3);
@@ -125,7 +111,15 @@ namespace WindowsFormsApp1.FuncToXml
 
                 }
             }
+        }
 
+        public ImgNode setPicturesChild(XmlManager xm, string name)
+        {
+            FolderNode pictures = (FolderNode)xm.root.child["Pictures"];
+            ImgNode node = new ImgNode(name, pictures);
+            node.path = Application.StartupPath + @"New File\Pictures\" + name;
+
+            return node;
         }
 
     }

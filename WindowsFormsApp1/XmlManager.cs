@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Collections;
 using System.Windows.Forms;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace WindowsFormsApp1
 {
@@ -57,7 +59,7 @@ namespace WindowsFormsApp1
 
             //Create File
 
-            string[] list1 = { "Configurations2", "META-INF", "Thumbnails" };
+            string[] list1 = { "Configurations2", "META-INF", "Thumbnails", "Pictures" };
 
             foreach (string s in list1)
             {
@@ -135,6 +137,10 @@ namespace WindowsFormsApp1
                     ((XmlNode)node).doc.Save(path);
                 }
             }
+            else if(node.GetType() == typeof(ImgNode))
+            {
+                SaveImage(node);
+            }
 
             if (node.child == null)
                 return;
@@ -144,6 +150,24 @@ namespace WindowsFormsApp1
                 SaveODT(child);
             }
 
+        }
+
+        void SaveImage(ImgNode node)
+        {
+            Image image = node.img;
+            string filePath = node.path;
+
+            string fileExtension = Path.GetExtension(filePath);
+            switch (fileExtension.ToLower())
+            {
+
+                case ".bmp": image.Save(filePath, ImageFormat.Bmp); break;
+                case ".exif": image.Save(filePath, ImageFormat.Exif); break;
+                case ".gif": image.Save(filePath, ImageFormat.Gif); break;
+                case ".jpg": case ".jpeg": image.Save(filePath, ImageFormat.Jpeg); break;
+                case ".png": image.Save(filePath, ImageFormat.Png); break;
+                case ".tif": case ".tiff": image.Save(filePath, ImageFormat.Tiff); break;
+            }
         }
 
 
