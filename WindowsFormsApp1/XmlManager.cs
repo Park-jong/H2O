@@ -1324,7 +1324,7 @@ namespace WindowsFormsApp1
 
             XmlElement tablestyle = doc.CreateElement("style:table-properties", header_style);
             tablestyle.SetAttribute("width", header_style, width + "cm");
-            tablestyle.SetAttribute("align", header_table, "center");
+            tablestyle.SetAttribute("align", header_table, "margins");
 
             //창의축전용 임의 스타일 설정 = 추후에 수정 필요
             if (name == "표1")
@@ -1362,7 +1362,7 @@ namespace WindowsFormsApp1
             col.SetAttribute("family", header_style, "table-column");
 
             XmlElement colStyle = doc.CreateElement("style:table-column-properties", header_style);
-            colStyle.SetAttribute("width", header_style, width + "cm");
+            colStyle.SetAttribute("column-width", header_style, width + "cm");
 
             col.AppendChild(colStyle);
             e.AppendChild(col);
@@ -1449,7 +1449,7 @@ namespace WindowsFormsApp1
             cell.SetAttribute("family", header_style, "table-cell");
 
             XmlElement cellStyle = doc.CreateElement("style:table-cell-properties", header_style);
-            cellStyle.SetAttribute("width", header_style, width + "cm");
+            //cellStyle.SetAttribute("width", header_style, width + "cm");
             cellStyle.SetAttribute("height", header_style, height + "cm");
             cellStyle.SetAttribute("padding-top", header_fo, margin_top + "cm");
             cellStyle.SetAttribute("padding-bottom", header_fo, margin_bottom + "cm");
