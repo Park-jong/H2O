@@ -92,7 +92,7 @@ namespace WindowsFormsApp1.FuncToXml
 
                     JArray temp = binJson["embeddedBinaryDataList"][ID - 1]["data"].Value<JArray>();
                     sbyte[] items = temp.ToObject<sbyte[]>();
-                    
+
                     //ImgNode 생성 및 Pictures폴더 child 설정
                     ImgNode node = setPicturesChild(xm, name);
                     node.img = StringToImage(items);
@@ -107,8 +107,7 @@ namespace WindowsFormsApp1.FuncToXml
                     string currentPath = "Pictures/" + name;
                     xm.imgstyle(ID - 1);
                     xm.makeimg(width, height, extension, currentPath, lx, ly);
-
-
+                    xm.makeimgEntry(node);
                 }
             }
         }

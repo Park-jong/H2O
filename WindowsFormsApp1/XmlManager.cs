@@ -24,6 +24,7 @@ namespace WindowsFormsApp1
         private const string header_table = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
         private const string header_draw = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
         private const string header_xlink = "http://www.w3.org/1999/xlink";
+        private const string header_manifest = "urn:oasis:names:tc:opendocument:xmlns:manifest:1.0";
         private static int numP = 0;
         private static int numSpan = 0;
         private static int numMP = 0;
@@ -139,7 +140,7 @@ namespace WindowsFormsApp1
             }
             else if(node.GetType() == typeof(ImgNode))
             {
-                SaveImage(node);
+                SaveImage(((ImgNode)node));
             }
 
             if (node.child == null)
@@ -1601,6 +1602,24 @@ namespace WindowsFormsApp1
 
             return pname;
         }
+
+        public void makeimgEntry(ImgNode img)
+        {
+            FolderNode meta = (FolderNode)root.child["META-INF"];
+            XmlNode manifest = (XmlNode)meta.child["manifest.xml"];
+            XmlDocument doc = manifest.doc;
+            
+            XmlNodeList list = doc.GetElementsByTagName("manifest", header_manifest);
+            XmlElement e = (XmlElement)list.Item(0);
+
+            XmlElement entry = doc.CreateElement("manifest:file-entry", header_manifest);
+            entry.SetAttribute("full-path", header_manifest, "Pictures/" + img.name);
+            entry.SetAttribute("media-type", header_manifest, "image/jpeg");
+
+            e.AppendChild(entry);
+
+        }
+
         public void makeimg(double Width, double Height, String extension, String imagePath, double x, double y)
         {
             String name = "이미지" + (numImage + 1).ToString();
