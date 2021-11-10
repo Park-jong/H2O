@@ -145,79 +145,35 @@ namespace WindowsFormsApp1.FuncToXml
                     {
                         for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
+                            string[] contents = null;
                             //text
                             for (int k = 0; k < jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count(); k++)
                             {
-                                //전체 텍스트 가져오기
                                 string pcontent = null; // p text
                                 int shapeId = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["header"]["paraShapeId"].Value<int>();
                                 int sID = shapeId;
-                                try
+                                if (k == 0)
                                 {
-                                    object obj = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<object>();
 
-                                    if (obj != null)
-                                        pcontent = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<string>();
-                                }
-                                /////////////////////////////////////////////////////////////글자가 없을 때
-                                catch (Exception e)
-                                {
-                                    int nullPStyle = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
-                                    float nullPFontSize = docJson["charShapeList"][nullPStyle]["baseSize"].Value<float>() / 100;
-                                    string nullPName = xm.AddTableContentP(rowIndex, colIndex); // para null 인 경우 처리
-                                    xm.SetFontSize(nullPName, nullPFontSize);
-
-                                    //줄 간격
-                                    int lineSpace = docJson["paraShapeList"][sID]["lineSpace"].Value<int>();
-                                    xm.Paragraph.SetLineSpace(nullPName, (XmlDocument)xm.docs["content.xml"], lineSpace * 0.01 * nullPFontSize * 0.03527);
-
-                                    //문단 테두리 간격
-                                    double topborderSpace = docJson["paraShapeList"][sID]["topBorderSpace"].Value<double>();
-                                    double bottomBorderSpace = docJson["paraShapeList"][sID]["bottomBorderSpace"].Value<double>();
-                                    double leftBorderSpace = docJson["paraShapeList"][sID]["leftBorderSpace"].Value<double>();
-                                    double rightBorderSpace = docJson["paraShapeList"][sID]["rightBorderSpace"].Value<double>();
-
-                                    topborderSpace *= 0.01;
-                                    bottomBorderSpace *= 0.01;
-                                    leftBorderSpace *= 0.01;
-                                    rightBorderSpace *= 0.01;
-
-                                    xm.Paragraph.SetBorderSpace(nullPName, (XmlDocument)xm.docs["content.xml"], topborderSpace, bottomBorderSpace, leftBorderSpace, rightBorderSpace);
-
-                                    //정렬
-                                    int temp = docJson["paraShapeList"][sID]["property1"]["value"].Value<int>();
-
-                                    int paraAlign = bitcal(temp, 2, 0x7);
-                                    if (paraAlign.Equals(2))
-                                        xm.SetPAlign(nullPName, "end");
-                                    else if (paraAlign.Equals(0))
-                                        xm.SetPAlign(nullPName, "justify");
-                                    else if (paraAlign.Equals(3))
-                                        xm.SetPAlign(nullPName, "center");
-                                    else if (paraAlign.Equals(4))
-                                        xm.SetPAlign(nullPName, "Divide");
-                                    else if (paraAlign.Equals(5))
-                                        xm.SetPAlign(nullPName, "Distribute");
-                                    else if (paraAlign.Equals(1))
-                                        xm.SetPAlign(nullPName, "Distribute");
-
-                                    //첫줄 들여쓰기
-                                    //margin
-                                    double indent = docJson["paraShapeList"][sID]["indent"].Value<double>();
-                                    double topspace = docJson["paraShapeList"][sID]["topParaSpace"].Value<double>();
-                                    double bottomspace = docJson["paraShapeList"][sID]["bottomParaSpace"].Value<double>();
-                                    double leftmargin = docJson["paraShapeList"][sID]["leftMargin"].Value<double>();
-                                    double rightmargin = docJson["paraShapeList"][sID]["rightMargin"].Value<double>();
-                                    if (indent != 0 || topspace != 0 || bottomspace != 0 || leftmargin != 0 || rightmargin != 0)
+                                    try
                                     {
-                                        xm.SetPIndent(nullPName, (float)(indent / 200 * 0.0353));
-                                        if (indent < 0)
-                                            leftmargin = -indent + leftmargin;
-                                        xm.SetPMargin(nullPName, (float)(leftmargin / 200 * 0.0353), (float)(rightmargin / 200 * 0.0353), (float)(topspace / 200 * 0.0353), (float)(bottomspace / 200 * 0.0353));
-                                    }
+                                        object obj = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<object>();
 
-                                    continue;
+                                        if (obj != null)
+                                            pcontent = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<string>();
+
+                                    }
+                                    catch(Exception e)
+                                    {
+                                        continue;
+                                    }
+                                    contents = pcontent.Split('\n');
+                                    
                                 }
+                                if(jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count() > 1)
+                                    pcontent = contents[k];
+                                //전체 텍스트 가져오기
+                                
                                 /////////////////////////////////////////////////////////////////
 
                                 // 스타일별 텍스트 개수
