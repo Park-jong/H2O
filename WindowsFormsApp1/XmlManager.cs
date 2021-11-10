@@ -1402,7 +1402,7 @@ namespace WindowsFormsApp1
             column.SetAttribute("style-name", header_table, row_name);
         }
 
-        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right)
+        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right, int Verticalalign)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -1459,6 +1459,11 @@ namespace WindowsFormsApp1
             cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "solid #000000");
             cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "solid #000000");
             cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "solid #000000");
+            if (Verticalalign == 1)
+            {
+                cellStyle.SetAttribute("vertical-align", header_style, "middle");
+            }
+            
 
             cell.AppendChild(cellStyle);
             e.AppendChild(cell);
