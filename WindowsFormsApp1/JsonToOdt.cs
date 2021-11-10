@@ -6,8 +6,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Xml;
-using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace WindowsFormsApp1
 {
@@ -72,7 +70,6 @@ namespace WindowsFormsApp1
 
 
 
-
             for (int s = 0; s < json["bodyText"]["sectionList"].Count(); s++)
                 for (int i = 0; i < json["bodyText"]["sectionList"][s]["paragraphList"].Count(); i++)
                 {
@@ -82,12 +79,39 @@ namespace WindowsFormsApp1
                     JToken docJson = json["docInfo"];
                     JToken imgJson = json["binData"];
 
-                    ttx.Run(xm, nowJson, docJson, zeroCheck);
-                    gtx.Run(xm, nowJson, docJson, zeroCheck);
-                    itx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
-                }
 
-            //ttx.Run(xm, json);
+                    bool hasTable = false;
+                    int controlListCount = 0;
+                    try
+                    {
+                        controlListCount = nowJson["controlList"].Count();
+                    }
+                    catch (System.ArgumentNullException e)
+                    {
+                        controlListCount = 0;
+                    }
+                    for (int controlList = 0; controlList < controlListCount; controlList++)
+                    {
+                        try
+                        {
+                            nowJson["controlList"][controlList]["table"].Value<JToken>();
+                            hasTable = true;
+                            break;
+                        }
+                        catch (System.ArgumentNullException e)
+                        {
+                            hasTable = false;
+                        }
+                    }
+
+                    if(hasTable)
+                        gtx.Run(xm, nowJson, docJson, zeroCheck);
+                    else
+                        ttx.Run(xm, nowJson, docJson, zeroCheck);
+
+                    itx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
+
+                }
 
             SaveODT();
         }
