@@ -76,36 +76,46 @@ namespace WindowsFormsApp1.FuncToXml
                 {
                     // int borderColor = bodyjson["controlList"][controlList]["shapeComponentPicture"]["borderColor"].Value<int>();
                     int ID = bodyJson["controlList"][controlList]["shapeComponentPicture"]["pictureInfo"]["binItemID"].Value<int>();
+                    int IDindex = 0;
                     int imgWidth = bodyJson["controlList"][controlList]["header"]["width"].Value<int>();
                     int imgHeight = bodyJson["controlList"][controlList]["header"]["height"].Value<int>();
                     // String borderProperty = bodyJson["controlList"][controlList]["shapeComponentPicture"]["borderColor"].Value<String>();
-                    double leftTopX = bodyJson["controlList"][controlList]["header"]["xOffset"].Value<int>();
-                    double leftTopY = bodyJson["controlList"][controlList]["header"]["yOffset"].Value<int> ();
+                    double X = bodyJson["controlList"][controlList]["header"]["xOffset"].Value<int>();
+                    double Y = bodyJson["controlList"][controlList]["header"]["yOffset"].Value<int> ();
                     int property = bodyJson["controlList"][controlList]["header"]["property"]["value"].Value<int>();
                     int VertiRelTo = bitcal(property, 3, 0x3);
                     int VertiRelToarray = bitcal(property, 5, 0x7);
                     int HorzRelTo = bitcal(property, 8, 0x3);
                     int HorzRelToarray = bitcal(property, 10, 0x7);
-
-                    String name = binJson["embeddedBinaryDataList"][ID - 1]["name"].Value<String>();
-
-                    JArray temp = binJson["embeddedBinaryDataList"][ID - 1]["data"].Value<JArray>();
+                    int geulja = bitcal(property, 0, 0x1);
+                    int through = bitcal(property, 21, 0x7);
+                    int zindex = bodyJson["controlList"][controlList]["header"]["zOrder"].Value<int>();
+                    int linevertical = bodyJson["lineSeg"]["lineSegItemList"][0]["lineVerticalPosition"].Value<int>();
+                    for (int i = 0; i < binJson["embeddedBinaryDataList"].Count(); i++)
+                    {
+                        String temp2 = binJson["embeddedBinaryDataList"][i]["name"].Value<String>();
+                        String tt = temp2.Substring(3,4);
+                        if (ID == Convert.ToInt16(tt))
+                            IDindex = i;
+                        
+                    }
+                    String name = binJson["embeddedBinaryDataList"][IDindex]["name"].Value<String>();
+                    
+                    JArray temp = binJson["embeddedBinaryDataList"][IDindex]["data"].Value<JArray>();
                     sbyte[] items = temp.ToObject<sbyte[]>();
                     
                     //ImgNode 생성 및 Pictures폴더 child 설정
                     ImgNode node = setPicturesChild(xm, name);
                     node.img = StringToImage(items);
 
-                    String extension = docJson["binDataList"][ID - 1]["extensionForEmbedding"].Value<String>();
+                    String extension = docJson["binDataList"][IDindex]["extensionForEmbedding"].Value<String>();
 
-                    double lx = Math.Round(leftTopX * 2.54 / 7200, 3);
-                    double ly = Math.Round(leftTopY * 2.54 / 7200, 3);
-
+                    
                     double width = Math.Round(imgWidth * 2.54 / 7200, 3);
-                    double height = Math.Round(imgHeight * 2.54 / 7200, 3);
+                    double height = Math.Round((imgHeight) * 2.54 / 7200, 3);
                     string currentPath = "Pictures/" + name;
-                    xm.imgstyle(VertiRelTo,VertiRelToarray,HorzRelTo,HorzRelToarray);
-                    xm.makeimg(width, height, extension, currentPath, lx, ly);
+                    xm.imgstyle(VertiRelTo,VertiRelToarray,HorzRelTo,HorzRelToarray,through);
+                    xm.makeimg(width, height, extension, currentPath, X, Y, geulja, zindex,linevertical,VertiRelTo, ID);
 
 
                 }
