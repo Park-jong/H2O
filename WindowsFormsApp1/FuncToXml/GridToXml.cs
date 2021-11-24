@@ -85,8 +85,46 @@ namespace WindowsFormsApp1.FuncToXml
                     double outterRightMargin = Math.Round(jsonHeader["outterMarginRight"].Value<int>() * 0.01 * 0.0352778, 3);
                     double outterBottomMargin = Math.Round(jsonHeader["outterMarginBottom"].Value<int>() * 0.01 * 0.0352778, 3);
 
+
+                    List<int> widthList = new List<int>();
+                    for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
+                    {
+                        int current = 0;
+                        for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
+                        {
+
+                            int cellWidth = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["width"].Value<int>();
+                            if (colIndex != 0)
+                            {
+                                current += cellWidth;
+                            }
+                            else
+                            {
+                                current = cellWidth;
+                            }
+
+                            if (!widthList.Contains(current))
+                            {
+                                widthList.Add(current);
+                            }
+
+                        }
+                    }
+                    widthList.Sort();
+
                     string table = xm.MakeTable(rowCount, columnCount);
-                    xm.setTable(table, Math.Round(jsonHeader["width"].Value<int>() * 0.01 * 0.0352778, 3), outterTopMargin, outterLeftMargin, outterRightMargin, outterBottomMargin);
+                    xm.setTable(table, Math.Round((widthList[widthList.Count - 1]) * 0.01 * 0.0352778, 3), outterTopMargin, outterLeftMargin, outterRightMargin, outterBottomMargin);
+
+                    for (int colIndex = 0; colIndex < jsonTable["columnCount"].Value<int>(); colIndex++)
+                    {
+                        int cellWidth;
+                        if (colIndex == 0)
+                            cellWidth = widthList[colIndex];
+                        else
+                            cellWidth = widthList[colIndex] - widthList[colIndex - 1];
+                        xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
+                    }
+
                     //for(int c = 0; c < columnCount; c++)
                     //{
                     //    int colWidth = json["bodyText"]["sectionList"][s]["paragraphList"][i]["controlList"][controlList]["rowList"][0]["cellList"][c]["listHeader"]["width"].Value<int>();
@@ -124,36 +162,37 @@ namespace WindowsFormsApp1.FuncToXml
                             // 0 top 1 center 2 bottom
                             int paraCount = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["paraCount"].Value<int>();
 
-                            
-                            string top = docJson["borderFillList"][borderFillId-1]["topBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
+
+                            string top = docJson["borderFillList"][borderFillId - 1]["topBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
                             string left = docJson["borderFillList"][borderFillId - 1]["leftBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
                             string right = docJson["borderFillList"][borderFillId - 1]["rightBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
                             string bottom = docJson["borderFillList"][borderFillId - 1]["bottomBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
 
-                            double topThickness = Math.Round(Double.Parse(top)*2.83465);
-                            double leftThickness = Math.Round(Double.Parse(left) * 2.83465);
-                            double rightThickness = Math.Round(Double.Parse(right) * 2.83465);
-                            double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465);
+                            double topThickness = Math.Round(Double.Parse(top) * 2.83465, 2);
+                            double leftThickness = Math.Round(Double.Parse(left) * 2.83465, 2);
+                            double rightThickness = Math.Round(Double.Parse(right) * 2.83465, 2);
+                            double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465, 2);
 
-                            xm.setCol(table, colIndex, Math.Round(cellWidth * 0.01 * 0.0352778, 3));
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
-                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3));
+                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign);
 
                         }
                     }
                     for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
                     {
+                        int childCellIndex = 0;
                         for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
                             int row_index = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowIndex"].Value<int>();
                             int colSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colSpan"].Value<int>();
+                            int rowSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowSpan"].Value<int>();
 
 
-                            if(colSpan > 1)
+                            if (colSpan > 1 || rowSpan > 1)
                             {
-                                   xm.replaceP(row_index, colIndex, colSpan);
+                                xm.replaceP(row_index, colIndex, colSpan, rowSpan, childCellIndex);
                             }
-                         
+                            childCellIndex += colSpan;
 
                         }
                     }
@@ -179,22 +218,22 @@ namespace WindowsFormsApp1.FuncToXml
                                             pcontent = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<string>();
 
                                     }
-                                    catch(Exception e)
+                                    catch (Exception e)
                                     {
                                         continue;
                                     }
                                     contents = pcontent.Split('\n');
-                                    
+
                                 }
-                                if(jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count() > 1)
+                                if (jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count() > 1)
                                     pcontent = contents[k];
                                 //전체 텍스트 가져오기
-                                
+
                                 /////////////////////////////////////////////////////////////////
 
                                 // 스타일별 텍스트 개수
                                 int spancount = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"].Count(); // p 안 text style count
-                                                                                                                                                                                                                  // 스타일별 텍스트 아이디
+                                                                                                                                                                                  // 스타일별 텍스트 아이디
                                 int pstyle = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
 
 
@@ -469,7 +508,7 @@ namespace WindowsFormsApp1.FuncToXml
                             }
                         }
                     }
-                    
+
                 }
             }
         }

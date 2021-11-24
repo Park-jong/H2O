@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Collections;
 using System.Windows.Forms;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace WindowsFormsApp1
 {
@@ -22,6 +24,8 @@ namespace WindowsFormsApp1
         private const string header_table = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
         private const string header_draw = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
         private const string header_xlink = "http://www.w3.org/1999/xlink";
+        private const string header_manifest = "urn:oasis:names:tc:opendocument:xmlns:manifest:1.0";
+        private const string header_loext = "urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0";
         private static int numP = 0;
         private static int numSpan = 0;
         private static int numMP = 0;
@@ -57,7 +61,7 @@ namespace WindowsFormsApp1
 
             //Create File
 
-            string[] list1 = { "Configurations2", "META-INF", "Thumbnails" };
+            string[] list1 = { "Configurations2", "META-INF", "Thumbnails", "Pictures" };
 
             foreach (string s in list1)
             {
@@ -135,6 +139,10 @@ namespace WindowsFormsApp1
                     ((XmlNode)node).doc.Save(path);
                 }
             }
+            else if (node.GetType() == typeof(ImgNode))
+            {
+                SaveImage(((ImgNode)node));
+            }
 
             if (node.child == null)
                 return;
@@ -144,6 +152,24 @@ namespace WindowsFormsApp1
                 SaveODT(child);
             }
 
+        }
+
+        void SaveImage(ImgNode node)
+        {
+            Image image = node.img;
+            string filePath = node.path;
+
+            string fileExtension = Path.GetExtension(filePath);
+            switch (fileExtension.ToLower())
+            {
+
+                case ".bmp": image.Save(filePath, ImageFormat.Bmp); break;
+                case ".exif": image.Save(filePath, ImageFormat.Exif); break;
+                case ".gif": image.Save(filePath, ImageFormat.Gif); break;
+                case ".jpg": case ".jpeg": image.Save(filePath, ImageFormat.Jpeg); break;
+                case ".png": image.Save(filePath, ImageFormat.Png); break;
+                case ".tif": case ".tiff": image.Save(filePath, ImageFormat.Tiff); break;
+            }
         }
 
 
@@ -940,7 +966,19 @@ namespace WindowsFormsApp1
             XmlElement text_element = doc.CreateElement("text:p", header_text);
 
             text_element.SetAttribute("style-name", header_text, pname);
-            text_element.InnerText = text; // 구식
+            foreach (char eachtext in text)
+            {
+                if (eachtext.Equals(' '))
+                {
+                    XmlElement s = doc.CreateElement("text:s", header_text);
+                    text_element.AppendChild(s);
+                }
+                else
+                {
+                    XmlText t = doc.CreateTextNode(eachtext.ToString());
+                    text_element.AppendChild(t);
+                }
+            }
             e.AppendChild(text_element);
 
             numP++;
@@ -1029,7 +1067,19 @@ namespace WindowsFormsApp1
                     XmlElement text_element = doc.CreateElement("text:span", header_text);
 
                     text_element.SetAttribute("style-name", header_text, spanname);
-                    text_element.InnerText = text;
+                    foreach (char eachtext in text)
+                    {
+                        if (eachtext.Equals(' '))
+                        {
+                            XmlElement s = doc.CreateElement("text:s", header_text);
+                            text_element.AppendChild(s);
+                        }
+                        else
+                        {
+                            XmlText t = doc.CreateTextNode(eachtext.ToString());
+                            text_element.AppendChild(t);
+                        }
+                    }
                     element.AppendChild(text_element);
                     numSpan++;
                     break;
@@ -1178,7 +1228,19 @@ namespace WindowsFormsApp1
             XmlElement e = (XmlElement)list.Item(list.Count - 1);
             XmlElement span = doc.CreateElement("text:span", header_text);
             span.SetAttribute("style-name", header_text, name);
-            span.InnerText = text;
+            foreach (char eachtext in text)
+            {
+                if (eachtext.Equals(' '))
+                {
+                    XmlElement s = doc.CreateElement("text:s", header_text);
+                    span.AppendChild(s);
+                }
+                else
+                {
+                    XmlText t = doc.CreateTextNode(eachtext.ToString());
+                    span.AppendChild(t);
+                }
+            }
             e.AppendChild(span);
             numMT++;
 
@@ -1326,7 +1388,7 @@ namespace WindowsFormsApp1
             col.SetAttribute("family", header_style, "table-column");
 
             XmlElement colStyle = doc.CreateElement("style:table-column-properties", header_style);
-            colStyle.SetAttribute("width", header_style, width + "cm");
+            colStyle.SetAttribute("column-width", header_style, width + "cm");
 
             col.AppendChild(colStyle);
             e.AppendChild(col);
@@ -1366,7 +1428,7 @@ namespace WindowsFormsApp1
             column.SetAttribute("style-name", header_table, row_name);
         }
 
-        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right)
+        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right, int Verticalalign)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -1413,7 +1475,7 @@ namespace WindowsFormsApp1
             cell.SetAttribute("family", header_style, "table-cell");
 
             XmlElement cellStyle = doc.CreateElement("style:table-cell-properties", header_style);
-            cellStyle.SetAttribute("width", header_style, width + "cm");
+            //cellStyle.SetAttribute("width", header_style, width + "cm");
             cellStyle.SetAttribute("height", header_style, height + "cm");
             cellStyle.SetAttribute("padding-top", header_fo, margin_top + "cm");
             cellStyle.SetAttribute("padding-bottom", header_fo, margin_bottom + "cm");
@@ -1423,28 +1485,45 @@ namespace WindowsFormsApp1
             cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "solid #000000");
             cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "solid #000000");
             cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "solid #000000");
+            if (Verticalalign == 1)
+            {
+                cellStyle.SetAttribute("vertical-align", header_style, "middle");
+            }
+
 
             cell.AppendChild(cellStyle);
             e.AppendChild(cell);
         }
 
-        public void replaceP(int row_index, int col_index, int colSpan)
+        public void replaceP(int row_index, int col_index, int colSpan, int rowSpan, int childCellIndex)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
 
             XmlNodeList list = doc.GetElementsByTagName("table", header_table);
             XmlElement e = (XmlElement)list.Item(numTable - 1);
-            
+
             list = e.GetElementsByTagName("table-row", header_table);
             XmlElement row = (XmlElement)list.Item(row_index);
 
-            for(int changeIndex = 1; changeIndex < colSpan; changeIndex++)
+            for (int changeIndex = 1; changeIndex < colSpan; changeIndex++)
             {
-                XmlElement covered = doc.CreateElement("covered-table-cell", header_table);
+                XmlElement covered = doc.CreateElement("table:covered-table-cell", header_table);
                 list = row.GetElementsByTagName("table-cell", header_table);
                 XmlElement changed = (XmlElement)list.Item(col_index + 1);
                 row.ReplaceChild(covered, changed);
+            }
+            for (int rowindex = 1; rowindex < rowSpan; rowindex++)
+            {
+                for (int changeIndex = 0; changeIndex < colSpan; changeIndex++)
+                {
+                    list = e.GetElementsByTagName("table-row", header_table);
+                    row = (XmlElement)list.Item(row_index + rowindex);
+                    XmlElement covered = doc.CreateElement("table:covered-table-cell", header_table);
+                    list = row.ChildNodes;
+                    XmlElement changed = (XmlElement)list.Item(changeIndex + childCellIndex);
+                    row.ReplaceChild(covered, changed);
+                }
             }
         }
 
@@ -1480,7 +1559,19 @@ namespace WindowsFormsApp1
             XmlElement text_element = doc.CreateElement("text:p", header_text);
 
             text_element.SetAttribute("style-name", header_text, pname);
-            text_element.InnerText = text; // 구식
+            foreach (char eachtext in text)
+            {
+                if (eachtext.Equals(' '))
+                {
+                    XmlElement s = doc.CreateElement("text:s", header_text);
+                    text_element.AppendChild(s);
+                }
+                else
+                {
+                    XmlText t = doc.CreateTextNode(eachtext.ToString());
+                    text_element.AppendChild(t);
+                }
+            }
             tableCell.AppendChild(text_element);
 
             numP++;
@@ -1524,11 +1615,30 @@ namespace WindowsFormsApp1
 
             return pname;
         }
-        public void makeimg(double Width, double Height, String extension, String imagePath, double x, double y)
+
+        public void makeimgEntry(ImgNode img)
         {
-            String name = "이미지" + (numImage + 1).ToString();
+            FolderNode meta = (FolderNode)root.child["META-INF"];
+            XmlNode manifest = (XmlNode)meta.child["manifest.xml"];
+            XmlDocument doc = manifest.doc;
+
+            XmlNodeList list = doc.GetElementsByTagName("manifest", header_manifest);
+            XmlElement e = (XmlElement)list.Item(0);
+
+            XmlElement entry = doc.CreateElement("manifest:file-entry", header_manifest);
+            entry.SetAttribute("full-path", header_manifest, "Pictures/" + img.name);
+            entry.SetAttribute("media-type", header_manifest, "image/jpeg");
+
+            e.AppendChild(entry);
+
+        }
+
+        public void makeimg(double Width, double Height, String extension, String imagePath, double x, double y, int g, int zindex, int linevertical, int verrel, int ID)
+        {
+            String geulja = "";
+            String name = "이미지" + ID.ToString();
             String width = Width.ToString(); String height = Height.ToString();
-            String svgx = x.ToString(); String svgy = y.ToString();
+            String svgx = ""; String svgy = "";
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
 
@@ -1538,6 +1648,18 @@ namespace WindowsFormsApp1
 
             XmlElement image = doc.CreateElement("text:p", header_text);
 
+            if (g == 0)
+                geulja = "paragraph";
+            else if (g == 1)
+                geulja = "as-char";
+
+            if (verrel == 2)
+                svgy = (Math.Round((y + linevertical) * 2.54 / 7200, 3)).ToString();
+            else
+                svgy = (Math.Round(y * 2.54 / 7200, 3)).ToString(); ;
+
+            svgx = (Math.Round(x * 2.54 / 7200, 3)).ToString();
+
 
             image.SetAttribute("style-name", header_text, "Standard");
             e.AppendChild(image);
@@ -1545,14 +1667,13 @@ namespace WindowsFormsApp1
             XmlElement draw = doc.CreateElement("draw:frame", header_draw);
             draw.SetAttribute("name", header_draw, name);
             draw.SetAttribute("style-name", header_draw, "fr" + imageStylenum); ;
-            draw.SetAttribute("z-index", header_draw, numImage.ToString());
+            draw.SetAttribute("z-index", header_draw, zindex.ToString());
             draw.SetAttribute("width", header_svg, width + "cm");
-
             draw.SetAttribute("height", header_svg, height + "cm");
             draw.SetAttribute("y", header_svg, svgy + "cm");
             draw.SetAttribute("x", header_svg, svgx + "cm");
 
-            draw.SetAttribute("anchor-type", header_text, "char");
+            draw.SetAttribute("anchor-type", header_text, geulja);
 
             image.AppendChild(draw);
             XmlElement ndraw = doc.CreateElement("draw:image", header_draw);
@@ -1565,14 +1686,71 @@ namespace WindowsFormsApp1
             numImage++;
 
         }
-        public void imgstyle(int i)
+        public void imgstyle(int VertiRelTo,
+        int VertiRelToarray,
+        int HorzRelTo,
+        int HorzRelToarray,
+        int through)
         {
+            String vertrel = "";
+            String horzrel = "";
+            String verto = "";
+            String horzto = "";
+            String thr = "";
+            String wrap = "";
             String name = "fr" + (++imageStylenum).ToString();
 
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
+            if (VertiRelTo == 0)
+                vertrel = "paper";
+            else if (VertiRelTo == 1)
+                vertrel = "page";
+            else if (VertiRelTo == 2)
+                vertrel = "paragraph";
 
+            if (VertiRelToarray == 0)
+                verto = "from-top";
 
+            else if (VertiRelToarray == 1)
+                if (VertiRelTo == 0 || VertiRelTo == 1)
+                    verto = "middle";
+
+                else if (VertiRelToarray == 2)
+                    verto = "from-bottom";
+
+                else if (VertiRelToarray == 3)
+                    if (VertiRelTo == 0 || VertiRelTo == 1)
+                        verto = "inside";
+
+                    else if (VertiRelToarray == 4)
+                        if (VertiRelTo == 0 || VertiRelTo == 1)
+                            verto = "outside";
+            if (HorzRelTo == 0)
+                horzrel = "paper";
+            else if (HorzRelTo == 1)
+                horzrel = "page";
+            else if (HorzRelTo == 2)
+                horzrel = "paragraph";
+            else if (HorzRelTo == 3)
+                horzrel = "paragraph";
+
+            if (HorzRelToarray == 0)
+                horzto = "from-left";
+            else if (HorzRelToarray == 1)
+                if (HorzRelTo == 0 || HorzRelTo == 1)
+                    horzto = "middle";
+
+                else if (HorzRelToarray == 2)
+                    horzto = "from-right";
+
+                else if (HorzRelToarray == 3)
+                    if (HorzRelTo == 0 || HorzRelTo == 1)
+                        horzto = "inside";
+
+                    else if (HorzRelToarray == 4)
+                        if (HorzRelTo == 0 || HorzRelTo == 1)
+                            horzto = "outside";
             XmlNodeList list = doc.GetElementsByTagName("automatic-styles", header_office);
             XmlElement e = (XmlElement)list.Item(0);
 
@@ -1594,10 +1772,35 @@ namespace WindowsFormsApp1
 
             imgstyle.SetAttribute("clip", header_fo, "rect(0cm,0cm,0cm,0cm)");
             imgstyle.SetAttribute("mirror", header_style, "none");
-            imgstyle.SetAttribute("horizontal-rel", header_style, "paragraph");
-            imgstyle.SetAttribute("horizontal-pos", header_style, "from-left");
-            imgstyle.SetAttribute("vertical-rel", header_style, "paragraph");
-            imgstyle.SetAttribute("vertical-pos", header_style, "from-top");
+            imgstyle.SetAttribute("horizontal-rel", header_style, horzrel);
+            imgstyle.SetAttribute("horizontal-pos", header_style, horzto);
+            imgstyle.SetAttribute("vertical-rel", header_style, "page-content");
+            imgstyle.SetAttribute("vertical-pos", header_style, verto);
+            imgstyle.SetAttribute("wrap-contour", header_style, "false");
+
+            if (through == 2)
+            {
+                wrap = "run-through";
+                thr = "background";
+                imgstyle.SetAttribute("wrap", header_style, wrap);
+                imgstyle.SetAttribute("run-through", header_style, thr);
+
+                imgstyle.SetAttribute("wrap-influence-on-position", header_draw, "once-concurrent");
+                imgstyle.SetAttribute("number-wrapped-paragraphs", header_style, "no-limit");
+            }
+            else if (through == 3)
+            {
+                wrap = "run-through";
+                thr = "foreground";
+                imgstyle.SetAttribute("wrap", header_style, wrap);
+                imgstyle.SetAttribute("run-through", header_style, thr);
+                imgstyle.SetAttribute("number-wrapped-paragraphs", header_style, "no-limit");
+                imgstyle.SetAttribute("wrap-influence-on-position", header_draw, "once-concurrent");
+            }
+
+
+
+
             image.AppendChild(imgstyle);
 
 
