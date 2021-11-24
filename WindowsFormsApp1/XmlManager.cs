@@ -25,7 +25,7 @@ namespace WindowsFormsApp1
         private const string header_draw = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
         private const string header_xlink = "http://www.w3.org/1999/xlink";
         private const string header_manifest = "urn:oasis:names:tc:opendocument:xmlns:manifest:1.0";
-        private const string header_loext ="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0";
+        private const string header_loext = "urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0";
         private static int numP = 0;
         private static int numSpan = 0;
         private static int numMP = 0;
@@ -139,7 +139,7 @@ namespace WindowsFormsApp1
                     ((XmlNode)node).doc.Save(path);
                 }
             }
-            else if(node.GetType() == typeof(ImgNode))
+            else if (node.GetType() == typeof(ImgNode))
             {
                 SaveImage(((ImgNode)node));
             }
@@ -1489,13 +1489,13 @@ namespace WindowsFormsApp1
             {
                 cellStyle.SetAttribute("vertical-align", header_style, "middle");
             }
-            
+
 
             cell.AppendChild(cellStyle);
             e.AppendChild(cell);
         }
 
-        public void replaceP(int row_index, int col_index, int colSpan)
+        public void replaceP(int row_index, int col_index, int colSpan, int rowSpan, int childCellIndex)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -1512,6 +1512,18 @@ namespace WindowsFormsApp1
                 list = row.GetElementsByTagName("table-cell", header_table);
                 XmlElement changed = (XmlElement)list.Item(col_index + 1);
                 row.ReplaceChild(covered, changed);
+            }
+            for (int rowindex = 1; rowindex < rowSpan; rowindex++)
+            {
+                for (int changeIndex = 0; changeIndex < colSpan; changeIndex++)
+                {
+                    list = e.GetElementsByTagName("table-row", header_table);
+                    row = (XmlElement)list.Item(row_index + rowindex);
+                    XmlElement covered = doc.CreateElement("table:covered-table-cell", header_table);
+                    list = row.ChildNodes;
+                    XmlElement changed = (XmlElement)list.Item(changeIndex + childCellIndex);
+                    row.ReplaceChild(covered, changed);
+                }
             }
         }
 
@@ -1609,7 +1621,7 @@ namespace WindowsFormsApp1
             FolderNode meta = (FolderNode)root.child["META-INF"];
             XmlNode manifest = (XmlNode)meta.child["manifest.xml"];
             XmlDocument doc = manifest.doc;
-            
+
             XmlNodeList list = doc.GetElementsByTagName("manifest", header_manifest);
             XmlElement e = (XmlElement)list.Item(0);
 
@@ -1621,7 +1633,7 @@ namespace WindowsFormsApp1
 
         }
 
-        public void makeimg(double Width, double Height, String extension, String imagePath, double x, double y, int g, int zindex, int linevertical,int verrel,int ID)
+        public void makeimg(double Width, double Height, String extension, String imagePath, double x, double y, int g, int zindex, int linevertical, int verrel, int ID)
         {
             String geulja = "";
             String name = "이미지" + ID.ToString();
@@ -1636,7 +1648,7 @@ namespace WindowsFormsApp1
 
             XmlElement image = doc.CreateElement("text:p", header_text);
 
-            if (g == 0) 
+            if (g == 0)
                 geulja = "paragraph";
             else if (g == 1)
                 geulja = "as-char";
@@ -1645,9 +1657,9 @@ namespace WindowsFormsApp1
                 svgy = (Math.Round((y + linevertical) * 2.54 / 7200, 3)).ToString();
             else
                 svgy = (Math.Round(y * 2.54 / 7200, 3)).ToString(); ;
-            
+
             svgx = (Math.Round(x * 2.54 / 7200, 3)).ToString();
-            
+
 
             image.SetAttribute("style-name", header_text, "Standard");
             e.AppendChild(image);
@@ -1679,11 +1691,11 @@ namespace WindowsFormsApp1
         int HorzRelTo,
         int HorzRelToarray,
         int through)
-        { 
-        String vertrel ="";
-        String horzrel = "";
-        String verto="";
-        String horzto="";
+        {
+            String vertrel = "";
+            String horzrel = "";
+            String verto = "";
+            String horzto = "";
             String thr = "";
             String wrap = "";
             String name = "fr" + (++imageStylenum).ToString();
@@ -1698,15 +1710,15 @@ namespace WindowsFormsApp1
                 vertrel = "paragraph";
 
             if (VertiRelToarray == 0)
-                    verto = "from-top";
-                
+                verto = "from-top";
+
             else if (VertiRelToarray == 1)
                 if (VertiRelTo == 0 || VertiRelTo == 1)
                     verto = "middle";
-                   
-            else if (VertiRelToarray == 2)
-                        verto = "from-bottom";
-                
+
+                else if (VertiRelToarray == 2)
+                    verto = "from-bottom";
+
                 else if (VertiRelToarray == 3)
                     if (VertiRelTo == 0 || VertiRelTo == 1)
                         verto = "inside";
@@ -1724,13 +1736,13 @@ namespace WindowsFormsApp1
                 horzrel = "paragraph";
 
             if (HorzRelToarray == 0)
-                 horzto = "from-left";
+                horzto = "from-left";
             else if (HorzRelToarray == 1)
                 if (HorzRelTo == 0 || HorzRelTo == 1)
                     horzto = "middle";
 
                 else if (HorzRelToarray == 2)
-                         horzto = "from-right";
+                    horzto = "from-right";
 
                 else if (HorzRelToarray == 3)
                     if (HorzRelTo == 0 || HorzRelTo == 1)
@@ -1757,7 +1769,7 @@ namespace WindowsFormsApp1
             imgstyle.SetAttribute("color-green", header_draw, "0%");
             imgstyle.SetAttribute("color-contrast", header_draw, "0%");
             imgstyle.SetAttribute("color-luminance", header_draw, "0%");
-            
+
             imgstyle.SetAttribute("clip", header_fo, "rect(0cm,0cm,0cm,0cm)");
             imgstyle.SetAttribute("mirror", header_style, "none");
             imgstyle.SetAttribute("horizontal-rel", header_style, horzrel);
@@ -1772,7 +1784,7 @@ namespace WindowsFormsApp1
                 thr = "background";
                 imgstyle.SetAttribute("wrap", header_style, wrap);
                 imgstyle.SetAttribute("run-through", header_style, thr);
-            
+
                 imgstyle.SetAttribute("wrap-influence-on-position", header_draw, "once-concurrent");
                 imgstyle.SetAttribute("number-wrapped-paragraphs", header_style, "no-limit");
             }
