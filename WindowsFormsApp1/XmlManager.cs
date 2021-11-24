@@ -1352,10 +1352,10 @@ namespace WindowsFormsApp1
             tablestyle.SetAttribute("width", header_style, width + "cm");
             tablestyle.SetAttribute("align", header_table, "center");
 
-            tablestyle.SetAttribute("margin-top", header_fo, outterTopMargin * 10 + "cm");
-            tablestyle.SetAttribute("margin-left", header_fo, outterLeftMargin * 10 + "cm");
-            tablestyle.SetAttribute("margin-right", header_fo, outterRightMargin * 10 + "cm");
-            tablestyle.SetAttribute("margin-bottom", header_fo, outterBottomMargin * 10 + "cm");
+            tablestyle.SetAttribute("margin-top", header_fo, outterTopMargin + "cm");
+            tablestyle.SetAttribute("margin-left", header_fo, outterLeftMargin  + "cm");
+            tablestyle.SetAttribute("margin-right", header_fo, outterRightMargin + "cm");
+            tablestyle.SetAttribute("margin-bottom", header_fo, outterBottomMargin + "cm");
 
             table.AppendChild(tablestyle);
 
