@@ -168,10 +168,10 @@ namespace WindowsFormsApp1.FuncToXml
                             string right = docJson["borderFillList"][borderFillId - 1]["rightBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
                             string bottom = docJson["borderFillList"][borderFillId - 1]["bottomBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
 
-                            double topThickness = Math.Round(Double.Parse(top) * 2.83465 , 2);
-                            double leftThickness = Math.Round(Double.Parse(left) * 2.83465 , 2);
-                            double rightThickness = Math.Round(Double.Parse(right) * 2.83465 , 2);
-                            double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465 , 2);
+                            double topThickness = Math.Round(Double.Parse(top) * 2.83465, 2);
+                            double leftThickness = Math.Round(Double.Parse(left) * 2.83465, 2);
+                            double rightThickness = Math.Round(Double.Parse(right) * 2.83465, 2);
+                            double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465, 2);
 
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
                             xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign);
@@ -180,17 +180,19 @@ namespace WindowsFormsApp1.FuncToXml
                     }
                     for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
                     {
+                        int childCellIndex = 0;
                         for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
                             int row_index = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowIndex"].Value<int>();
                             int colSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colSpan"].Value<int>();
+                            int rowSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowSpan"].Value<int>();
 
 
-                            if (colSpan > 1)
+                            if (colSpan > 1 || rowSpan > 1)
                             {
-                                xm.replaceP(row_index, colIndex, colSpan);
+                                xm.replaceP(row_index, colIndex, colSpan, rowSpan, childCellIndex);
                             }
-
+                            childCellIndex += colSpan;
 
                         }
                     }
