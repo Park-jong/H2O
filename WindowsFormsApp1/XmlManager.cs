@@ -1542,9 +1542,19 @@ namespace WindowsFormsApp1
 
             if (background_color_to_bit != "0")
             {
-                string strR = background_color_to_bit.Substring(0, 8);
-                string strG = background_color_to_bit.Substring(8, 8);
-                string strB = background_color_to_bit.Substring(16, 8);
+                string strR, strG, strB;
+                if (background_color_to_bit.Length == 16)
+                {
+                    strR = background_color_to_bit.Substring(0, 5);
+                    strG = background_color_to_bit.Substring(5, 6);
+                    strB = background_color_to_bit.Substring(11, 5);
+                }else
+                {
+                    strR = background_color_to_bit.Substring(0, 8);
+                    strG = background_color_to_bit.Substring(8, 8);
+                    strB = background_color_to_bit.Substring(16, 8);
+                }
+               
                 int r = 0;
                 int g = 0;
                 int b = 0;
