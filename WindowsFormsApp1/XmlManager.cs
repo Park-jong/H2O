@@ -1478,31 +1478,6 @@ namespace WindowsFormsApp1
             cellStyle.SetAttribute("padding-left", header_fo, margin_left + "cm");
             cellStyle.SetAttribute("padding-right", header_fo, margin_right + "cm");
 
-            //추후 함수로 따로 구현
-            switch (top_line_type)
-            {
-                case "Solid":
-                    cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "solid #000000");
-                    break;
-                case "Dot":
-                    cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "dotted #000000");
-                    break;
-                case "Dash":
-                    cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "dashed #000000");
-                    break;
-            }
-            switch (left_line_type)
-            {
-                case "Solid":
-                    cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "solid #000000");
-                    break;
-                case "Dot":
-                    cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "dotted #000000");
-                    break;
-                case "Dash":
-                    cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "dashed #000000");
-                    break;
-            }
             switch (right_line_type)
             {
                 case "Solid":
@@ -1526,6 +1501,38 @@ namespace WindowsFormsApp1
                 case "Dash":
                     cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "dashed #000000");
                     break;
+            }
+
+            if(column_index == 0)
+            {
+                switch (left_line_type)
+                {
+                    case "Solid":
+                        cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "solid #000000");
+                        break;
+                    case "Dot":
+                        cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "dotted #000000");
+                        break;
+                    case "Dash":
+                        cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "dashed #000000");
+                        break;
+                }
+            }
+
+            if(row_index == 0)
+            {
+                switch (top_line_type)
+                {
+                    case "Solid":
+                        cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "solid #000000");
+                        break;
+                    case "Dot":
+                        cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "dotted #000000");
+                        break;
+                    case "Dash":
+                        cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "dashed #000000");
+                        break;
+                }
             }
 
             if (Verticalalign == 1)
