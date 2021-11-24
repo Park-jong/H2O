@@ -1352,14 +1352,10 @@ namespace WindowsFormsApp1
             tablestyle.SetAttribute("width", header_style, width + "cm");
             tablestyle.SetAttribute("align", header_table, "center");
 
-            //창의축전용 임의 스타일 설정 = 추후에 수정 필요
-            if (name == "표1")
-            {
-                //tablestyle.SetAttribute("margin-top", header_fo, outterTopMargin + "cm");
-                tablestyle.SetAttribute("margin-left", header_fo, outterLeftMargin * 10 + "cm");
-                tablestyle.SetAttribute("margin-right", header_fo, outterRightMargin * 10 + "cm");
-                //tablestyle.SetAttribute("margin-bottom", header_fo, outterBottomMargin + "cm");
-            }
+            tablestyle.SetAttribute("margin-top", header_fo, outterTopMargin * 10 + "cm");
+            tablestyle.SetAttribute("margin-left", header_fo, outterLeftMargin * 10 + "cm");
+            tablestyle.SetAttribute("margin-right", header_fo, outterRightMargin * 10 + "cm");
+            tablestyle.SetAttribute("margin-bottom", header_fo, outterBottomMargin * 10 + "cm");
 
             table.AppendChild(tablestyle);
 
@@ -1428,7 +1424,7 @@ namespace WindowsFormsApp1
             column.SetAttribute("style-name", header_table, row_name);
         }
 
-        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_num, int row_num, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right, int Verticalalign)
+        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right, int Verticalalign, string background_color_to_bit, string top_line_type, string left_line_type, string right_line_type, string bottom_line_type)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -1481,15 +1477,87 @@ namespace WindowsFormsApp1
             cellStyle.SetAttribute("padding-bottom", header_fo, margin_bottom + "cm");
             cellStyle.SetAttribute("padding-left", header_fo, margin_left + "cm");
             cellStyle.SetAttribute("padding-right", header_fo, margin_right + "cm");
-            cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "solid #000000");
-            cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "solid #000000");
-            cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "solid #000000");
-            cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "solid #000000");
+
+            //추후 함수로 따로 구현
+            switch (top_line_type)
+            {
+                case "Solid":
+                    cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "solid #000000");
+                    break;
+                case "Dot":
+                    cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "dotted #000000");
+                    break;
+                case "Dash":
+                    cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "dashed #000000");
+                    break;
+            }
+            switch (left_line_type)
+            {
+                case "Solid":
+                    cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "solid #000000");
+                    break;
+                case "Dot":
+                    cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "dotted #000000");
+                    break;
+                case "Dash":
+                    cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "dashed #000000");
+                    break;
+            }
+            switch (right_line_type)
+            {
+                case "Solid":
+                    cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "solid #000000");
+                    break;
+                case "Dot":
+                    cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "dotted #000000");
+                    break;
+                case "Dash":
+                    cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "dashed #000000");
+                    break;
+            }
+            switch (bottom_line_type)
+            {
+                case "Solid":
+                    cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "solid #000000");
+                    break;
+                case "Dot":
+                    cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "dotted #000000");
+                    break;
+                case "Dash":
+                    cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "dashed #000000");
+                    break;
+            }
+
             if (Verticalalign == 1)
             {
                 cellStyle.SetAttribute("vertical-align", header_style, "middle");
             }
 
+            if (background_color_to_bit != "0")
+            {
+                string strR = background_color_to_bit.Substring(0, 8);
+                string strG = background_color_to_bit.Substring(8, 8);
+                string strB = background_color_to_bit.Substring(16, 8);
+                int r = 0;
+                int g = 0;
+                int b = 0;
+
+                try
+                {
+                    r = Convert.ToByte(strB, 2);
+                    g = Convert.ToByte(strG, 2);
+                    b = Convert.ToByte(strR, 2);
+
+                }
+                catch (FormatException)
+                {
+                    System.Console.WriteLine("Invalid String");
+                }
+
+                string theHexColor = "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+
+                cellStyle.SetAttribute("background-color", header_fo, theHexColor);
+            }
 
             cell.AppendChild(cellStyle);
             e.AppendChild(cell);

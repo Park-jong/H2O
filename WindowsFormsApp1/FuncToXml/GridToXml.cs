@@ -163,18 +163,36 @@ namespace WindowsFormsApp1.FuncToXml
                             int paraCount = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["paraCount"].Value<int>();
 
 
-                            string top = docJson["borderFillList"][borderFillId - 1]["topBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
-                            string left = docJson["borderFillList"][borderFillId - 1]["leftBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
-                            string right = docJson["borderFillList"][borderFillId - 1]["rightBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
-                            string bottom = docJson["borderFillList"][borderFillId - 1]["bottomBorder"]["thickness"].Value<string>().Substring(2).Replace("_", ".");
+                            JToken cellTopStyle = docJson["borderFillList"][borderFillId - 1]["topBorder"];
+                            JToken cellLeftStyle = docJson["borderFillList"][borderFillId - 1]["leftBorder"];
+                            JToken cellRightStyle = docJson["borderFillList"][borderFillId - 1]["rightBorder"];
+                            JToken cellBottomStyle = docJson["borderFillList"][borderFillId - 1]["bottomBorder"];
 
-                            double topThickness = Math.Round(Double.Parse(top) * 2.83465, 2);
-                            double leftThickness = Math.Round(Double.Parse(left) * 2.83465, 2);
-                            double rightThickness = Math.Round(Double.Parse(right) * 2.83465, 2);
-                            double bottomThickness = Math.Round(Double.Parse(bottom) * 2.83465, 2);
+                            string topThicknessStr = cellTopStyle["thickness"].Value<string>().Substring(2).Replace("_", ".");
+                            string leftThicknessStr = cellLeftStyle["thickness"].Value<string>().Substring(2).Replace("_", ".");
+                            string rightThicknessStr = cellRightStyle["thickness"].Value<string>().Substring(2).Replace("_", ".");
+                            string bottomThicknessStr = cellBottomStyle["thickness"].Value<string>().Substring(2).Replace("_", ".");
+                            double topThickness = Math.Round(Double.Parse(topThicknessStr) * 2.83465, 2);
+                            double leftThickness = Math.Round(Double.Parse(leftThicknessStr) * 2.83465, 2);
+                            double rightThickness = Math.Round(Double.Parse(rightThicknessStr) * 2.83465, 2);
+                            double bottomThickness = Math.Round(Double.Parse(bottomThicknessStr) * 2.83465, 2);
+
+                            string topLineType = cellTopStyle["type"].Value<string>();
+                            string leftLineType = cellLeftStyle["type"].Value<string>();
+                            string rightLineType = cellRightStyle["type"].Value<string>();
+                            string bottomLineType = cellBottomStyle["type"].Value<string>();
+
+                            int backgroundColor = 0;
+
+                            if (docJson["borderFillList"][borderFillId - 1]["fillInfo"]["patternFill"] != null)
+                            {
+                                backgroundColor = docJson["borderFillList"][borderFillId - 1]["fillInfo"]["patternFill"]["backColor"]["value"].Value<int>();
+                            }
+
+                            string backgroundColorToBit = Convert.ToString(backgroundColor, 2);
 
                             xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
-                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, colNum, rowNum, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign);
+                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign, backgroundColorToBit, topLineType, leftLineType, rightLineType, bottomLineType);
 
                         }
                     }
