@@ -47,7 +47,7 @@ namespace WindowsFormsApp1
                 xm.SetPageLayout(pageMarginLeft, pageMarginRight, pageMarginTop, pageMarginBottom);
                 {
                     xm.SetHeader(pageMarginHeader, 0, 0, 0);
-                    //string name = xm.AddHeader();
+                    string name = xm.AddHeader();
                     //name = xm.AddHeader();
                     //name = xm.AddHeaderFooterSpan(name, "123");
                     //name = xm.AddHeader();
@@ -57,7 +57,7 @@ namespace WindowsFormsApp1
                 {
                     xm.SetFooter(pageMarginFooter, 0, 0, 0);
                     //xm.AddFooter();
-                    //string name = xm.AddFooter();
+                    string name = xm.AddFooter();
                     //xm.AddHeaderFooterSpan(name, "789");
                     //name = xm.AddFooter();
                     //xm.AddHeaderFooterSpan(name, "1011");
