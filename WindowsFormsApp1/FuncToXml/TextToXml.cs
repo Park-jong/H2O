@@ -35,6 +35,8 @@ namespace WindowsFormsApp1.FuncToXml
 
                 if (obj != null)
                     pcontent = json["text"].Value<string>();
+                if (pcontent.Equals(""))
+                    throw new Exception();
             }
             /////////////////////////////////////////////////////////////글자가 없을 때
             catch (Exception e)
@@ -94,7 +96,7 @@ namespace WindowsFormsApp1.FuncToXml
                     xm.SetPMargin(nullPName, (float)(leftmargin / 200 * 0.0353), (float)(rightmargin / 200 * 0.0353), (float)(topspace / 200 * 0.0353), (float)(bottomspace / 200 * 0.0353));
                 }
 
-                //continue;
+                return;
             }
             /////////////////////////////////////////////////////////////////
 
