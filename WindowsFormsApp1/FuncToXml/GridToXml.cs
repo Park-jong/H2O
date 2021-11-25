@@ -354,7 +354,8 @@ namespace WindowsFormsApp1.FuncToXml
                                     {
                                         //줄 간격
                                         int lineSpace = docJson["paraShapeList"][sID]["lineSpace"].Value<int>();
-                                        xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace * 0.01 * baseSize * 0.01 * 0.03527);
+                                        int property = docJson["paraShapeList"][sID]["property1"]["value"].Value<int>();
+                                        xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace, property, (int)baseSize);
 
                                         //문단 테두리 간격
                                         double topborderSpace = docJson["paraShapeList"][sID]["topBorderSpace"].Value<double>();
