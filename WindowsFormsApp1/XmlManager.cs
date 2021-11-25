@@ -34,7 +34,7 @@ namespace WindowsFormsApp1
 
         private static int numImage = 0;
         private static int imageStylenum = 0;
-        private static int numheader= 0;
+        private static int numheader = 0;
         private static int numfooter = 0;
         public bool ContentXml { get; set; }//본문인지 아닌지 판별
 
@@ -50,7 +50,7 @@ namespace WindowsFormsApp1
             numMP = 0;
             numMT = 0;
             numTable = 0;
-            
+
         }
 
         public void CreateODT()
@@ -1475,7 +1475,7 @@ namespace WindowsFormsApp1
 
             XmlElement cellStyle = doc.CreateElement("style:table-cell-properties", header_style);
             //cellStyle.SetAttribute("width", header_style, width + "cm");
-            cellStyle.SetAttribute("height", header_style, height + "cm");
+            //cellStyle.SetAttribute("height", header_style, height + "cm");
             cellStyle.SetAttribute("padding-top", header_fo, margin_top + "cm");
             cellStyle.SetAttribute("padding-bottom", header_fo, margin_bottom + "cm");
             cellStyle.SetAttribute("padding-left", header_fo, margin_left + "cm");
@@ -1578,6 +1578,8 @@ namespace WindowsFormsApp1
                 string theHexColor = "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
 
                 cellStyle.SetAttribute("background-color", header_fo, theHexColor);
+                XmlElement backgroundImage = doc.CreateElement("style:background-image", header_style);
+                cellStyle.AppendChild(backgroundImage);
             }
 
             cell.AppendChild(cellStyle);
@@ -1722,7 +1724,7 @@ namespace WindowsFormsApp1
 
         }
 
-        public void makeimg(double Width, double Height, String extension, String imagePath, double x, double y, int g, int zindex, int linevertical, int verrel, int ID, Boolean isHeader,Boolean isFooter)
+        public void makeimg(double Width, double Height, String extension, String imagePath, double x, double y, int g, int zindex, int linevertical, int verrel, int ID, Boolean isHeader, Boolean isFooter)
         {
             String geulja = "";
             String name = "이미지" + ID.ToString();
@@ -1734,9 +1736,9 @@ namespace WindowsFormsApp1
             XmlElement e2; XmlElement e = null;
             if (isHeader == false && isFooter == false)
             {
-                
+
                 content = (XmlNode)root.child["content.xml"];
-                doc= content.doc;
+                doc = content.doc;
                 list = doc.GetElementsByTagName("text", header_office);
                 e = (XmlElement)list.Item(0);
 
@@ -1745,24 +1747,26 @@ namespace WindowsFormsApp1
             {
                 content = (XmlNode)root.child["styles.xml"];
                 doc = content.doc;
-               
+
                 list = doc.GetElementsByTagName("master-page", header_style);
                 e2 = (XmlElement)list.Item(0);
-                if (isFooter == true) {
+                if (isFooter == true)
+                {
                     if (numfooter == 0)
                         e = doc.CreateElement("style:footer", header_style);
-                    else e =(XmlElement) (doc.GetElementsByTagName("footer",header_style).Item(0));
-                     }
-                else if(isHeader == true) {
+                    else e = (XmlElement)(doc.GetElementsByTagName("footer", header_style).Item(0));
+                }
+                else if (isHeader == true)
+                {
                     if (numheader == 0)
-                      e = doc.CreateElement("style:header", header_style);
+                        e = doc.CreateElement("style:header", header_style);
                     else e = (XmlElement)(doc.GetElementsByTagName("header", header_style).Item(0));
                 }
                 e2.AppendChild(e);
             }
 
 
-              XmlElement image = doc.CreateElement("text:p", header_text);
+            XmlElement image = doc.CreateElement("text:p", header_text);
 
             if (g == 0)
                 geulja = "paragraph";
@@ -1776,15 +1780,15 @@ namespace WindowsFormsApp1
 
             svgx = (Math.Round(x * 2.54 / 7200, 3)).ToString();
 
-            if(isHeader == false && isFooter == false)
-            image.SetAttribute("style-name", header_text, "Standard");
-            
+            if (isHeader == false && isFooter == false)
+                image.SetAttribute("style-name", header_text, "Standard");
+
             e.AppendChild(image);
 
             XmlElement draw = doc.CreateElement("draw:frame", header_draw);
             draw.SetAttribute("name", header_draw, name);
-            if(isHeader == false && isFooter == false)
-            draw.SetAttribute("style-name", header_draw, "fr" + imageStylenum); 
+            if (isHeader == false && isFooter == false)
+                draw.SetAttribute("style-name", header_draw, "fr" + imageStylenum);
             else
                 draw.SetAttribute("style-name", header_draw, "Mfr" + imageStylenum); ;
             draw.SetAttribute("z-index", header_draw, zindex.ToString());
@@ -1813,7 +1817,7 @@ namespace WindowsFormsApp1
         int VertiRelToarray,
         int HorzRelTo,
         int HorzRelToarray,
-        int through,Boolean isHeader,Boolean isFooter)
+        int through, Boolean isHeader, Boolean isFooter)
         {
             String vertrel = "";
             String horzrel = "";
@@ -1824,7 +1828,7 @@ namespace WindowsFormsApp1
             String name = "";
             XmlNode content;
 
-            if (isHeader == false && isFooter ==false)
+            if (isHeader == false && isFooter == false)
             {
                 name = "fr" + (++imageStylenum).ToString();
                 content = (XmlNode)root.child["content.xml"];
@@ -1888,7 +1892,7 @@ namespace WindowsFormsApp1
                     else if (HorzRelToarray == 4)
                         if (HorzRelTo == 0 || HorzRelTo == 1)
                             horzto = "outside";
-           
+
             image.SetAttribute("name", header_style, name);
             image.SetAttribute("family", header_style, "graphic");
             image.SetAttribute("parent-style-name", header_style, "Greaphics");
@@ -1908,8 +1912,8 @@ namespace WindowsFormsApp1
             imgstyle.SetAttribute("mirror", header_style, "none");
             imgstyle.SetAttribute("horizontal-rel", header_style, horzrel);
             imgstyle.SetAttribute("horizontal-pos", header_style, horzto);
-            if(isFooter == true || isHeader == true)
-            imgstyle.SetAttribute("vertical-rel", header_style, "page");
+            if (isFooter == true || isHeader == true)
+                imgstyle.SetAttribute("vertical-rel", header_style, "page");
             else
                 imgstyle.SetAttribute("vertical-rel", header_style, "page-content");
             imgstyle.SetAttribute("vertical-pos", header_style, verto);
