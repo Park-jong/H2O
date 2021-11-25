@@ -106,11 +106,9 @@ namespace WindowsFormsApp1
                         }
                     }
 
-                    if(hasTable)
+                    if (hasTable)
                         gtx.Run(xm, nowJson, docJson, zeroCheck);
-                    else
-                        ttx.Run(xm, nowJson, docJson, zeroCheck);
-
+                    ttx.Run(xm, nowJson, docJson, zeroCheck);
                     itx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
                     htx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
 
