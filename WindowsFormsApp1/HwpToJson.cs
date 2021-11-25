@@ -39,6 +39,24 @@ namespace WindowsFormsApp1
 
             file.Close();
             reader.Close();
+
+            DeleteJsonFile();
+        }
+
+        private void DeleteJsonFile()
+        {
+            string path1 = Data.currentPath + @"\test.json";
+            string path2 = Data.currentPath + @"\onlytext.json";
+
+            if (File.Exists(path1))
+            {
+                File.Delete(path1);
+            }
+
+            if (File.Exists(path2))
+            {
+                File.Delete(path2);
+            }
         }
 
 
