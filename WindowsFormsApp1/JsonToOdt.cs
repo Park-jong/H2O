@@ -18,6 +18,7 @@ namespace WindowsFormsApp1
         FuncToXml.TextToXml ttx;
         FuncToXml.GridToXml gtx;
         FuncToXml.ImgToXml itx;
+        FuncToXml.HeadToXml htx;
 
         public JsonToOdt()
         {
@@ -26,6 +27,7 @@ namespace WindowsFormsApp1
             ttx = new FuncToXml.TextToXml();
             gtx = new FuncToXml.GridToXml();
             itx = new FuncToXml.ImgToXml();
+            htx = new FuncToXml.HeadToXml();
         }
 
         public void Run()
@@ -110,6 +112,7 @@ namespace WindowsFormsApp1
                         ttx.Run(xm, nowJson, docJson, zeroCheck);
 
                     itx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
+                    htx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
 
                 }
 

@@ -28,7 +28,7 @@ namespace WindowsFormsApp1.FuncToXml
             int sID = shapeId;
 
             //전체 텍스트 가져오기
-            string pcontent = null; // p text
+            string pcontent = ""; // p text
             try
             {
                 object obj = json["text"].Value<object>();
@@ -107,14 +107,15 @@ namespace WindowsFormsApp1.FuncToXml
 
             string pname = "";
             string name;
-
+            Boolean hasControl = false;
+            int controlListCount = 0;
             // 텍스트별 위치 비교해서 자르기
             for (int j = 0; j < spancount; j++)
             {
                 //스타일이 시작되는 위치
                 current_position = json["charShape"]["positionShapeIdPairList"][j]["position"].Value<int>();
-
-                string subcontent;
+                
+                string subcontent = "";
                 if (j < spancount - 1)
                 {
                     next_position = json["charShape"]["positionShapeIdPairList"][j + 1]["position"].Value<int>();
@@ -123,7 +124,22 @@ namespace WindowsFormsApp1.FuncToXml
                         current_position = current_position - 16 < 0 ? 0 : current_position - 16;
                         next_position -= 16;
                     }
-                    subcontent = pcontent.Substring(current_position, next_position - current_position); //처음포지션부터 글자 수만큼 자르기
+                    try
+                    {
+                        controlListCount = json["controlList"].Count();
+                        hasControl = true;
+                         
+                    }
+                    catch(System.ArgumentNullException e) { hasControl = false; }
+                    if(hasControl)
+                        for (int i = 0; i < controlListCount; i++)
+                        {
+                            if(627600491 == json["controlList"][i]["header"]["ctrlId"].Value<int>() || 1651469165
+ == json["controlList"][i]["header"]["ctrlId"].Value<int>())
+                                subcontent = pcontent.Substring(current_position-8<0?0: current_position - 8, current_position - 8 < 0 ? next_position -8 - current_position : next_position - 8 -( current_position -8)); //처음포지션부터 글자 수만큼 자르기
+                            else subcontent = pcontent.Substring(current_position, next_position - current_position);
+                        }                   
+                     else pcontent.Substring(current_position, next_position - current_position);                                                                             //
                 }
                 else //마지막 텍스트
                 {
@@ -131,7 +147,18 @@ namespace WindowsFormsApp1.FuncToXml
                     {
                         current_position -= 16;
                     }
-                    subcontent = pcontent.Substring(current_position);
+
+                    if (hasControl)
+                        for (int i = 0; i < controlListCount; i++)
+                        {
+                            int count = json["charShape"]["positionShapeIdPairList"].Count() - 1;
+                            if (627600491 == json["controlList"][i]["header"]["ctrlId"].Value<int>() || 1651469165
+ == json["controlList"][i]["header"]["ctrlId"].Value<int>())
+                                subcontent = pcontent.Substring(current_position-8*count); //처음포지션부터 글자 수만큼 자르기
+                            else subcontent = pcontent.Substring(current_position);
+                        }
+                    else subcontent = pcontent.Substring(current_position);
+
                 }
 
                 //스타일 추가 및 내용 추가

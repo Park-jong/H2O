@@ -50,16 +50,16 @@ namespace WindowsFormsApp1.FuncToXml
 
             bool hasImg = false;
             int hasImgControlNum;
-            int ImgcontrolListCount = 0;
+            int controlListCount = 0;
             try
             {
-                ImgcontrolListCount = bodyJson["controlList"].Count();
+                controlListCount = bodyJson["controlList"].Count();
             }
             catch (System.ArgumentNullException e)
             {
-                ImgcontrolListCount = 0;
+                controlListCount = 0;
             }
-            for (int controlList = 0; controlList < ImgcontrolListCount; controlList++)
+            for (int controlList = 0; controlList < controlListCount; controlList++)
             {
                 try
                 {
@@ -90,12 +90,14 @@ namespace WindowsFormsApp1.FuncToXml
                     int geulja = bitcal(property, 0, 0x1);
                     int through = bitcal(property, 21, 0x7);
                     int zindex = bodyJson["controlList"][controlList]["header"]["zOrder"].Value<int>();
-                    int linevertical = bodyJson["lineSeg"]["lineSegItemList"][0]["lineVerticalPosition"].Value<int>();
+                    int linevertical = 0;
+                    if (bodyJson["lineSeg"] != null)
+                    linevertical = bodyJson["lineSeg"]["lineSegItemList"][0]["lineVerticalPosition"].Value<int>();
                     for (int i = 0; i < binJson["embeddedBinaryDataList"].Count(); i++)
                     {
                         String temp2 = binJson["embeddedBinaryDataList"][i]["name"].Value<String>();
                         String tt = temp2.Substring(3,4);
-                        if (ID == Convert.ToInt16(tt))
+                        if (ID == Convert.ToInt16(tt,16))
                             IDindex = i;
                         
                     }
@@ -114,12 +116,14 @@ namespace WindowsFormsApp1.FuncToXml
                     double width = Math.Round(imgWidth * 2.54 / 7200, 3);
                     double height = Math.Round((imgHeight) * 2.54 / 7200, 3);
                     string currentPath = "Pictures/" + name;
-                    xm.imgstyle(VertiRelTo,VertiRelToarray,HorzRelTo,HorzRelToarray,through);
-                    xm.makeimg(width, height, extension, currentPath, X, Y, geulja, zindex,linevertical,VertiRelTo, ID);
+                    xm.imgstyle(VertiRelTo,VertiRelToarray,HorzRelTo,HorzRelToarray,through,false,false);
+                    xm.makeimg(width, height, extension, currentPath, X, Y, geulja, zindex,linevertical,VertiRelTo, ID,false,false);
 
 
                 }
             }
+
+      
         }
 
         public ImgNode setPicturesChild(XmlManager xm, string name)
