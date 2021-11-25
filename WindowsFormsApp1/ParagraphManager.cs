@@ -15,10 +15,29 @@ namespace WindowsFormsApp1
         public ParagraphManager()
         {
         }
-
-        //줄 간격
-        public void SetLineSpace(string name, XmlDocument doc, double lineSpace)
+        public int bitcal(int i, int shift, byte b) //대부분 property에 있는 value를 bit별로 나누어서 넣을때 
+        /** i = value 값  shift = 이동갯수 b = &연산할 값 */
         {
+            byte temp = (byte)(i >> shift);
+            return (int)(temp & b);
+        }
+        //줄 간격
+        public void SetLineSpace(string name, XmlDocument doc, double lineSpace, int property, int basesize)
+        {
+            int bit = bitcal(property, 0, 0x3);
+            double lineHeight;
+            switch (bit)
+            {
+                case 0:
+                    lineHeight = Math.Round(lineSpace * 0.01 * basesize * 0.01 * 0.03527, 3);
+                    break;
+                case 1:
+                    lineHeight = Math.Round(lineSpace * 0.01 * 0.03527, 3);
+                    break;
+                default:
+                    lineHeight = Math.Round(lineSpace * 0.01 * basesize * 0.01 * 0.03527, 3);
+                    break;
+            }
             XmlNodeList list = doc.GetElementsByTagName("style", header_style);
             foreach (XmlElement e in list)
             {
@@ -33,7 +52,7 @@ namespace WindowsFormsApp1
                     {
                         e1 = doc.CreateElement("style:" + type + "-properties", header_style);
                     }
-                    e1.SetAttribute("line-height", header_fo, lineSpace.ToString() + "cm");//%에서 cm로 수정 한글의 % odt에서와 기준이 다름
+                    e1.SetAttribute("line-height", header_fo, lineHeight.ToString() + "cm");//%에서 cm로 수정 한글의 % odt에서와 기준이 다름
 
                     e.AppendChild(e1);
                 }
@@ -198,4 +217,3 @@ namespace WindowsFormsApp1
         }
     }
 }
-
