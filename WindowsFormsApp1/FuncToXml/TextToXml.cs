@@ -22,7 +22,7 @@ namespace WindowsFormsApp1.FuncToXml
 
         public void Run(XmlManager xm, JToken json, JToken docJson, bool zeroCheck)
         {
-            
+
             // 문단 ID 가져오기
             int shapeId = json["header"]["paraShapeId"].Value<int>();
             int sID = shapeId;
@@ -42,11 +42,12 @@ namespace WindowsFormsApp1.FuncToXml
                 int nullPStyle = json["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
                 float nullPFontSize = docJson["charShapeList"][nullPStyle]["baseSize"].Value<float>() / 100;
                 string nullPName = xm.AddContentP(); // para null 인 경우 처리
+                int property = docJson["paraShapeList"][sID]["property1"]["value"].Value<int>();
                 xm.SetFontSize(nullPName, nullPFontSize);
 
                 //줄 간격
                 int lineSpace = docJson["paraShapeList"][sID]["lineSpace"].Value<int>();
-                xm.Paragraph.SetLineSpace(nullPName, (XmlDocument)xm.docs["content.xml"], lineSpace * 0.01 * nullPFontSize * 0.03527);
+                xm.Paragraph.SetLineSpace(nullPName, (XmlDocument)xm.docs["content.xml"], lineSpace, property, (int)nullPFontSize * 100);
 
                 //문단 테두리 간격
                 double topborderSpace = docJson["paraShapeList"][sID]["topBorderSpace"].Value<double>();
@@ -114,7 +115,7 @@ namespace WindowsFormsApp1.FuncToXml
             {
                 //스타일이 시작되는 위치
                 current_position = json["charShape"]["positionShapeIdPairList"][j]["position"].Value<int>();
-                
+
                 string subcontent = "";
                 if (j < spancount - 1)
                 {
@@ -128,18 +129,18 @@ namespace WindowsFormsApp1.FuncToXml
                     {
                         controlListCount = json["controlList"].Count();
                         hasControl = true;
-                         
+
                     }
-                    catch(System.ArgumentNullException e) { hasControl = false; }
-                    if(hasControl)
+                    catch (System.ArgumentNullException e) { hasControl = false; }
+                    if (hasControl)
                         for (int i = 0; i < controlListCount; i++)
                         {
-                            if(627600491 == json["controlList"][i]["header"]["ctrlId"].Value<int>() || 1651469165
+                            if (627600491 == json["controlList"][i]["header"]["ctrlId"].Value<int>() || 1651469165
  == json["controlList"][i]["header"]["ctrlId"].Value<int>())
-                                subcontent = pcontent.Substring(current_position-8<0?0: current_position - 8, current_position - 8 < 0 ? next_position -8 - current_position : next_position - 8 -( current_position -8)); //처음포지션부터 글자 수만큼 자르기
+                                subcontent = pcontent.Substring(current_position - 8 < 0 ? 0 : current_position - 8, current_position - 8 < 0 ? next_position - 8 - current_position : next_position - 8 - (current_position - 8)); //처음포지션부터 글자 수만큼 자르기
                             else subcontent = pcontent.Substring(current_position, next_position - current_position);
-                        }                   
-                     else pcontent.Substring(current_position, next_position - current_position);                                                                             //
+                        }
+                    else pcontent.Substring(current_position, next_position - current_position);                                                                             //
                 }
                 else //마지막 텍스트
                 {
@@ -154,7 +155,7 @@ namespace WindowsFormsApp1.FuncToXml
                             int count = json["charShape"]["positionShapeIdPairList"].Count() - 1;
                             if (627600491 == json["controlList"][i]["header"]["ctrlId"].Value<int>() || 1651469165
  == json["controlList"][i]["header"]["ctrlId"].Value<int>())
-                                subcontent = pcontent.Substring(current_position-8*count); //처음포지션부터 글자 수만큼 자르기
+                                subcontent = pcontent.Substring(current_position - 8 * count); //처음포지션부터 글자 수만큼 자르기
                             else subcontent = pcontent.Substring(current_position);
                         }
                     else subcontent = pcontent.Substring(current_position);
@@ -196,7 +197,8 @@ namespace WindowsFormsApp1.FuncToXml
                 {
                     //줄 간격
                     int lineSpace = docJson["paraShapeList"][sID]["lineSpace"].Value<int>();
-                    xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace * 0.01 * baseSize * 0.01 * 0.03527);
+                    int property = docJson["paraShapeList"][sID]["property1"]["value"].Value<int>();
+                    xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace, property, (int)baseSize);
 
                     //문단 테두리 간격
                     double topborderSpace = docJson["paraShapeList"][sID]["topBorderSpace"].Value<double>();
