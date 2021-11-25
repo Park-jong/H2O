@@ -1355,7 +1355,7 @@ namespace WindowsFormsApp1
             tablestyle.SetAttribute("align", header_table, "center");
 
             tablestyle.SetAttribute("margin-top", header_fo, outterTopMargin + "cm");
-            tablestyle.SetAttribute("margin-left", header_fo, outterLeftMargin  + "cm");
+            tablestyle.SetAttribute("margin-left", header_fo, outterLeftMargin + "cm");
             tablestyle.SetAttribute("margin-right", header_fo, outterRightMargin + "cm");
             tablestyle.SetAttribute("margin-bottom", header_fo, outterBottomMargin + "cm");
 
@@ -1415,6 +1415,7 @@ namespace WindowsFormsApp1
 
             XmlElement rowStyle = doc.CreateElement("style:table-row-properties", header_style);
             rowStyle.SetAttribute("min-row-height", header_style, height + "cm");
+            rowStyle.SetAttribute("keep-together", header_fo, "auto");
 
             row.AppendChild(rowStyle);
             e.AppendChild(row);
@@ -1505,7 +1506,7 @@ namespace WindowsFormsApp1
                     break;
             }
 
-            if(column_index == 0)
+            if (column_index == 0)
             {
                 switch (left_line_type)
                 {
@@ -1521,7 +1522,7 @@ namespace WindowsFormsApp1
                 }
             }
 
-            if(row_index == 0)
+            if (row_index == 0)
             {
                 switch (top_line_type)
                 {
@@ -1550,13 +1551,14 @@ namespace WindowsFormsApp1
                     strR = background_color_to_bit.Substring(0, 5);
                     strG = background_color_to_bit.Substring(5, 6);
                     strB = background_color_to_bit.Substring(11, 5);
-                }else
+                }
+                else
                 {
                     strR = background_color_to_bit.Substring(0, 8);
                     strG = background_color_to_bit.Substring(8, 8);
                     strB = background_color_to_bit.Substring(16, 8);
                 }
-               
+
                 int r = 0;
                 int g = 0;
                 int b = 0;

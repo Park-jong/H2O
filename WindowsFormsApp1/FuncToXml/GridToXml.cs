@@ -87,28 +87,52 @@ namespace WindowsFormsApp1.FuncToXml
 
 
                     List<int> widthList = new List<int>();
+                    List<int> rowSpanList = new List<int>();
+                    List<int> spanWidth = new List<int>();
+                    List<int> colSpanList = new List<int>();
                     for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
                     {
-                        int current = 0;
+                        List<int> newRowSpanList = new List<int>();
+                        List<int> newSpanWidth = new List<int>();
+                        List<int> newColSpanList = new List<int>();
+                        int currentIndex = 0;
+                        int currentwidth = 0;
+                        int spanUse = 0;
                         for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
-
+                            int index = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colIndex"].Value<int>();
+                            int colSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colSpan"].Value<int>();
+                            while (currentIndex < index)
+                            {
+                                currentwidth += spanWidth[spanUse];
+                                if (rowSpanList[spanUse] - 1 > 1)
+                                {
+                                    newRowSpanList.Add(rowSpanList[spanUse] - 1);
+                                    newSpanWidth.Add(spanWidth[spanUse]);
+                                    newColSpanList.Add(colSpanList[spanUse]);
+                                }
+                                currentIndex = currentIndex + colSpanList[spanUse];
+                                spanUse++;
+                            }
                             int cellWidth = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["width"].Value<int>();
-                            if (colIndex != 0)
+                            if (1 < jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowSpan"].Value<int>())
                             {
-                                current += cellWidth;
-                            }
-                            else
-                            {
-                                current = cellWidth;
+                                newRowSpanList.Add(jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowSpan"].Value<int>());
+                                newSpanWidth.Add(cellWidth);
+                                newColSpanList.Add(colSpan);
                             }
 
-                            if (!widthList.Contains(current))
-                            {
-                                widthList.Add(current);
-                            }
+                            currentwidth += cellWidth;
 
+                            if (!widthList.Contains(currentwidth))
+                            {
+                                widthList.Add(currentwidth);
+                            }
+                            currentIndex = currentIndex + colSpan;
                         }
+                        rowSpanList = newRowSpanList;
+                        spanWidth = newSpanWidth;
+                        colSpanList = newColSpanList;
                     }
                     widthList.Sort();
 
@@ -137,6 +161,16 @@ namespace WindowsFormsApp1.FuncToXml
                     //}
                     for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
                     {
+                        int minHeight = 0;
+                        for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
+                        {
+                            int cellHeight = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["height"].Value<int>();
+                            if (colIndex == 0)
+                            {
+                                minHeight = cellHeight;
+                            }
+                            minHeight = Math.Min(minHeight, cellHeight);
+                        }
                         for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
                             int rowNum = jsonRowList.Count();
@@ -191,16 +225,19 @@ namespace WindowsFormsApp1.FuncToXml
 
                             string backgroundColorToBit = Convert.ToString(backgroundColor, 2);
 
-                            xm.setRow(table, rowIndex, Math.Round(cellHeight * 0.01 * 0.0352778, 3));
+                            if (colIndex == 0)
+                            {
+                                xm.setRow(table, rowIndex, Math.Round(minHeight * 0.01 * 0.0352778, 3));
+                            }
                             xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign, backgroundColorToBit, topLineType, leftLineType, rightLineType, bottomLineType);
 
                         }
                     }
                     for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
                     {
-                        int childCellIndex = 0;
                         for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
+                            int childCellIndex = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colIndex"].Value<int>();
                             int row_index = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowIndex"].Value<int>();
                             int colSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["colSpan"].Value<int>();
                             int rowSpan = jsonRowList[rowIndex]["cellList"][colIndex]["listHeader"]["rowSpan"].Value<int>();
@@ -210,8 +247,6 @@ namespace WindowsFormsApp1.FuncToXml
                             {
                                 xm.replaceP(row_index, colIndex, colSpan, rowSpan, childCellIndex);
                             }
-                            childCellIndex += colSpan;
-
                         }
                     }
                     for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
