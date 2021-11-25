@@ -140,7 +140,7 @@ namespace WindowsFormsApp1.FuncToXml
                                 subcontent = pcontent.Substring(current_position - 8 < 0 ? 0 : current_position - 8, current_position - 8 < 0 ? next_position - 8 - current_position : next_position - 8 - (current_position - 8)); //처음포지션부터 글자 수만큼 자르기
                             else subcontent = pcontent.Substring(current_position, next_position - current_position);
                         }
-                    else pcontent.Substring(current_position, next_position - current_position);                                                                             //
+                    else subcontent = pcontent.Substring(current_position, next_position - current_position);                                                                             //
                 }
                 else //마지막 텍스트
                 {
