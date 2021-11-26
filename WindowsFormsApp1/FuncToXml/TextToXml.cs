@@ -34,7 +34,7 @@ namespace WindowsFormsApp1.FuncToXml
                 object obj = json["text"].Value<object>();
 
                 if (obj != null)
-                    pcontent = json["text"].Value<string>();
+                    pcontent = json["text-String"].Value<string>();
             }
             /////////////////////////////////////////////////////////////글자가 없을 때
             catch (Exception e)
@@ -104,7 +104,7 @@ namespace WindowsFormsApp1.FuncToXml
 
             int current_position;
             int next_position;
-
+            List<int> a = new List<int>();
             string pname = "";
             string name;
             Boolean hasControl = false;
@@ -124,22 +124,34 @@ namespace WindowsFormsApp1.FuncToXml
                         current_position = current_position - 16 < 0 ? 0 : current_position - 16;
                         next_position -= 16;
                     }
-                    try
+                    for (int i = 0; i < json["text"]["charList"].Count(); i++)
                     {
-                        controlListCount = json["controlList"].Count();
-                        hasControl = true;
-                         
-                    }
-                    catch(System.ArgumentNullException e) { hasControl = false; }
-                    if(hasControl)
-                        for (int i = 0; i < controlListCount; i++)
+                        try
                         {
-                            if(627600491 == json["controlList"][i]["header"]["ctrlId"].Value<int>() || 1651469165
- == json["controlList"][i]["header"]["ctrlId"].Value<int>())
-                                subcontent = pcontent.Substring(current_position-8<0?0: current_position - 8, current_position - 8 < 0 ? next_position -8 - current_position : next_position - 8 -( current_position -8)); //처음포지션부터 글자 수만큼 자르기
-                            else subcontent = pcontent.Substring(current_position, next_position - current_position);
-                        }                   
-                     else pcontent.Substring(current_position, next_position - current_position);                                                                             //
+                            object ex = json["text"]["charList"][i]["additon"].Value<object>();
+                            a.Add(i);
+                        }
+                        catch (System.ArgumentNullException e) { }
+                    }
+                    if (a.Count != 0)
+                        for (int i = 0; i < a.Count; i++)
+                        {
+                            if (current_position <= a[i] && next_position >= a[i])
+                            {
+                                next_position = next_position - 4 * i;
+                                subcontent = pcontent.Substring(current_position, next_position - current_position);
+                            }
+                            else if (current_position >= a[i] && next_position >= a[i])
+                            {
+                                current_position = current_position - 4 * i;
+                                next_position = next_position - 4 * i;
+                                subcontent = pcontent.Substring(current_position, next_position - current_position);
+                            }
+                            else subcontent = pcontent.Substring(current_position, next_position - current_position); //처음포지션부터 글자 수만큼 자르기
+                                                                                                                      //처음포지션부터 글자 수만큼 자르기
+                        }
+                    else
+                        subcontent = pcontent.Substring(current_position, next_position - current_position);                                                                            //
                 }
                 else //마지막 텍스트
                 {
@@ -148,16 +160,23 @@ namespace WindowsFormsApp1.FuncToXml
                         current_position -= 16;
                     }
 
-                    if (hasControl)
-                        for (int i = 0; i < controlListCount; i++)
-                        {
-                            int count = json["charShape"]["positionShapeIdPairList"].Count() - 1;
-                            if (627600491 == json["controlList"][i]["header"]["ctrlId"].Value<int>() || 1651469165
- == json["controlList"][i]["header"]["ctrlId"].Value<int>())
-                                subcontent = pcontent.Substring(current_position-8*count); //처음포지션부터 글자 수만큼 자르기
-                            else subcontent = pcontent.Substring(current_position);
-                        }
-                    else subcontent = pcontent.Substring(current_position);
+                    int temp = 0;
+                    for (int i = 0; i < a.Count - 1; i++)
+                    {
+                        if (a[i] < current_position)
+                            temp = temp + i;
+
+
+                        current_position = current_position - 4 * temp;
+
+
+                        //처음포지션부터 글자 수만큼 자르기
+                    }
+                    try
+                    {
+                        subcontent = pcontent.Substring(current_position);
+                    }
+                    catch (System.ArgumentOutOfRangeException) { }
 
                 }
 

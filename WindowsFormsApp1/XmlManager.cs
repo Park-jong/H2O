@@ -36,6 +36,9 @@ namespace WindowsFormsApp1
         private static int imageStylenum = 0;
         private static int numheader= 0;
         private static int numfooter = 0;
+        private static int numheaderimg = 0;
+        private static int numfooterimg = 0;
+
         public bool ContentXml { get; set; }//본문인지 아닌지 판별
 
         public Hashtable docs = new Hashtable();
@@ -1427,7 +1430,7 @@ namespace WindowsFormsApp1
             column.SetAttribute("style-name", header_table, row_name);
         }
 
-        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right, int Verticalalign, string background_color_to_bit, string top_line_type, string left_line_type, string right_line_type, string bottom_line_type)
+        public void SetCell(string name, double topThickness, double leftThickness, double rightThickness, double bottomThickness, int colSpan, int rowSpan, int column_index, int row_index, double height, double width, double margin_top, double margin_bottom, double margin_left, double margin_right, int Verticalalign, string background_color_to_bit, string top_line_type, string left_line_type, string right_line_type, string bottom_line_type, string top_line_color, string left_line_color,string right_line_color,string bottom_line_color)
         {
             XmlNode content = (XmlNode)root.child["content.xml"];
             XmlDocument doc = content.doc;
@@ -1545,18 +1548,24 @@ namespace WindowsFormsApp1
 
             if (background_color_to_bit != "0")
             {
-                string strR, strG, strB;
+                string strR="", strG="", strB = "";
                 if (background_color_to_bit.Length == 16)
                 {
                     strR = background_color_to_bit.Substring(0, 5);
                     strG = background_color_to_bit.Substring(5, 6);
                     strB = background_color_to_bit.Substring(11, 5);
                 }
-                else
+                else if(background_color_to_bit.Length == 24)
                 {
                     strR = background_color_to_bit.Substring(0, 8);
                     strG = background_color_to_bit.Substring(8, 8);
                     strB = background_color_to_bit.Substring(16, 8);
+                }
+                else if (background_color_to_bit.Length == 8)
+                {
+                    strR = background_color_to_bit.Substring(0, 2);
+                    strG = background_color_to_bit.Substring(2, 3);
+                    strB = background_color_to_bit.Substring(5, 3);
                 }
 
                 int r = 0;
@@ -1579,7 +1588,184 @@ namespace WindowsFormsApp1
 
                 cellStyle.SetAttribute("background-color", header_fo, theHexColor);
             }
+            string theTopBorderColor = "000000";
+            string theLeftBorderColor = "000000";
+            string theRightBorderColor = "000000";
+            string theBottomBorderColor = "000000";
 
+            if (right_line_color != "0")
+            {
+                string strR, strG, strB;
+
+                strR = right_line_color.Substring(0, 8);
+                strG = right_line_color.Substring(8, 8);
+                strB = right_line_color.Substring(16, 8);
+
+                int r = 0;
+                int g = 0;
+                int b = 0;
+
+                try
+                {
+                    r = Convert.ToByte(strB, 2);
+                    g = Convert.ToByte(strG, 2);
+                    b = Convert.ToByte(strR, 2);
+
+                }
+                catch (FormatException)
+                {
+                    System.Console.WriteLine("Invalid String");
+                }
+
+                theRightBorderColor = r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+            }
+
+            switch (right_line_type)
+            {
+                case "Solid":
+                    cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "solid #" + theRightBorderColor);
+                    break;
+                case "Dot":
+                    cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "dotted #" + theRightBorderColor);
+                    break;
+                case "Dash":
+                    cellStyle.SetAttribute("border-right", header_fo, rightThickness + "pt " + "dashed #" + theRightBorderColor);
+                    break;
+            }
+
+            if (bottom_line_color != "0")
+            {
+                string strR, strG, strB;
+
+                strR = bottom_line_color.Substring(0, 8);
+                strG = bottom_line_color.Substring(8, 8);
+                strB = bottom_line_color.Substring(16, 8);
+
+                int r = 0;
+                int g = 0;
+                int b = 0;
+
+                try
+                {
+                    r = Convert.ToByte(strB, 2);
+                    g = Convert.ToByte(strG, 2);
+                    b = Convert.ToByte(strR, 2);
+
+                }
+                catch (FormatException)
+                {
+                    System.Console.WriteLine("Invalid String");
+                }
+
+                theBottomBorderColor = r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+
+
+            }
+
+            switch (bottom_line_type)
+            {
+                case "Solid":
+                    cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "solid #" + theBottomBorderColor);
+                    break;
+                case "Dot":
+                    cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "dotted #" + theBottomBorderColor);
+                    break;
+                case "Dash":
+                    cellStyle.SetAttribute("border-bottom", header_fo, bottomThickness + "pt " + "dashed #" + theBottomBorderColor);
+                    break;
+            }
+
+
+            if (column_index == 0)
+            {
+                if (left_line_color != "0")
+                {
+                    string strR, strG, strB;
+
+                    strR = left_line_color.Substring(0, 8);
+                    strG = left_line_color.Substring(8, 8);
+                    strB = left_line_color.Substring(16, 8);
+
+                    int r = 0;
+                    int g = 0;
+                    int b = 0;
+
+                    try
+                    {
+                        r = Convert.ToByte(strB, 2);
+                        g = Convert.ToByte(strG, 2);
+                        b = Convert.ToByte(strR, 2);
+
+                    }
+                    catch (FormatException)
+                    {
+                        System.Console.WriteLine("Invalid String");
+                    }
+
+                    theLeftBorderColor = r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+
+
+                }
+
+                switch (left_line_type)
+                {
+                    case "Solid":
+                        cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "solid #" + theLeftBorderColor);
+                        break;
+                    case "Dot":
+                        cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "dotted #" + theLeftBorderColor);
+                        break;
+                    case "Dash":
+                        cellStyle.SetAttribute("border-left", header_fo, leftThickness + "pt " + "dashed #" + theLeftBorderColor);
+                        break;
+                }
+
+            }
+
+            if (row_index == 0)
+            {
+                if (top_line_color != "0")
+                {
+                    string strR, strG, strB;
+
+                    strR = top_line_color.Substring(0, 8);
+                    strG = top_line_color.Substring(8, 8);
+                    strB = top_line_color.Substring(16, 8);
+
+                    int r = 0;
+                    int g = 0;
+                    int b = 0;
+
+                    try
+                    {
+                        r = Convert.ToByte(strB, 2);
+                        g = Convert.ToByte(strG, 2);
+                        b = Convert.ToByte(strR, 2);
+
+                    }
+                    catch (FormatException)
+                    {
+                        System.Console.WriteLine("Invalid String");
+                    }
+
+                    theTopBorderColor = r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+
+
+                }
+
+                switch (top_line_type)
+                {
+                    case "Solid":
+                        cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "solid #" + theTopBorderColor);
+                        break;
+                    case "Dot":
+                        cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "dotted #" + theTopBorderColor);
+                        break;
+                    case "Dash":
+                        cellStyle.SetAttribute("border-top", header_fo, topThickness + "pt " + "dashed #" + theTopBorderColor);
+                        break;
+                }
+            }
             cell.AppendChild(cellStyle);
             e.AppendChild(cell);
         }
@@ -1749,25 +1935,26 @@ namespace WindowsFormsApp1
                 list = doc.GetElementsByTagName("master-page", header_style);
                 e2 = (XmlElement)list.Item(0);
                 if (isFooter == true) {
-                    if (numfooter == 0)
-                        e = doc.CreateElement("style:footer", header_style);
-                    else e =(XmlElement) (doc.GetElementsByTagName("footer",header_style).Item(0));
-                     }
+                    e =(XmlElement) (doc.GetElementsByTagName("footer",header_style).Item(0));
+                    
+                }
                 else if(isHeader == true) {
-                    if (numheader == 0)
-                      e = doc.CreateElement("style:header", header_style);
-                    else e = (XmlElement)(doc.GetElementsByTagName("header", header_style).Item(0));
+                    e = (XmlElement)(doc.GetElementsByTagName("header", header_style).Item(0));
+                 
+                        
+                   
                 }
                 e2.AppendChild(e);
             }
+            XmlElement image = (XmlElement)(e.GetElementsByTagName("p", header_text).Item(0));
 
-
-              XmlElement image = doc.CreateElement("text:p", header_text);
 
             if (g == 0)
                 geulja = "paragraph";
             else if (g == 1)
                 geulja = "as-char";
+            else if (g == 2)
+                geulja = "char";
 
             if (verrel == 2)
                 svgy = (Math.Round((y + linevertical) * 2.54 / 7200, 3)).ToString();
@@ -1909,12 +2096,15 @@ namespace WindowsFormsApp1
             imgstyle.SetAttribute("horizontal-rel", header_style, horzrel);
             imgstyle.SetAttribute("horizontal-pos", header_style, horzto);
             if(isFooter == true || isHeader == true)
-            imgstyle.SetAttribute("vertical-rel", header_style, "page");
+            imgstyle.SetAttribute("vertical-rel", header_style, "paper");
             else
                 imgstyle.SetAttribute("vertical-rel", header_style, "page-content");
             imgstyle.SetAttribute("vertical-pos", header_style, verto);
             imgstyle.SetAttribute("wrap-contour", header_style, "false");
-
+            imgstyle.SetAttribute("number-wrapped-paragraphs", header_style, "no-limit");
+            imgstyle.SetAttribute("wrap-influence-on-position", header_draw, "once-concurrent");
+            imgstyle.SetAttribute("wrap", header_style, "dynamic");
+       
             if (through == 2)
             {
                 wrap = "run-through";

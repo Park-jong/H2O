@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -229,8 +230,23 @@ namespace WindowsFormsApp1.FuncToXml
                             {
                                 xm.setRow(table, rowIndex, Math.Round(minHeight * 0.01 * 0.0352778, 3));
                             }
-                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign, backgroundColorToBit, topLineType, leftLineType, rightLineType, bottomLineType);
+                            string topLineColor = Convert.ToString(cellTopStyle["color"]["value"].Value<int>(), 2);
+                            string leftLineColor = Convert.ToString(cellLeftStyle["color"]["value"].Value<int>(), 2);
+                            string rightLineColor = Convert.ToString(cellRightStyle["color"]["value"].Value<int>(), 2);
+                            string bottomLineColor = Convert.ToString(cellBottomStyle["color"]["value"].Value<int>(), 2);
 
+                            
+
+                            if (docJson["borderFillList"][borderFillId - 1]["fillInfo"]["patternFill"] != null)
+                            {
+                                backgroundColor = docJson["borderFillList"][borderFillId - 1]["fillInfo"]["patternFill"]["backColor"]["value"].Value<int>();
+                            }
+
+                            if (colIndex == 0)
+                            {
+                                xm.setRow(table, rowIndex, Math.Round(minHeight * 0.01 * 0.0352778, 3));
+                            }
+                            xm.SetCell(table, topThickness, leftThickness, rightThickness, bottomThickness, colSpan, rowSpan, column_index, row_index, Math.Round(cellHeight * 0.01 * 0.0352778, 3), Math.Round(cellWidth * 0.01 * 0.0352778, 3), Math.Round(margin_top * 0.01 * 0.0352778, 3), Math.Round(margin_bottom * 0.01 * 0.0352778, 3), Math.Round(margin_left * 0.01 * 0.0352778, 3), Math.Round(margin_right * 0.01 * 0.0352778, 3), Verticalalign, backgroundColorToBit, topLineType, leftLineType, rightLineType, bottomLineType, topLineColor, leftLineColor, rightLineColor, bottomLineColor);
                         }
                     }
                     for (int rowIndex = 0; rowIndex < jsonRowList.Count(); rowIndex++)
@@ -253,33 +269,32 @@ namespace WindowsFormsApp1.FuncToXml
                     {
                         for (int colIndex = 0; colIndex < jsonRowList[rowIndex]["cellList"].Count(); colIndex++)
                         {
-                            string[] contents = null;
+                            string[] contents;
                             //text
                             for (int k = 0; k < jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count(); k++)
-                            {
-                                string pcontent = null; // p text
+                            {   
+                                string pcontent = ""; // p text
                                 int shapeId = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["header"]["paraShapeId"].Value<int>();
                                 int sID = shapeId;
-                                if (k == 0)
-                                {
 
+                                
+                                
                                     try
                                     {
                                         object obj = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<object>();
 
                                         if (obj != null)
-                                            pcontent = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"].Value<string>();
+                                            pcontent = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text-String"].Value<string>();
 
                                     }
                                     catch (Exception e)
                                     {
-                                        continue;
-                                    }
-                                    contents = pcontent.Split('\n');
-
+                                    pcontent = "";
                                 }
-                                if (jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"].Count() > 1)
-                                    pcontent = contents[k];
+                                
+                               
+                            
+                                
                                 //전체 텍스트 가져오기
 
                                 /////////////////////////////////////////////////////////////////
@@ -292,14 +307,15 @@ namespace WindowsFormsApp1.FuncToXml
 
                                 string pname = "";
                                 string name = "";
-
+                                List<int> a = new List<int>();
                                 // 텍스트별 위치 비교해서 자르기
+                                if(pcontent != "")
                                 for (int j = 0; j < spancount; j++)
                                 {
                                     //스타일이 시작되는 위치
                                     int current_position = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j]["position"].Value<int>();
 
-                                    string subcontent;
+                                    string subcontent = "";
                                     if (j < spancount - 1)
                                     {
                                         int next_position = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["charShape"]["positionShapeIdPairList"][j + 1]["position"].Value<int>();
@@ -308,7 +324,35 @@ namespace WindowsFormsApp1.FuncToXml
                                             //current_position = current_position - 16 < 0 ? 0 : current_position - 16;
                                             //next_position -= 16;
                                         }
-                                        subcontent = pcontent.Substring(current_position, next_position - current_position); //처음포지션부터 글자 수만큼 자르기
+                                        
+                                        for (int i = 0; i < jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"]["charList"].Count(); i++)
+                                        {
+                                            try
+                                            {
+                                                object ex = jsonRowList[rowIndex]["cellList"][colIndex]["paragraphList"]["paragraphList"][k]["text"]["charList"][i]["additon"].Value<object>();
+                                                a.Add(i);
+                                            }
+                                            catch (System.ArgumentNullException e) { }
+                                        }
+                                        if (a.Count != 0)
+                                            for (int i = 0; i < a.Count; i++)
+                                            {
+                                                if (current_position <= a[i] && next_position >= a[i])
+                                                {
+                                                    next_position = next_position - 4 * i;
+                                                    subcontent = pcontent.Substring(current_position, next_position - current_position);
+                                                }
+                                                else if (current_position >= a[i] && next_position >= a[i])
+                                                {
+                                                    current_position = current_position - 4 * i;
+                                                    next_position = next_position - 4 * i;
+                                                    subcontent = pcontent.Substring(current_position, next_position - current_position);
+                                                }
+                                                else subcontent = pcontent.Substring(current_position, next_position - current_position); //처음포지션부터 글자 수만큼 자르기
+                                                                                                                                          //처음포지션부터 글자 수만큼 자르기
+                                            }
+                                        else
+                                            subcontent = pcontent.Substring(current_position, next_position - current_position);
                                     }
                                     else //마지막 텍스트
                                     {
@@ -316,7 +360,24 @@ namespace WindowsFormsApp1.FuncToXml
                                         {
                                             //current_position -= 16;
                                         }
-                                        subcontent = pcontent.Substring(current_position);
+                                        
+                                        int temp = 0;
+                                        for (int i = 0; i < a.Count - 1; i++)
+                                        { 
+                                            if (a[i] < current_position)
+                                                temp = temp + i;
+
+
+                                            current_position = current_position - 4 * temp;
+
+
+                                            //처음포지션부터 글자 수만큼 자르기
+                                        }
+                                        try
+                                        {
+                                            subcontent = pcontent.Substring(current_position);
+                                        }
+                                        catch (System.ArgumentOutOfRangeException) { }
                                     }
 
                                     //스타일 추가 및 내용 추가

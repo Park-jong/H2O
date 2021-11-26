@@ -29,7 +29,12 @@ namespace WindowsFormsApp1
             itx = new FuncToXml.ImgToXml();
             htx = new FuncToXml.HeadToXml();
         }
-
+        private static int headerIndex = 0;
+        private static int headerS = 0;
+        private static int headerP = 0;
+        private static int footerIndex = 0;
+        private static int footerS = 0;
+        private static int footerP = 0;
         public void Run()
         {
             CreateFolder();
@@ -71,15 +76,15 @@ namespace WindowsFormsApp1
             // p 생성
 
 
-
+            JToken nowJson = null; JToken docJson = null; JToken imgJson = null; JToken HJson = null;JToken FJson = null;
             for (int s = 0; s < json["bodyText"]["sectionList"].Count(); s++)
                 for (int i = 0; i < json["bodyText"]["sectionList"][s]["paragraphList"].Count(); i++)
                 {
                     bool zeroCheck = i == 0 ? true : false;
 
-                    JToken nowJson = json["bodyText"]["sectionList"][s]["paragraphList"][i];
-                    JToken docJson = json["docInfo"];
-                    JToken imgJson = json["binData"];
+                    nowJson = json["bodyText"]["sectionList"][s]["paragraphList"][i];
+                    docJson = json["docInfo"];
+                    imgJson = json["binData"];
 
 
                     bool hasTable = false;
@@ -92,18 +97,29 @@ namespace WindowsFormsApp1
                     {
                         controlListCount = 0;
                     }
-                    for (int controlList = 0; controlList < controlListCount; controlList++)
+                  
+                         for (int controlList = 0; controlList < controlListCount; controlList++)
                     {
-                        try
-                        {
-                            nowJson["controlList"][controlList]["table"].Value<JToken>();
-                            hasTable = true;
-                            break;
+                        int Id = nowJson["controlList"][controlList]["header"]["ctrlId"].Value<int>();
+                        if (Id == 1751474532)
+                        {//머리 
+                            HJson = nowJson;
+                            headerIndex = controlList;
                         }
-                        catch (System.ArgumentNullException e)
-                        {
-                            hasTable = false;
+                        else if (Id == 1718579060)
+                        {// 꼬리
+                            FJson = nowJson; footerIndex = controlList;
                         }
+                            try
+                            {
+                                nowJson["controlList"][controlList]["table"].Value<JToken>();
+                                hasTable = true;
+                                break;
+                            }
+                            catch (System.ArgumentNullException e)
+                            {
+                                hasTable = false;
+                            }
                     }
 
                     if(hasTable)
@@ -112,10 +128,10 @@ namespace WindowsFormsApp1
                         ttx.Run(xm, nowJson, docJson, zeroCheck);
 
                     itx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
-                    htx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
+                   
 
                 }
-
+            htx.Run(xm, imgJson, nowJson, docJson, HJson,FJson,headerIndex,footerIndex);
             SaveODT();
         }
 
