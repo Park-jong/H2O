@@ -88,7 +88,7 @@ namespace WindowsFormsApp1
 
 
                     bool hasTable = false;
-                    string text = nowJson["text"].Value<string>();
+                    string text = nowJson["text-String"].Value<string>();
                     int controlListCount = 0;
                     try
                     {
