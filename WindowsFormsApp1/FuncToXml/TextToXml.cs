@@ -22,7 +22,7 @@ namespace WindowsFormsApp1.FuncToXml
 
         public void Run(XmlManager xm, JToken json, JToken docJson, bool zeroCheck)
         {
-            
+
             // 문단 ID 가져오기
             int shapeId = json["header"]["paraShapeId"].Value<int>();
             int sID = shapeId;
@@ -42,11 +42,12 @@ namespace WindowsFormsApp1.FuncToXml
                 int nullPStyle = json["charShape"]["positionShapeIdPairList"][0]["shapeId"].Value<int>();
                 float nullPFontSize = docJson["charShapeList"][nullPStyle]["baseSize"].Value<float>() / 100;
                 string nullPName = xm.AddContentP(); // para null 인 경우 처리
+                int property = docJson["paraShapeList"][sID]["property1"]["value"].Value<int>();
                 xm.SetFontSize(nullPName, nullPFontSize);
 
                 //줄 간격
                 int lineSpace = docJson["paraShapeList"][sID]["lineSpace"].Value<int>();
-                xm.Paragraph.SetLineSpace(nullPName, (XmlDocument)xm.docs["content.xml"], lineSpace * 0.01 * nullPFontSize * 0.03527);
+                xm.Paragraph.SetLineSpace(nullPName, (XmlDocument)xm.docs["content.xml"], lineSpace, property, (int)nullPFontSize * 100);
 
                 //문단 테두리 간격
                 double topborderSpace = docJson["paraShapeList"][sID]["topBorderSpace"].Value<double>();
@@ -93,7 +94,7 @@ namespace WindowsFormsApp1.FuncToXml
                     xm.SetPMargin(nullPName, (float)(leftmargin / 200 * 0.0353), (float)(rightmargin / 200 * 0.0353), (float)(topspace / 200 * 0.0353), (float)(bottomspace / 200 * 0.0353));
                 }
 
-                //continue;
+                return;
             }
             /////////////////////////////////////////////////////////////////
 
@@ -114,7 +115,7 @@ namespace WindowsFormsApp1.FuncToXml
             {
                 //스타일이 시작되는 위치
                 current_position = json["charShape"]["positionShapeIdPairList"][j]["position"].Value<int>();
-                
+
                 string subcontent = "";
                 if (j < spancount - 1)
                 {
@@ -215,7 +216,8 @@ namespace WindowsFormsApp1.FuncToXml
                 {
                     //줄 간격
                     int lineSpace = docJson["paraShapeList"][sID]["lineSpace"].Value<int>();
-                    xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace * 0.01 * baseSize * 0.01 * 0.03527);
+                    int property = docJson["paraShapeList"][sID]["property1"]["value"].Value<int>();
+                    xm.Paragraph.SetLineSpace(pname, (XmlDocument)xm.docs["content.xml"], lineSpace, property, (int)baseSize);
 
                     //문단 테두리 간격
                     double topborderSpace = docJson["paraShapeList"][sID]["topBorderSpace"].Value<double>();
