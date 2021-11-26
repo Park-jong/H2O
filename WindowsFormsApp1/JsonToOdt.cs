@@ -83,6 +83,7 @@ namespace WindowsFormsApp1
 
 
                     bool hasTable = false;
+                    string text = nowJson["text"].Value<string>();
                     int controlListCount = 0;
                     try
                     {
@@ -108,7 +109,10 @@ namespace WindowsFormsApp1
 
                     if (hasTable)
                         gtx.Run(xm, nowJson, docJson, zeroCheck);
-                    ttx.Run(xm, nowJson, docJson, zeroCheck);
+                    if(!hasTable || !text.Equals(""))
+                    {
+                        ttx.Run(xm, nowJson, docJson, zeroCheck);
+                    }
                     itx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
                     htx.Run(xm, imgJson, nowJson, docJson, zeroCheck);
 
