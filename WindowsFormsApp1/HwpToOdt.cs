@@ -32,7 +32,6 @@ namespace WindowsFormsApp1
                 string subString1 = rewrite.Substring(0, index + 1);
                 string subString2 = rewrite.Substring(index + 1);
                 rewrite = subString1 + Regex.Replace(subString2, @">\r\n( )*<", "><");
-                //  (, ) 가 json에 (,\n+공백)로 줄바꿈 입력됨 이유는 모름 나중에 수정가능성
                 rewrite = Regex.Replace(rewrite, @",\n             ", ", ");
                 System.IO.File.WriteAllText(Application.StartupPath + @"\New File\" + filename, rewrite);
             }
