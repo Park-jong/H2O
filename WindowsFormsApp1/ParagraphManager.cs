@@ -209,7 +209,7 @@ namespace WindowsFormsApp1
                     e1.SetAttribute("margin-right", header_fo, right.ToString() + "in");
 
                     XmlElement e2 = doc.CreateElement("style:tab-stops", header_style);
-                    e1.AppendChild(e2); //이건 뭔지 모르겠음 그냥 추가됨
+                    e1.AppendChild(e2);
 
                     e.AppendChild(e1);
                 }
